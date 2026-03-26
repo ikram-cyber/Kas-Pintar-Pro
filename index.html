@@ -3,512 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kas Santai</title>
+    <title>Kas Pintar Pro</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#007bff">
     <style>
-        body { font-family: sans-serif; background-color: #f0f2f5; color: #333; margin: 0; padding: 15px; }
-        .container { max-width: 400px; margin: auto; }
-        h2 { text-align: center; color: #444; margin-top: 5px; }
-        .nav-bar { display: flex; justify-content: space-between; background: white; padding: 5px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .nav-btn { width: 19%; background: none; border: none; font-size: 10px; font-weight: bold; color: #888; cursor: pointer; padding: 8px 2px; border-radius: 8px; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center;}
-        .nav-btn.aktif { background-color: #e7f1ff; color: #007bff; }
-        .halaman { display: none; }
-        .halaman.aktif { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center; }
-        .summary-card { display: flex; justify-content: space-between; margin-top: 15px; }
-        .summary-box { width: 48%; background: #f8f9fa; padding: 10px; border-radius: 8px; border: 1px solid #eee; }
-        .summary-title { font-size: 11px; color: #666; margin-bottom: 5px; display: block; }
-        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 15px; }
-        .btn-masuk { background-color: #28a745; color: white; width: 48%; display: inline-block; margin-right: 2%; border: none; font-weight: bold; cursor: pointer;}
-        .btn-keluar { background-color: #dc3545; color: white; width: 48%; display: inline-block; border: none; font-weight: bold; cursor: pointer;}
-        .btn-cetak { background-color: #17a2b8; color: white; font-weight: bold; border: none; cursor: pointer; margin-top: 15px; padding: 15px;}
-        .btn-excel { background-color: #28a745; color: white; font-weight: bold; border: none; cursor: pointer; margin-top: 5px;}
-        .grup-nominal { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; justify-content: center;}
-        .btn-nominal { flex: 1; min-width: 50px; background-color: #e9ecef; color: #495057; border: 1px solid #ced4da; padding: 8px 5px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer;}
-        .btn-tambah-nom { background-color: #007bff; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; padding: 10px;}
-        .tag-nominal { display: inline-block; background-color: #e7f1ff; color: #007bff; padding: 5px 10px; border-radius: 15px; margin: 5px; font-size: 12px; font-weight: bold; border: 1px solid #b8daff;}
-        .hapus-tag { color: #dc3545; cursor: pointer; margin-left: 5px; font-weight: bold; padding: 0 5px;}
-        .grup-tanggal { text-align: left; font-weight: bold; color: #333; margin: 20px 0 10px 0; padding-bottom: 5px; border-bottom: 2px solid #ddd; font-size: 14px;}
-        .total-harian { font-size: 12px; font-weight: normal; margin-top: 4px; display: block;}
-        ul { list-style: none; padding: 0; margin: 0; }
-        li { background: #fff; margin-bottom: 8px; padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
-        li.item-masuk { border-left-color: #28a745; }
-        li.item-keluar { border-left-color: #dc3545; }
-        .uang-masuk { color: #28a745; font-weight: bold; }
-        .uang-keluar { color: #dc3545; font-weight: bold; }
-        .btn-hapus { background-color: #ffc107; color: #000; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; margin-top: 5px;}
-        .label-input { text-align: left; display: block; font-size: 12px; color: #666; margin-top: 5px; font-weight: bold;}
-        .hari-kosong { background-color: #fff; padding: 10px; border-radius: 8px; text-align: center; color: #999; font-style: italic; font-size: 13px; border: 1px dashed #ccc; margin-bottom: 8px;}
-        .zona-bahaya { border: 2px solid #dc3545; padding: 15px; border-radius: 12px; background-color: #fffafb; text-align: left;}
-        .btn-bahaya { background-color: #dc3545; color: white; font-weight: bold; border: none; padding: 12px; border-radius: 8px; cursor: pointer; margin-top: 10px;}
-        .btn-peringatan { background-color: #ff9800; color: white; font-weight: bold; border: none; padding: 12px; border-radius: 8px; cursor: pointer; margin-top: 10px;}
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; text-align: left; }
-        th, td { border: 1px solid #ddd; padding: 6px; }
-        th { background-color: #f4f4f4; }
-        tfoot { font-weight: bold; background-color: #f8f9fa; }
-        .tr-masuk { background-color: #e8f5e9; }
-        .tr-keluar { background-color: #ffebee; }
-        
-        /* Area Print Global */
-        #areaPrintGlobal { display: none; }
-        .area-ttd { margin-top: 40px; display: flex; justify-content: flex-end; text-align: center; font-size: 12px; page-break-inside: avoid; }
-        .box-ttd { width: 180px; }
-        .ttd-kosong { height: 60px; }
-        .ttd-nama { font-weight: bold; text-decoration: underline; text-transform: uppercase; }
-
-        @media print {
-            body { background: white; padding: 0; color: black; font-family: 'Times New Roman', serif; }
-            .container { display: none !important; } 
-            #areaPrintGlobal { display: block !important; width: 100%; } 
-            table { font-size: 12px; width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-            th, td { border: 1px solid #000; padding: 6px; text-align: left; }
-            th { background-color: #eee !important; -webkit-print-color-adjust: exact; }
-            tfoot { background-color: #eee !important; -webkit-print-color-adjust: exact; }
-            #kopLaporan { text-align: center; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 20px; }
-            .judul-kop { margin: 0; font-size: 22px; text-transform: uppercase; font-weight: bold; }
-            .sub-kop { font-size: 16px; font-weight: bold; margin-top: 5px; }
-            .periode-kop { font-size: 12px; color: #000; margin-top: 3px; }
-            
-            /* Laba Rugi Print Fix */
-            #lrHasilBg { background: white !important; border: 2px solid #000 !important; color: black !important; }
-            #lrHasilBg span { color: black !important; }
-            
-            .uang-masuk { color: #000 !important; }
-            .uang-keluar { color: #000 !important; }
-            .tr-masuk, .tr-keluar { background-color: transparent !important; }
-        }
+        :root { --primary: #007bff; --success: #28a745; --danger: #dc3545; --bg: #f0f2f5; }
+        body { font-family: sans-serif; background: var(--bg); margin: 0; padding: 15px; padding-bottom: 80px; }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        .saldo-box { background: linear-gradient(135deg, #007bff, #0056b3); color: white; text-align: center; }
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; }
+        .btn-in { background: var(--success); color: white; border: none; font-weight: bold; width: 48%; }
+        .btn-out { background: var(--danger); color: white; border: none; font-weight: bold; width: 48%; }
+        .btn-share { background: #17a2b8; color: white; border: none; font-weight: bold; margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
+        .page { display: none; } .page.active { display: block; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
+        .nav-item { border: none; background: none; font-size: 11px; color: #888; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .nav-item.active { color: var(--primary); font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="container" id="uiAplikasi">
-    <h2>Kas Santai</h2>
-    <div class="nav-bar">
-        <button id="navBeranda" class="nav-btn aktif" onclick="bukaTab('beranda')"><span style="font-size:16px;">🏠</span>Home</button>
-        <button id="navAkuntansi" class="nav-btn" onclick="bukaTab('akuntansi')"><span style="font-size:16px;">⚖️</span>Neraca</button>
-        <button id="navLabaRugi" class="nav-btn" onclick="bukaTab('labaRugi')"><span style="font-size:16px;">📈</span>LabaRugi</button>
-        <button id="navLaporan" class="nav-btn" onclick="bukaTab('laporan')"><span style="font-size:16px;">📊</span>ArusKas</button>
-        <button id="navPengaturan" class="nav-btn" onclick="bukaTab('pengaturan')"><span style="font-size:16px;">⚙️</span>Seting</button>
-    </div>
+<h2 style="text-align:center;">Kas Pintar Pro</h2>
 
-    <div id="halamanBeranda" class="halaman aktif">
-        <div class="card" style="padding: 15px;">
-            <p style="margin: 0; color: #666; font-size: 14px;">Total Kas (Harta):</p>
-            <h1 style="margin: 5px 0 10px 0;" id="saldoDisplay">Rp 0</h1>
-            <div class="summary-card">
-                <div class="summary-box"><span class="summary-title">Pemasukan Bulan Ini</span><span class="uang-masuk" id="masukBulanIni">Rp 0</span></div>
-                <div class="summary-box"><span class="summary-title">Pengeluaran Bulan Ini</span><span class="uang-keluar" id="keluarBulanIni">Rp 0</span></div>
-            </div>
-        </div>
-
-        <div class="card">
-            <span class="label-input">Kategori Akuntansi:</span>
-            <select id="kategoriTransaksi" style="background-color: #fdfdfd; font-weight: bold;">
-                <option value="Operasional">Pendapatan / Beban Operasional</option>
-                <option value="Utang">Terima Utang / Bayar Utang</option>
-                <option value="Modal">Suntikan Modal / Tarik Dana (Prive)</option>
-            </select>
-            
-            <span class="label-input">Pilih atau Ketik Jumlah:</span>
-            <div class="grup-nominal" id="wadahTombolBeranda"></div>
-            <input type="number" id="jumlah" placeholder="Ketik Manual (Cth: 12500)">
-            <span class="label-input">Keterangan (Opsional):</span>
-            <input type="text" id="keterangan" placeholder="Boleh dikosongkan">
-            <span class="label-input">Tanggal Transaksi:</span>
-            <input type="date" id="tanggalInput">
-            <div style="text-align: left;">
-                <button class="btn-masuk" onclick="catatData('masuk')">+ Pemasukan</button>
-                <button class="btn-keluar" onclick="catatData('keluar')">- Pengeluaran</button>
-            </div>
-        </div>
-
-        <div class="card" style="background: transparent; box-shadow: none; padding: 0;">
-            <h3 style="text-align: left; margin-top: 0;">Catatan Terakhir</h3>
-            <div id="riwayatContainer"></div>
-        </div>
-    </div>
-
-    <div id="halamanAkuntansi" class="halaman">
-        <div class="card">
-            <h3 style="margin-top:0; color:#333;">Laporan Neraca</h3>
-            <p style="font-size: 12px; color: #666; margin-bottom: 20px; font-weight: bold;">HARTA = UTANG + MODAL</p>
-            
-            <div id="kontenNeraca">
-                <div style="background: #e7f1ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 2px solid #007bff;">
-                    <h4 style="margin:0 0 5px 0; color:#007bff;">Total Kas (Harta)</h4>
-                    <h2 style="margin:0;" id="akunHarta">Rp 0</h2>
-                </div>
-                
-                <div style="display: flex; gap: 10px;">
-                    <div style="flex: 1; background: #fff3cd; padding: 15px; border-radius: 8px; border: 2px solid #ffc107;">
-                        <h4 style="margin:0 0 5px 0; color:#856404;">Total Utang</h4>
-                        <h3 style="margin:0;" id="akunUtang" class="uang-keluar">Rp 0</h3>
-                    </div>
-                    <div style="flex: 1; background: #d4edda; padding: 15px; border-radius: 8px; border: 2px solid #28a745;">
-                        <h4 style="margin:0 0 5px 0; color:#155724;">Total Modal</h4>
-                        <h3 style="margin:0;" id="akunModal" class="uang-masuk">Rp 0</h3>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="statusSeimbang" style="margin-top: 15px; font-weight: bold; padding: 12px; border-radius: 8px; background: #d1ecf1; color: #0c5460; font-size: 14px;">
-                ⚖️ Status: MENGHITUNG...
-            </div>
-
-            <button class="btn-cetak" onclick="prosesCetak('neraca')">🖨️ Cetak Neraca (PDF)</button>
-        </div>
-    </div>
-
-    <div id="halamanLabaRugi" class="halaman">
-        <div class="card">
-            <h3 style="margin-top:0;">Filter Periode</h3>
-            <select id="filterLabaRugi" onchange="generateLabaRugi()">
-                <option value="semua">Semua Waktu</option>
-                <option value="harian">Harian (Hari Ini)</option>
-                <option value="bulanan" selected>Bulanan (Bulan Ini)</option>
-                <option value="tahunan">Tahunan (Tahun Ini)</option>
-            </select>
-        </div>
-        <div class="card">
-            <h3 style="margin-top:0;">Laporan Laba Rugi</h3>
-            <p id="periodeLabaRugi" style="font-size: 12px; color: #666; margin-top: -10px;">Periode: -</p>
-            
-            <div id="kontenLabaRugi" style="text-align: left; margin-top: 15px;">
-                <div style="display: flex; justify-content: space-between; padding: 12px; background: #e8f5e9; border-radius: 8px; margin-bottom: 8px; border: 1px solid #c3e6cb;">
-                    <strong>Pendapatan Operasional</strong><span class="uang-masuk" id="lrPendapatan">Rp 0</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding: 12px; background: #ffebee; border-radius: 8px; margin-bottom: 15px; border: 1px solid #f5c6cb;">
-                    <strong>Beban Operasional</strong><span class="uang-keluar" id="lrBeban">Rp 0</span>
-                </div>
-                <div id="lrHasilBg" style="padding: 15px; border-radius: 8px; text-align: center; color: white; font-weight: bold; font-size: 18px;">
-                    <span id="lrTeks" style="font-size: 14px; display:block; margin-bottom: 5px;">LABA BERSIH</span>
-                    <span id="lrTotal" style="font-size: 24px;">Rp 0</span>
-                </div>
-            </div>
-
-            <button class="btn-cetak" onclick="prosesCetak('labarugi')">🖨️ Cetak Laba Rugi (PDF)</button>
-        </div>
-    </div>
-
-    <div id="halamanLaporan" class="halaman">
-        <div class="card">
-            <h3 style="margin-top:0;">Filter Periode Arus Kas</h3>
-            <select id="filterJenis" onchange="generateLaporan()">
-                <option value="semua">Semua Waktu</option>
-                <option value="harian">Harian (Hari Ini)</option>
-                <option value="bulanan">Bulanan (Bulan Ini)</option>
-                <option value="tahunan">Tahunan (Tahun Ini)</option>
-            </select>
-        </div>
-
-        <div class="card">
-            <div id="kontenArusKas" style="overflow-x: auto;">
-                <table id="tabelLaporan">
-                    <thead><tr><th>Tanggal</th><th>Keterangan</th><th>Masuk</th><th>Keluar</th></tr></thead>
-                    <tbody id="isiTabelLaporan"></tbody>
-                    <tfoot id="kakiTabelLaporan"></tfoot> </table>
-            </div>
-
-            <button class="btn-cetak" onclick="prosesCetak('aruskas')">🖨️ Cetak Arus Kas (PDF)</button>
-            <button class="btn-excel" onclick="downloadExcel()">📊 Download Excel (CSV)</button>
-        </div>
-    </div>
-
-    <div id="halamanPengaturan" class="halaman">
-        <div class="card" style="text-align: left;">
-            <h3 style="margin-top:0;">🏢 Pengaturan Cetak & TTD</h3>
-            <span class="label-input">Nama PT / Toko:</span>
-            <input type="text" id="inputNamaToko" placeholder="Cth: PT KAS SANTAI" oninput="simpanPengaturanCetak()">
-            <span class="label-input">Tempat & Tanggal TTD:</span>
-            <input type="text" id="inputTtdTempat" placeholder="Cth: Jakarta, 27 Maret 2026" oninput="simpanPengaturanCetak()">
-            <span class="label-input">Jabatan:</span>
-            <input type="text" id="inputTtdJabatan" placeholder="Cth: Direktur Keuangan" oninput="simpanPengaturanCetak()">
-            <span class="label-input">Nama Lengkap Bos:</span>
-            <input type="text" id="inputTtdNama" placeholder="Cth: Budi Santoso" oninput="simpanPengaturanCetak()">
-        </div>
-
-        <div class="card" style="text-align: left; border: 2px solid #007bff;">
-            <h4 style="margin-top:0; color: #007bff;">✨ Atur Tombol Nominal</h4>
-            <div id="wadahPengaturanTombol" style="margin-bottom: 10px; min-height: 30px;"></div>
-            <div style="display: flex; gap: 10px;">
-                <input type="number" id="inputNominalBaru" placeholder="Cth: 1000000" style="margin: 0; flex: 2;">
-                <button class="btn-tambah-nom" onclick="tambahTombolCustom()" style="margin: 0; flex: 1;">+ Tambah</button>
-            </div>
-        </div>
-        
-        <div class="zona-bahaya">
-            <h4 style="margin: 0 0 10px 0; color: #dc3545;">⚠️ Hapus Data</h4>
-            <div style="margin-bottom: 20px; border-bottom: 1px solid #f5c2c7; padding-bottom:10px;">
-                <input type="date" id="tanggalHapus">
-                <button class="btn-peringatan" onclick="hapusHariPilihan()">Hapus Tanggal Ini</button>
-            </div>
-            <div>
-                <button class="btn-bahaya" onclick="hapusSemua()" style="margin-top:0;">Hapus Semua (Reset)</button>
-            </div>
+<div id="p-home" class="page active">
+    <div class="card saldo-box"><p style="margin:0;">Total Harta (Kas)</p><h1 id="v-saldo" style="margin:5px 0 0 0;">Rp 0</h1></div>
+    <div class="card">
+        <h3>Input Transaksi</h3>
+        <input type="number" id="inp-amt" placeholder="Nominal Uang">
+        <input type="text" id="inp-desc" placeholder="Keterangan">
+        <select id="inp-cat">
+            <option value="Operasional">Operasional (Laba/Rugi)</option>
+            <option value="Utang">Utang (Kewajiban)</option>
+            <option value="Modal">Modal (Bersih)</option>
+        </select>
+        <input type="date" id="inp-date">
+        <div style="display:flex; justify-content:space-between;">
+            <button class="btn-in" onclick="catat('in')">MASUK</button>
+            <button class="btn-out" onclick="catat('out')">KELUAR</button>
         </div>
     </div>
 </div>
 
-<div id="areaPrintGlobal">
-    <div id="kopLaporan">
-        <h2 id="printNamaToko" class="judul-kop">NAMA TOKO</h2>
-        <div id="printJudulLaporan" class="sub-kop">JUDUL LAPORAN</div>
-        <div id="printPeriode" class="periode-kop">Periode: -</div>
-    </div>
+<div id="p-neraca" class="page">
+    <div class="card"><h3>Neraca</h3><div id="view-neraca"></div><button class="btn-share" onclick="bagikan('neraca')">📤 Bagikan Neraca</button></div>
+</div>
 
-    <div id="printAreaKonten"></div>
+<div id="p-lr" class="page">
+    <div class="card"><h3>Laba Rugi</h3><div id="view-lr"></div><button class="btn-share" onclick="bagikan('lr')">📤 Bagikan Laba Rugi</button></div>
+</div>
 
-    <div class="area-ttd">
-        <div class="box-ttd">
-            <div id="printTtdTempat" style="margin-bottom: 3px;">Jakarta, -</div>
-            <div id="printTtdJabatan">Jabatan</div>
-            <div class="ttd-kosong"></div>
-            <div id="printTtdNama" class="ttd-nama">Nama Lengkap</div>
-        </div>
+<div id="p-seting" class="page">
+    <div class="card">
+        <h3>Pengaturan</h3>
+        <input type="text" id="set-toko" placeholder="Nama Toko" oninput="simpanSet()">
+        <input type="text" id="set-bos" placeholder="Nama Pemilik" oninput="simpanSet()">
+        <button onclick="if(confirm('Hapus Semua Data?')) { localStorage.clear(); location.reload(); }" style="background:var(--danger); color:white; margin-top:20px;">Hapus Data</button>
     </div>
+</div>
+
+<div class="bottom-nav">
+    <button class="nav-item active" onclick="bukaTab('home')">🏠<br>Home</button>
+    <button class="nav-item" onclick="bukaTab('neraca')">⚖️<br>Neraca</button>
+    <button class="nav-item" onclick="bukaTab('lr')">📈<br>LabaRugi</button>
+    <button class="nav-item" onclick="bukaTab('seting')">⚙️<br>Seting</button>
 </div>
 
 <script>
-    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').then(() => { console.log('PWA Siap!'); }); }
+    let db = JSON.parse(localStorage.getItem('kspro_db')) || [];
+    let saldo = parseInt(localStorage.getItem('kspro_saldo')) || 0;
+    document.getElementById('inp-date').valueAsDate = new Date();
 
-    let tombolCustom = JSON.parse(localStorage.getItem("tombol_santai")) || [5000, 10000, 50000, 100000, 1000000];
-    let saldo = parseInt(localStorage.getItem("saldo_santai")) || 0;
-    let riwayat = JSON.parse(localStorage.getItem("riwayat_santai")) || [];
-    let dataLaporan = [];
+    function simpan() { localStorage.setItem('kspro_db', JSON.stringify(db)); localStorage.setItem('kspro_saldo', saldo); perbarui(); }
+    function simpanSet() { localStorage.setItem('kspro_toko', document.getElementById('set-toko').value); localStorage.setItem('kspro_bos', document.getElementById('set-bos').value); }
 
-    document.getElementById("inputNamaToko").value = localStorage.getItem("nama_toko_santai") || "";
-    document.getElementById("inputTtdTempat").value = localStorage.getItem("ttd_tempat") || "";
-    document.getElementById("inputTtdJabatan").value = localStorage.getItem("ttd_jabatan") || "Admin Keuangan";
-    document.getElementById("inputTtdNama").value = localStorage.getItem("ttd_nama") || "Nama Bos";
-
-    function simpanPengaturanCetak() {
-        localStorage.setItem("nama_toko_santai", document.getElementById("inputNamaToko").value);
-        localStorage.setItem("ttd_tempat", document.getElementById("inputTtdTempat").value);
-        localStorage.setItem("ttd_jabatan", document.getElementById("inputTtdJabatan").value);
-        localStorage.setItem("ttd_nama", document.getElementById("inputTtdNama").value);
+    function catat(j) {
+        let n = parseInt(document.getElementById('inp-amt').value);
+        let d = document.getElementById('inp-desc').value || "-";
+        let c = document.getElementById('inp-cat').value;
+        let t = document.getElementById('inp-date').value;
+        if(!n) return alert("Isi nominal!");
+        j === 'in' ? saldo += n : saldo -= n;
+        db.push({tgl:t, ket:d, kat:c, nom:n, jen:j});
+        document.getElementById('inp-amt').value = ""; simpan(); alert("Tersimpan!");
     }
 
-    function siapkanDataPrint() {
-        let namaToko = localStorage.getItem("nama_toko_santai") || "PERUSAHAAN KAS SANTAI";
-        let ttdTempat = localStorage.getItem("ttd_tempat");
-        let ttdJabatan = localStorage.getItem("ttd_jabatan") || "Admin";
-        let ttdNama = localStorage.getItem("ttd_nama") || "Nama Bos";
+    function perbarui() {
+        document.getElementById('v-saldo').innerText = "Rp " + saldo.toLocaleString();
+        let u=0, p=0, b=0;
+        db.forEach(x => {
+            if(x.kat==='Utang') x.jen==='in'?u+=x.nom:u-=x.nom;
+            if(x.kat==='Operasional') x.jen==='in'?p+=x.nom:b+=x.nom;
+        });
+        document.getElementById('view-neraca').innerHTML = `<table><tr><td>Kas</td><td>Rp ${saldo.toLocaleString()}</td></tr><tr><td>Utang</td><td>Rp ${u.toLocaleString()}</td></tr><tr><td>Modal</td><td>Rp ${(saldo-u).toLocaleString()}</td></tr></table>`;
+        document.getElementById('view-lr').innerHTML = `<table><tr><td>Pendapatan</td><td>Rp ${p.toLocaleString()}</td></tr><tr><td>Beban</td><td>Rp ${b.toLocaleString()}</td></tr><tr><td><b>Laba/Rugi</b></td><td><b>Rp ${(p-b).toLocaleString()}</b></td></tr></table>`;
+        document.getElementById('set-toko').value = localStorage.getItem('kspro_toko') || "";
+        document.getElementById('set-bos').value = localStorage.getItem('kspro_bos') || "";
+    }
 
-        if (!ttdTempat) {
-            let today = new Date();
-            let namaBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-            ttdTempat = `Jakarta, ${today.getDate()} ${namaBulan[today.getMonth()]} ${today.getFullYear()}`;
+    async function bagikan(m) {
+        let t = localStorage.getItem('kspro_toko') || "Toko"; let bos = localStorage.getItem('kspro_bos') || "Pemilik";
+        let teks = `*LAPORAN ${m.toUpperCase()}*\n🏬 ${t}\n----------------\n`;
+        if(m==='neraca') {
+            let u=0; db.forEach(x=>{if(x.kat==='Utang') x.jen==='in'?u+=x.nom:u-=x.nom;});
+            teks += `Kas: Rp ${saldo.toLocaleString()}\nUtang: Rp ${u.toLocaleString()}\nModal: Rp ${(saldo-u).toLocaleString()}\n`;
+        } else {
+            let p=0, b=0; db.forEach(x=>{if(x.kat==='Operasional') x.jen==='in'?p+=x.nom:b+=x.nom;});
+            teks += `Pendapatan: Rp ${p.toLocaleString()}\nBeban: Rp ${b.toLocaleString()}\n*Laba/Rugi: Rp ${(p-b).toLocaleString()}*\n`;
         }
-
-        document.getElementById("printNamaToko").innerText = namaToko;
-        document.getElementById("printTtdTempat").innerText = ttdTempat;
-        document.getElementById("printTtdJabatan").innerText = ttdJabatan;
-        document.getElementById("printTtdNama").innerText = ttdNama;
+        teks += `----------------\nTTD: ${bos}`;
+        if(navigator.share) { try { await navigator.share({text: teks}); } catch(e){} } else { alert("Browser tidak support share."); }
     }
 
-    function prosesCetak(jenisLaporan) {
-        siapkanDataPrint(); 
-        let judul = ""; let periodeText = ""; let kontenHtml = "";
-
-        if (jenisLaporan === 'neraca') {
-            judul = "LAPORAN NERACA AKUNTANSI";
-            periodeText = "Per Tanggal: " + new Date().toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'});
-            kontenHtml = document.getElementById("kontenNeraca").innerHTML;
-        } 
-        else if (jenisLaporan === 'labarugi') {
-            judul = "LAPORAN LABA RUGI";
-            periodeText = document.getElementById("periodeLabaRugi").innerText;
-            kontenHtml = document.getElementById("kontenLabaRugi").innerHTML;
-        } 
-        else if (jenisLaporan === 'aruskas') {
-            judul = "LAPORAN ARUS KAS";
-            let select = document.getElementById("filterJenis");
-            periodeText = "Periode: " + select.options[select.selectedIndex].text;
-            kontenHtml = document.getElementById("kontenArusKas").innerHTML;
-        }
-
-        document.getElementById("printJudulLaporan").innerText = judul;
-        document.getElementById("printPeriode").innerText = periodeText;
-        document.getElementById("printAreaKonten").innerHTML = kontenHtml;
-
-        window.print();
-    }
-
-    function formatTeksTombol(angka) { return angka.toLocaleString('id-ID'); }
-    function getYYYYMMDD(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
-
-    function renderTombolNominal() {
-        let wadahBeranda = document.getElementById("wadahTombolBeranda"); let wadahPengaturan = document.getElementById("wadahPengaturanTombol");
-        wadahBeranda.innerHTML = ""; wadahPengaturan.innerHTML = "";
-        tombolCustom.forEach(angka => {
-            let btn = document.createElement("button"); btn.className = "btn-nominal"; btn.innerText = formatTeksTombol(angka);
-            btn.onclick = () => document.getElementById("jumlah").value = angka; wadahBeranda.appendChild(btn);
-        });
-        tombolCustom.forEach((angka, i) => {
-            let span = document.createElement("span"); span.className = "tag-nominal";
-            span.innerHTML = `${formatTeksTombol(angka)} <span class="hapus-tag" onclick="hapusTombolCustom(${i})">✖</span>`;
-            wadahPengaturan.appendChild(span);
-        });
-    }
-
-    function tambahTombolCustom() {
-        let val = document.getElementById("inputNominalBaru").value; if(!val) return; let angka = parseInt(val);
-        if(!tombolCustom.includes(angka)) { tombolCustom.push(angka); tombolCustom.sort((a,b)=>a-b); localStorage.setItem("tombol_santai", JSON.stringify(tombolCustom)); renderTombolNominal(); }
-        document.getElementById("inputNominalBaru").value = "";
-    }
-    function hapusTombolCustom(i) { tombolCustom.splice(i, 1); localStorage.setItem("tombol_santai", JSON.stringify(tombolCustom)); renderTombolNominal(); }
-    
-    function bukaTab(tab) {
-        document.querySelectorAll('.halaman, .nav-btn').forEach(el => el.classList.remove('aktif'));
-        if(tab === 'beranda') { document.getElementById('halamanBeranda').classList.add('aktif'); document.getElementById('navBeranda').classList.add('aktif'); updateTampilan(); }
-        else if(tab === 'akuntansi') { document.getElementById('halamanAkuntansi').classList.add('aktif'); document.getElementById('navAkuntansi').classList.add('aktif'); updateAkuntansi(); }
-        else if(tab === 'labaRugi') { document.getElementById('halamanLabaRugi').classList.add('aktif'); document.getElementById('navLabaRugi').classList.add('aktif'); generateLabaRugi(); }
-        else if(tab === 'laporan') { document.getElementById('halamanLaporan').classList.add('aktif'); document.getElementById('navLaporan').classList.add('aktif'); generateLaporan(); }
-        else { document.getElementById('halamanPengaturan').classList.add('aktif'); document.getElementById('navPengaturan').classList.add('aktif'); document.getElementById('tanggalHapus').value = getYYYYMMDD(new Date()); }
-    }
-
-    function updateTampilan() {
-        document.getElementById("saldoDisplay").innerText = "Rp " + saldo.toLocaleString('id-ID');
-        let today = new Date(); let cMonth = String(today.getMonth() + 1).padStart(2, '0'); let cYear = String(today.getFullYear());
-        let tMasuk = 0, tKeluar = 0;
-        riwayat.forEach(i => { let p = i.tanggalRaw.split('-'); if(p[0]===cYear && p[1]===cMonth) { i.jenis==="masuk" ? tMasuk+=i.jumlah : tKeluar+=i.jumlah; } });
-        document.getElementById("masukBulanIni").innerText = "Rp " + tMasuk.toLocaleString('id-ID'); document.getElementById("keluarBulanIni").innerText = "Rp " + tKeluar.toLocaleString('id-ID');
-        
-        let container = document.getElementById("riwayatContainer"); container.innerHTML = "";
-        if(riwayat.length === 0) { container.innerHTML = "<div class='hari-kosong'>Belum ada data bos.</div>"; return; }
-        
-        let firstDateStr = riwayat[0].tanggalRaw;
-        for(let i=1; i<riwayat.length; i++) { if(riwayat[i].tanggalRaw < firstDateStr) firstDateStr = riwayat[i].tanggalRaw; }
-        let partsFirst = firstDateStr.split('-'); let firstDate = new Date(partsFirst[0], partsFirst[1] - 1, partsFirst[2]);
-        let currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        
-        let dCount = 0;
-        while(currentDate >= firstDate && dCount < 7) {
-            let curStr = getYYYYMMDD(currentDate);
-            let items = riwayat.map((v,i) => ({...v, idx:i})).filter(r => r.tanggalRaw === curStr);
-            if(items.length > 0) {
-                let m = 0, k = 0; items.forEach(i => i.jenis==="masuk"?m+=i.jumlah:k+=i.jumlah);
-                let opsiTgl = { weekday: 'long', month: 'short', day: 'numeric' };
-                let judul = document.createElement("div"); judul.className = "grup-tanggal";
-                judul.innerHTML = `${currentDate.toLocaleDateString('id-ID', opsiTgl)} <div class="total-harian"><span class="uang-masuk">M: Rp ${m.toLocaleString('id-ID')}</span> | <span class="uang-keluar">K: Rp ${k.toLocaleString('id-ID')}</span></div>`;
-                container.appendChild(judul);
-                let ul = document.createElement("ul");
-                items.forEach(item => {
-                    let li = document.createElement("li"); li.className = item.jenis==="masuk"?"item-masuk":"item-keluar";
-                    let katBdg = item.kategori ? `<br><small style="color:#888; font-size:10px;">(${item.kategori})</small>` : "";
-                    li.innerHTML = `<div style="text-align: left; max-width: 65%;"><span class="keterangan-teks">${item.keterangan}</span>${katBdg}</div><div style="text-align: right;"><div class="${item.jenis==="masuk"?"uang-masuk":"uang-keluar"}">${item.jenis==="masuk"?"+":"-"} ${item.jumlah.toLocaleString('id-ID')}</div><button class="btn-hapus" onclick="hapusItem(${item.idx})">Batal</button></div>`;
-                    ul.appendChild(li);
-                });
-                container.appendChild(ul);
-            }
-            currentDate.setDate(currentDate.getDate() - 1); dCount++;
-        }
-    }
-
-    function updateAkuntansi() {
-        let totalHarta = saldo; let totalUtang = 0; let totalModal = 0;
-        riwayat.forEach(item => {
-            let kat = item.kategori || "Operasional";
-            if (item.jenis === "masuk") { if (kat === "Utang") { totalUtang += item.jumlah; } else if (kat === "Modal" || kat === "Operasional") { totalModal += item.jumlah; } } 
-            else if (item.jenis === "keluar") { if (kat === "Utang") { totalUtang -= item.jumlah; } else if (kat === "Modal" || kat === "Operasional") { totalModal -= item.jumlah; } }
-        });
-        document.getElementById("akunHarta").innerText = "Rp " + totalHarta.toLocaleString('id-ID'); document.getElementById("akunUtang").innerText = "Rp " + totalUtang.toLocaleString('id-ID'); document.getElementById("akunModal").innerText = "Rp " + totalModal.toLocaleString('id-ID');
-        let statusBox = document.getElementById("statusSeimbang");
-        if (totalHarta === (totalUtang + totalModal)) { statusBox.innerHTML = "✅ KEUANGAN SEIMBANG (BALANCE)"; statusBox.style.background = "#d4edda"; statusBox.style.color = "#155724"; } 
-        else { statusBox.innerHTML = "⚠️ ADA SELISIH (TIDAK SEIMBANG)"; statusBox.style.background = "#f8d7da"; statusBox.style.color = "#721c24"; }
-    }
-
-    function generateLabaRugi() {
-        let filter = document.getElementById("filterLabaRugi").value;
-        let today = new Date(); let curDateStr = getYYYYMMDD(today); let curMonthStr = curDateStr.substring(0, 7); let curYearStr = curDateStr.substring(0, 4);
-        let namaBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-        let teksPeriode = "";
-        if(filter === "semua") teksPeriode = "Keseluruhan Waktu"; else if(filter === "harian") teksPeriode = `${today.getDate()} ${namaBulan[today.getMonth()]} ${today.getFullYear()}`; else if(filter === "bulanan") teksPeriode = `Bulan ${namaBulan[today.getMonth()]} ${today.getFullYear()}`; else if(filter === "tahunan") teksPeriode = `Tahun ${today.getFullYear()}`;
-        document.getElementById("periodeLabaRugi").innerText = "Periode: " + teksPeriode;
-        
-        let totalPendapatan = 0; let totalBeban = 0;
-        riwayat.forEach(item => {
-            let masukKriteria = true;
-            if(filter === "harian" && item.tanggalRaw !== curDateStr) masukKriteria = false;
-            if(filter === "bulanan" && !item.tanggalRaw.startsWith(curMonthStr)) masukKriteria = false;
-            if(filter === "tahunan" && !item.tanggalRaw.startsWith(curYearStr)) masukKriteria = false;
-            if (masukKriteria) { let kat = item.kategori || "Operasional"; if (kat === "Operasional") { if (item.jenis === "masuk") totalPendapatan += item.jumlah; else if (item.jenis === "keluar") totalBeban += item.jumlah; } }
-        });
-        document.getElementById("lrPendapatan").innerText = "Rp " + totalPendapatan.toLocaleString('id-ID'); document.getElementById("lrBeban").innerText = "Rp " + totalBeban.toLocaleString('id-ID');
-        
-        let selisih = totalPendapatan - totalBeban; let hBg = document.getElementById("lrHasilBg"); let hTeks = document.getElementById("lrTeks"); let hTotal = document.getElementById("lrTotal");
-        if (selisih > 0) { hBg.style.background = "#28a745"; hBg.style.border = "none"; hBg.style.color = "white"; hTeks.innerText = "🎉 LABA BERSIH (UNTUNG)"; hTotal.innerText = "Rp " + selisih.toLocaleString('id-ID'); } 
-        else if (selisih < 0) { hBg.style.background = "#dc3545"; hBg.style.border = "none"; hBg.style.color = "white"; hTeks.innerText = "⚠️ RUGI BERSIH"; hTotal.innerText = "- Rp " + Math.abs(selisih).toLocaleString('id-ID'); } 
-        else { hBg.style.background = "#fff"; hBg.style.border = "2px solid #6c757d"; hBg.style.color = "#6c757d"; hTeks.innerText = "⚖️ IMPAS (BALIK MODAL)"; hTotal.innerText = "Rp 0"; }
-    }
-    
-    function generateLaporan() {
-        let filter = document.getElementById("filterJenis").value; let today = new Date(); let curDateStr = getYYYYMMDD(today); let curMonthStr = curDateStr.substring(0, 7); let curYearStr = curDateStr.substring(0, 4);
-        
-        dataLaporan = riwayat.filter(item => { if(filter === "harian") return item.tanggalRaw === curDateStr; if(filter === "bulanan") return item.tanggalRaw.startsWith(curMonthStr); if(filter === "tahunan") return item.tanggalRaw.startsWith(curYearStr); return true; });
-        dataLaporan.sort((a, b) => b.tanggalRaw.localeCompare(a.tanggalRaw));
-
-        let tbody = document.getElementById("isiTabelLaporan"); tbody.innerHTML = ""; 
-        let tfoot = document.getElementById("kakiTabelLaporan"); tfoot.innerHTML = "";
-        let totMasuk = 0, totKeluar = 0;
-
-        if(dataLaporan.length === 0) { 
-            tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Belum ada data di periode ini.</td></tr>"; 
-            return; 
-        }
-
-        dataLaporan.forEach(item => {
-            if(item.jenis === "masuk") totMasuk += item.jumlah; else totKeluar += item.jumlah;
-            let kat = item.kategori || "Operasional"; let tr = document.createElement("tr"); tr.className = item.jenis === "masuk" ? "tr-masuk" : "tr-keluar";
-            tr.innerHTML = `<td>${item.tanggalRaw}</td><td>${item.keterangan}<br><small style="color:#777;">[${kat}]</small></td><td class="uang-masuk">${item.jenis === "masuk" ? item.jumlah.toLocaleString('id-ID') : "-"}</td><td class="uang-keluar">${item.jenis === "keluar" ? item.jumlah.toLocaleString('id-ID') : "-"}</td>`; tbody.appendChild(tr);
-        });
-
-        // MASUKKAN TOTAL KE FOOTER TABEL
-        let saldoBersih = totMasuk - totKeluar;
-        tfoot.innerHTML = `
-            <tr>
-                <td colspan="2" style="text-align:right;"><strong>TOTAL</strong></td>
-                <td class="uang-masuk"><strong>Rp ${totMasuk.toLocaleString('id-ID')}</strong></td>
-                <td class="uang-keluar"><strong>Rp ${totKeluar.toLocaleString('id-ID')}</strong></td>
-            </tr>
-            <tr>
-                <td colspan="2" style="text-align:right; font-size:14px; color:#333;"><strong>SALDO BERSIH (PERIODE INI)</strong></td>
-                <td colspan="2" style="text-align:center; font-size:16px; font-weight:bold; color:${saldoBersih >= 0 ? '#28a745' : '#dc3545'};">
-                    Rp ${saldoBersih.toLocaleString('id-ID')}
-                </td>
-            </tr>
-        `;
-    }
-
-    function downloadExcel() {
-        if(dataLaporan.length === 0) { alert("Data kosong bos."); return; }
-        let namaPt = document.getElementById("inputNamaToko").value || "Laporan";
-        let csvContent = "data:text/csv;charset=utf-8,Tanggal,Kategori,Keterangan,Masuk,Keluar\n";
-        dataLaporan.forEach(row => { let masuk = row.jenis === "masuk" ? row.jumlah : 0; let keluar = row.jenis === "keluar" ? row.jumlah : 0; let ket = row.keterangan.replace(/,/g, " "); let kat = row.kategori || "Operasional"; csvContent += `${row.tanggalRaw},${kat},${ket},${masuk},${keluar}\n`; });
-        var encodedUri = encodeURI(csvContent); var link = document.createElement("a"); link.setAttribute("href", encodedUri); 
-        link.setAttribute("download", `Laporan_Kas_${namaPt}.csv`); document.body.appendChild(link); link.click(); document.body.removeChild(link);
-    }
-
-    function catatData(jenis) {
-        let jum = document.getElementById("jumlah").value; let ket = document.getElementById("keterangan").value; let tgl = document.getElementById("tanggalInput").value; let kat = document.getElementById("kategoriTransaksi").value;
-        if(!jum) { alert("Nominal uangnya diisi dulu dong bos!"); return; } 
-        if(tgl > getYYYYMMDD(new Date())) { alert("Jangan nyatet buat besok bos, pamali."); return; }
-        if(!ket || ket.trim() === "") { ket = "-"; }
-        let j = parseInt(jum); if (jenis === "masuk") saldo += j; else saldo -= j;
-        riwayat.push({jumlah: j, keterangan: ket, jenis: jenis, tanggalRaw: tgl, kategori: kat}); simpanData();
-        document.getElementById("jumlah").value = ""; document.getElementById("keterangan").value = ""; updateTampilan();
-    }
-
-    function hapusItem(idx) { if(confirm("Yakin hapus?")) { let i = riwayat[idx]; i.jenis==="masuk"?saldo-=i.jumlah:saldo+=i.jumlah; riwayat.splice(idx,1); simpanData(); updateTampilan(); updateAkuntansi(); generateLabaRugi(); generateLaporan(); } }
-    function hapusHariPilihan() { let t = document.getElementById("tanggalHapus").value; if(!t)return; if(confirm("Hapus rekap di tanggal ini?")) { riwayat = riwayat.filter(i => { if(i.tanggalRaw===t) { i.jenis==="masuk"?saldo-=i.jumlah:saldo+=i.jumlah; return false; } return true; }); simpanData(); alert("Dibersihkan!"); updateAkuntansi(); generateLabaRugi(); generateLaporan(); } }
-    function hapusSemua() { if(confirm("Reset total semuanya?")) { saldo = 0; riwayat = []; simpanData(); alert("Kembali ke nol."); updateAkuntansi(); generateLabaRugi(); generateLaporan(); } }
-    function simpanData() { localStorage.setItem("saldo_santai", saldo); localStorage.setItem("riwayat_santai", JSON.stringify(riwayat)); updateTampilan(); updateAkuntansi(); generateLabaRugi(); generateLaporan(); }
-    
-    document.getElementById("tanggalInput").value = getYYYYMMDD(new Date()); document.getElementById("tanggalInput").max = getYYYYMMDD(new Date());
-    renderTombolNominal(); updateTampilan(); updateAkuntansi(); generateLabaRugi(); generateLaporan();
+    function bukaTab(id) { document.querySelectorAll('.page, .nav-item').forEach(e => e.classList.remove('active')); document.getElementById('p-'+id).classList.add('active'); event.currentTarget.classList.add('active'); }
+    if('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
+    perbarui();
 </script>
 </body>
 </html>

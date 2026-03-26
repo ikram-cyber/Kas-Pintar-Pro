@@ -1,16 +1,15 @@
 {
-  "name": "Kas Santai",
-  "short_name": "Kas",
-  "start_url": "./index.html",
+  "name": "Kas Pintar Pro",
+  "short_name": "KasPintar",
+  "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#f0f2f5",
   "theme_color": "#007bff",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/2343/2343177.png",
       "sizes": "512x512",
       "type": "image/png"
     }
   ]
 }
-
