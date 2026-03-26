@@ -1,15 +1,9 @@
 {
-  "name": "Kas Pintar Pro",
+  "name": "Kas Pintar Pro Ultimate",
   "short_name": "KasPintar",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#f0f2f5",
-  "theme_color": "#007bff",
-  "icons": [
-    {
-      "src": "https://cdn-icons-png.flaticon.com/512/2343/2343177.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+  "background_color": "#f4f6f9",
+  "theme_color": "#0056b3",
+  "icons": [{"src": "https://cdn-icons-png.flaticon.com/512/2343/2343177.png", "sizes": "512x512", "type": "image/png"}]
 }
