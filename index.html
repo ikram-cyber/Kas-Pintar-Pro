@@ -3,138 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kas Pintar Pro Ultimate</title>
+    <title>Sistem Akuntansi Pro</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0056b3">
+    <meta name="theme-color" content="#1a202c">
     <style>
-        :root { --primary: #0056b3; --success: #28a745; --danger: #dc3545; --bg: #f4f6f9; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; padding: 15px; padding-bottom: 80px; }
-        .card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; }
-        .saldo-box { background: linear-gradient(135deg, var(--primary), #007bff); color: white; text-align: center; padding: 20px; border-radius: 12px; }
-        h3 { margin-top: 0; color: #333; border-bottom: 2px solid #eee; padding-bottom: 8px; }
+        :root { --primary: #2b6cb0; --success: #38a169; --danger: #e53e3e; --bg: #edf2f7; --text: #2d3748; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; padding-bottom: 80px; }
         
-        input, select, button { width: 100%; padding: 10px; margin: 6px 0; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; font-size: 14px; }
-        .btn-row { display: flex; gap: 10px; }
-        .btn-in { background: var(--success); color: white; border: none; font-weight: bold; }
-        .btn-out { background: var(--danger); color: white; border: none; font-weight: bold; }
-        .btn-share { background: #17a2b8; color: white; border: none; font-weight: bold; }
-        .btn-search { background: #6c757d; color: white; border: none; }
+        /* Desain Card & Layout */
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        .saldo-box { background: linear-gradient(135deg, #2b6cb0, #2c5282); color: white; text-align: center; padding: 25px 15px; border-radius: 12px; }
+        h2, h3 { margin-top: 0; color: #1a202c; }
+        .header-print { display: none; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
-        th, td { padding: 8px; border-bottom: 1px solid #eee; text-align: left; }
-        th { background: #f8f9fa; }
-        .text-in { color: var(--success); font-weight: bold; }
-        .text-out { color: var(--danger); font-weight: bold; }
+        /* Form & Tombol */
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #cbd5e0; box-sizing: border-box; font-size: 14px; }
+        input:focus, select:focus { border-color: var(--primary); outline: none; }
+        .btn-row { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-in { background: var(--success); color: white; border: none; font-weight: bold; flex: 1; }
+        .btn-out { background: var(--danger); color: white; border: none; font-weight: bold; flex: 1; }
+        .btn-pdf { background: #4a5568; color: white; border: none; font-weight: bold; }
+        .btn-excel { background: #2f855a; color: white; border: none; font-weight: bold; }
         
-        .page { display: none; } .page.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from {opacity:0} to {opacity:1} }
+        /* Tabel Profesional */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+        th, td { padding: 10px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+        th { background: #f7fafc; font-weight: 600; color: #4a5568; }
+        .text-in { color: var(--success); font-weight: 700; }
+        .text-out { color: var(--danger); font-weight: 700; }
+        .text-right { text-align: right; }
         
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 8px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 100; }
-        .nav-item { border: none; background: none; font-size: 11px; color: #888; display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 5px; }
+        /* Tab & Filter */
+        .page { display: none; animation: fadeIn 0.3s ease; } 
+        .page.active { display: block; }
+        @keyframes fadeIn { from {opacity:0; transform:translateY(10px)} to {opacity:1; transform:translateY(0)} }
+        .filter-box { background: #f7fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .filter-row { display: flex; gap: 10px; align-items: center; }
+        
+        /* Menu Bawah */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 10px 5px; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); z-index: 100; }
+        .nav-item { border: none; background: none; font-size: 11px; color: #a0aec0; display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 5px; margin: 0; width: 20%; }
         .nav-item.active { color: var(--primary); font-weight: bold; }
-        
-        .filter-box { background: #e9ecef; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
-        .filter-row { display: flex; gap: 5px; }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; font-style: normal; }
+
+        /* TANDA TANGAN (Hanya muncul saat dicetak) */
+        .ttd-area { display: none; margin-top: 50px; text-align: right; font-size: 14px; }
+        .ttd-area div { display: inline-block; text-align: center; width: 200px; }
+
+        /* MODE CETAK (PRINT PDF) - SANGAT PENTING UNTUK PROFESIONAL */
+        @media print {
+            body { background: white; padding: 0; margin: 0; font-size: 12pt; }
+            .card { box-shadow: none; border: none; padding: 0; margin: 0; }
+            .no-print, .bottom-nav, .filter-box, h3 { display: none !important; }
+            .header-print { display: block; }
+            .ttd-area { display: block; }
+            table, th, td { border-color: #000; color: #000; }
+            th { background: #f0f0f0 !important; -webkit-print-color-adjust: exact; }
+            .page { page-break-after: auto; }
+        }
     </style>
 </head>
 <body>
 
-<h2 style="text-align:center; color: var(--primary); margin-top: 0;">Kas Pintar Pro</h2>
-
 <div id="p-home" class="page active">
     <div class="saldo-box">
-        <p style="margin:0; font-size:14px; opacity:0.9;">Total Kas (Harta Aktual)</p>
-        <h1 id="v-saldo" style="margin:5px 0 0 0; font-size: 32px;">Rp 0</h1>
+        <p style="margin:0; font-size:14px; opacity:0.8; text-transform:uppercase; letter-spacing:1px;">Total Aktiva (Kas Saat Ini)</p>
+        <h1 id="v-saldo" style="margin:10px 0 0 0; font-size: 36px; font-weight:800;">Rp 0</h1>
     </div>
-    <div class="card" style="margin-top: 15px;">
-        <h3>Input Transaksi</h3>
+    <div class="card" style="margin-top: 20px;">
+        <h3 style="border-bottom: 2px solid #edf2f7; padding-bottom: 10px;">Entri Jurnal (Input Data)</h3>
         <input type="number" id="inp-amt" placeholder="Nominal Uang (Rp)">
         <input type="text" id="inp-desc" placeholder="Keterangan Transaksi">
         <select id="inp-cat">
             <option value="Operasional">Pendapatan / Beban (Operasional)</option>
             <option value="Utang">Utang / Cicilan (Kewajiban)</option>
-            <option value="Modal">Modal / Prive (Harta Bersih)</option>
+            <option value="Modal">Modal / Prive (Ekuitas)</option>
         </select>
         <input type="date" id="inp-date">
         <div class="btn-row">
-            <button class="btn-in" onclick="catat('in')">MASUK (+)</button>
-            <button class="btn-out" onclick="catat('out')">KELUAR (-)</button>
+            <button class="btn-in" onclick="catat('in')">DEBIT (Masuk)</button>
+            <button class="btn-out" onclick="catat('out')">KREDIT (Keluar)</button>
         </div>
     </div>
 </div>
 
 <div id="p-buku" class="page">
     <div class="card">
-        <h3>Buku Besar & Pencarian</h3>
-        <div class="filter-box">
-            <input type="text" id="cari-teks" placeholder="🔍 Cari keterangan..." onkeyup="cariData()">
-            <select id="cari-kat" onchange="cariData()">
-                <option value="Semua">Semua Kategori</option>
-                <option value="Operasional">Operasional</option>
-                <option value="Utang">Utang</option>
-                <option value="Modal">Modal</option>
-            </select>
-            <div class="filter-row">
-                <div style="flex:1;"><label style="font-size:10px;">Dari Tanggal:</label><input type="date" id="cari-mulai" onchange="cariData()"></div>
-                <div style="flex:1;"><label style="font-size:10px;">Sampai:</label><input type="date" id="cari-akhir" onchange="cariData()"></div>
+        <div class="header-print">
+            <h2 id="kop-buku-toko">NAMA PERUSAHAAN</h2>
+            <p style="margin:5px 0 0 0;">LAPORAN BUKU BESAR</p>
+            <p style="margin:5px 0 0 0; font-size:12px;" id="kop-buku-tgl"></p>
+        </div>
+        
+        <div class="no-print">
+            <h3 style="margin-top:0;">Buku Besar & Pencarian</h3>
+            <div class="filter-box">
+                <input type="text" id="cari-teks" placeholder="🔍 Cari keterangan..." onkeyup="cariData()">
+                <select id="cari-kat" onchange="cariData()">
+                    <option value="Semua">Semua Kategori (General Ledger)</option>
+                    <option value="Operasional">Operasional Saja</option>
+                    <option value="Utang">Kewajiban (Utang) Saja</option>
+                    <option value="Modal">Ekuitas (Modal) Saja</option>
+                </select>
+                <div class="filter-row">
+                    <div style="flex:1;"><label style="font-size:11px; font-weight:bold;">Dari:</label><input type="date" id="cari-mulai" onchange="cariData()"></div>
+                    <div style="flex:1;"><label style="font-size:11px; font-weight:bold;">Sampai:</label><input type="date" id="cari-akhir" onchange="cariData()"></div>
+                </div>
+                <div class="btn-row">
+                    <button class="btn-pdf" onclick="cetakPDF('Buku Besar')">🖨️ Cetak PDF</button>
+                    <button class="btn-excel" onclick="exportExcel()">📊 Export Excel</button>
+                </div>
             </div>
-            <button class="btn-search" onclick="resetCari()">Reset Filter</button>
         </div>
-        <div style="overflow-x:auto;">
-            <div id="view-buku"></div>
+        
+        <div style="overflow-x:auto;"><div id="view-buku"></div></div>
+        
+        <div class="ttd-area">
+            <div>
+                <p>Penanggung Jawab,</p>
+                <br><br><br>
+                <p style="font-weight:bold; text-decoration:underline;" id="ttd-nama-1">Pemilik</p>
+            </div>
         </div>
-        <button class="btn-share" onclick="bagikan('buku')" style="margin-top:10px;">📤 Bagikan Hasil Pencarian</button>
     </div>
 </div>
 
 <div id="p-neraca" class="page">
     <div class="card">
-        <h3>Laporan Neraca</h3>
+        <div class="header-print">
+            <h2 id="kop-neraca-toko">NAMA PERUSAHAAN</h2>
+            <p style="margin:5px 0 0 0;">LAPORAN NERACA (BALANCE SHEET)</p>
+            <p style="margin:5px 0 0 0; font-size:12px;" id="kop-neraca-tgl"></p>
+        </div>
+        
+        <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:15px;">
+            <h3 style="margin:0;">Neraca Keuangan</h3>
+            <button class="btn-pdf" style="width:auto; margin:0; padding:8px 15px;" onclick="window.print()">🖨️ Cetak PDF</button>
+        </div>
+        
         <div id="view-neraca"></div>
-        <button class="btn-share" onclick="bagikan('neraca')" style="margin-top:15px;">📤 Bagikan Neraca</button>
+        
+        <div class="ttd-area">
+            <div>
+                <p>Dibuat Oleh,</p><br><br><br>
+                <p style="font-weight:bold; text-decoration:underline;" id="ttd-nama-2">Pemilik</p>
+            </div>
+        </div>
     </div>
 </div>
 
 <div id="p-lr" class="page">
     <div class="card">
-        <h3>Laporan Laba Rugi</h3>
+        <div class="header-print">
+            <h2 id="kop-lr-toko">NAMA PERUSAHAAN</h2>
+            <p style="margin:5px 0 0 0;">LAPORAN LABA RUGI (INCOME STATEMENT)</p>
+            <p style="margin:5px 0 0 0; font-size:12px;" id="kop-lr-tgl"></p>
+        </div>
+        
+        <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:15px;">
+            <h3 style="margin:0;">Laba / Rugi</h3>
+            <button class="btn-pdf" style="width:auto; margin:0; padding:8px 15px;" onclick="window.print()">🖨️ Cetak PDF</button>
+        </div>
+        
         <div id="view-lr"></div>
-        <button class="btn-share" onclick="bagikan('lr')" style="margin-top:15px;">📤 Bagikan Laba Rugi</button>
+        
+        <div class="ttd-area">
+            <div>
+                <p>Dibuat Oleh,</p><br><br><br>
+                <p style="font-weight:bold; text-decoration:underline;" id="ttd-nama-3">Pemilik</p>
+            </div>
+        </div>
     </div>
 </div>
 
-<div id="p-seting" class="page">
+<div id="p-seting" class="page no-print">
     <div class="card">
         <h3>Pengaturan Aplikasi</h3>
-        <label style="font-size:12px;">Nama Perusahaan / Toko:</label>
-        <input type="text" id="set-toko" placeholder="Contoh: Toko Maju Jaya" oninput="simpanSet()">
-        <label style="font-size:12px;">Nama Penanggung Jawab:</label>
-        <input type="text" id="set-bos" placeholder="Contoh: Budi Santoso" oninput="simpanSet()">
-        <hr style="margin:20px 0; border:0; border-top:1px solid #eee;">
-        <button onclick="if(confirm('YAKIN HAPUS SEMUA DATA KEUNGAN?')) { localStorage.clear(); location.reload(); }" style="background:var(--danger); color:white;">HAPUS SEMUA DATA</button>
+        <label style="font-size:12px; font-weight:bold;">Nama Perusahaan / Toko (Untuk Kop Surat):</label>
+        <input type="text" id="set-toko" placeholder="Contoh: PT. Maju Mundur" oninput="simpanSet()">
+        
+        <label style="font-size:12px; font-weight:bold; margin-top:10px; display:block;">Nama Pemilik / Akuntan (Untuk Tanda Tangan):</label>
+        <input type="text" id="set-bos" placeholder="Contoh: Budi Santoso, S.Ak" oninput="simpanSet()">
+        
+        <hr style="margin:20px 0; border:0; border-top:1px solid #e2e8f0;">
+        <button onclick="if(confirm('YAKIN HAPUS SEMUA DATA TRANSAKSI? Data yang dihapus tidak bisa kembali.')) { localStorage.clear(); location.reload(); }" style="background:var(--danger); color:white; padding:15px; font-size:16px;">⚠️ HAPUS SEMUA DATA</button>
     </div>
 </div>
 
 <div class="bottom-nav">
-    <button class="nav-item active" onclick="bukaTab('home')">🏠<br>Input</button>
-    <button class="nav-item" onclick="bukaTab('buku')">🔍<br>Riwayat</button>
-    <button class="nav-item" onclick="bukaTab('neraca')">⚖️<br>Neraca</button>
-    <button class="nav-item" onclick="bukaTab('lr')">📈<br>LabaRugi</button>
-    <button class="nav-item" onclick="bukaTab('seting')">⚙️<br>Seting</button>
+    <button class="nav-item active" onclick="bukaTab('home')"><i>✍️</i>Input</button>
+    <button class="nav-item" onclick="bukaTab('buku')"><i>📖</i>Buku Besar</button>
+    <button class="nav-item" onclick="bukaTab('neraca')"><i>⚖️</i>Neraca</button>
+    <button class="nav-item" onclick="bukaTab('lr')"><i>📈</i>Laba Rugi</button>
+    <button class="nav-item" onclick="bukaTab('seting')"><i>⚙️</i>Seting</button>
 </div>
 
 <script>
     let db = JSON.parse(localStorage.getItem('kspro_db')) || [];
     let saldo = parseInt(localStorage.getItem('kspro_saldo')) || 0;
-    document.getElementById('inp-date').valueAsDate = new Date();
     
-    // Default Filter Tanggal (Awal bulan s/d Hari ini)
-    let date = new Date();
-    document.getElementById('cari-mulai').value = new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0];
-    document.getElementById('cari-akhir').value = date.toISOString().split('T')[0];
+    // Keamanan Tanggal (Anti-Masa Depan)
+    let dateObj = new Date();
+    let offset = dateObj.getTimezoneOffset() * 60000;
+    let localISOTime = (new Date(dateObj - offset)).toISOString().slice(0, 10);
+    
+    document.getElementById('inp-date').value = localISOTime;
+    document.getElementById('inp-date').setAttribute('max', localISOTime);
+    document.getElementById('cari-mulai').value = new Date(dateObj.getFullYear(), dateObj.getMonth(), 1).toISOString().split('T')[0];
+    document.getElementById('cari-akhir').value = localISOTime;
+    document.getElementById('cari-akhir').setAttribute('max', localISOTime);
 
     function simpan() { localStorage.setItem('kspro_db', JSON.stringify(db)); localStorage.setItem('kspro_saldo', saldo); perbaruiSemua(); }
-    function simpanSet() { localStorage.setItem('kspro_toko', document.getElementById('set-toko').value); localStorage.setItem('kspro_bos', document.getElementById('set-bos').value); }
+    function simpanSet() { localStorage.setItem('kspro_toko', document.getElementById('set-toko').value); localStorage.setItem('kspro_bos', document.getElementById('set-bos').value); perbaruiSemua(); }
 
     function catat(j) {
         let n = parseInt(document.getElementById('inp-amt').value);
@@ -142,15 +222,16 @@
         let c = document.getElementById('inp-cat').value;
         let t = document.getElementById('inp-date').value;
         
-        if(!n) return alert("Silakan isi nominal!");
+        if(!n) return alert("Silakan isi nominal uang!");
+        if(t > localISOTime) { alert("ERROR AKUNTANSI: Anda tidak bisa memposting transaksi untuk tanggal di masa depan."); document.getElementById('inp-date').value = localISOTime; return; }
+        
         j === 'in' ? saldo += n : saldo -= n;
         db.push({tgl:t, ket:d, kat:c, nom:n, jen:j});
         
         document.getElementById('inp-amt').value = ""; document.getElementById('inp-desc').value = "";
-        simpan(); alert("Transaksi Berhasil Dicatat!");
+        simpan(); alert("Data Jurnal Berhasil Diposting!");
     }
 
-    // FITUR PENCARIAN PROFESIONAL
     function cariData() {
         let teks = document.getElementById('cari-teks').value.toLowerCase();
         let kat = document.getElementById('cari-kat').value;
@@ -166,87 +247,137 @@
             return matchTeks && matchKat && matchTgl;
         });
 
-        tampilkanTabelBuku(hasil);
-        return hasil; // Digunakan untuk fitur bagikan
+        tampilkanTabelBuku(hasil); return hasil;
     }
 
-    function resetCari() {
-        document.getElementById('cari-teks').value = "";
-        document.getElementById('cari-kat').value = "Semua";
-        cariData();
-    }
+    function formatRp(angka) { return "Rp " + angka.toLocaleString('id-ID'); }
 
     function tampilkanTabelBuku(data) {
-        let html = "<table><tr><th>Tgl</th><th>Kategori</th><th>Keterangan</th><th>Nominal</th></tr>";
-        let totalCari = 0;
-        if(data.length === 0) html += "<tr><td colspan='4' style='text-align:center;'>Data tidak ditemukan</td></tr>";
+        let html = "<table><tr><th>Tanggal</th><th>Ref/Kat</th><th>Keterangan</th><th class='text-right'>Debit (Masuk)</th><th class='text-right'>Kredit (Keluar)</th></tr>";
+        let totalD = 0, totalK = 0;
         
-        // Balik urutan agar yang terbaru di atas
-        data.slice().reverse().forEach(x => {
-            let tglFormat = x.tgl.split('-')[2] + '/' + x.tgl.split('-')[1];
-            html += `<tr><td>${tglFormat}</td><td>${x.kat}</td><td>${x.ket}</td><td class="${x.jen==='in'?'text-in':'text-out'}">${x.jen==='in'?'+':'-'}${x.nom.toLocaleString()}</td></tr>`;
-            if(x.jen === 'in') totalCari += x.nom; else totalCari -= x.nom;
+        if(data.length === 0) html += "<tr><td colspan='5' style='text-align:center;'>Tidak ada transaksi pada periode ini</td></tr>";
+        
+        data.slice().forEach(x => {
+            let tglFormat = x.tgl.split('-')[2] + '/' + x.tgl.split('-')[1] + '/' + x.tgl.split('-')[0];
+            let isDebit = x.jen === 'in';
+            html += `<tr>
+                <td>${tglFormat}</td>
+                <td>${x.kat}</td>
+                <td>${x.ket}</td>
+                <td class="text-right ${isDebit ? 'text-in' : ''}">${isDebit ? formatRp(x.nom) : '-'}</td>
+                <td class="text-right ${!isDebit ? 'text-out' : ''}">${!isDebit ? formatRp(x.nom) : '-'}</td>
+            </tr>`;
+            if(isDebit) totalD += x.nom; else totalK += x.nom;
         });
-        html += `<tr style="background:#e9ecef;">ന<td colspan="3"><b>Total Saldo Filter</b></td><td><b>Rp ${totalCari.toLocaleString()}</b></td></tr></table>`;
+        
+        html += `<tr style="background:#edf2f7; font-weight:bold;">
+            <td colspan="3" class="text-right">TOTAL MUTASI</td>
+            <td class="text-right text-in">${formatRp(totalD)}</td>
+            <td class="text-right text-out">${formatRp(totalK)}</td>
+        </tr>
+        <tr style="background:#e2e8f0; font-weight:bold;">
+            <td colspan="3" class="text-right">SELISIH (NET)</td>
+            <td colspan="2" class="text-right">${formatRp(totalD - totalK)}</td>
+        </tr></table>`;
+        
         document.getElementById('view-buku').innerHTML = html;
     }
 
     function perbaruiSemua() {
-        document.getElementById('v-saldo').innerText = "Rp " + saldo.toLocaleString();
-        let u=0, p=0, b=0;
+        document.getElementById('v-saldo').innerText = formatRp(saldo);
         
-        db.forEach(x => {
-            if(x.kat==='Utang') x.jen==='in'?u+=x.nom:u-=x.nom;
-            if(x.kat==='Operasional') x.jen==='in'?p+=x.nom:b+=x.nom;
+        // Perbarui Data Perusahaan untuk Cetak PDF
+        let toko = localStorage.getItem('kspro_toko') || "NAMA PERUSAHAAN";
+        let bos = localStorage.getItem('kspro_bos') || "Pemilik";
+        let tglCetak = "Dicetak pada: " + new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'});
+        
+        ['buku', 'neraca', 'lr'].forEach(id => {
+            document.getElementById(`kop-${id}-toko`).innerText = toko.toUpperCase();
+            document.getElementById(`kop-${id}-tgl`).innerText = tglCetak;
         });
+        document.getElementById('ttd-nama-1').innerText = bos;
+        document.getElementById('ttd-nama-2').innerText = bos;
+        document.getElementById('ttd-nama-3').innerText = bos;
         
-        // Rumus Akuntansi: Harta = Utang + Modal
+        // Perhitungan Akuntansi
+        let u=0, p=0, b=0;
+        db.forEach(x => { if(x.kat==='Utang') x.jen==='in'?u+=x.nom:u-=x.nom; if(x.kat==='Operasional') x.jen==='in'?p+=x.nom:b+=x.nom; });
         let modal = saldo - u;
         
+        // Tampilan Neraca
         document.getElementById('view-neraca').innerHTML = `<table>
-            <tr><td colspan="2" style="background:#e9ecef; text-align:center;"><b>AKTIVA (HARTA)</b></td></tr>
-            <tr><td>Kas Aktual</td><td class="text-in">Rp ${saldo.toLocaleString()}</td></tr>
-            <tr><td colspan="2" style="background:#e9ecef; text-align:center;"><b>PASIVA (UTANG & MODAL)</b></td></tr>
-            <tr><td>Utang</td><td class="text-out">Rp ${u.toLocaleString()}</td></tr>
-            <tr><td>Modal Bersih</td><td class="text-in">Rp ${modal.toLocaleString()}</td></tr>
-            <tr style="border-top:2px solid #333;"><td><b>Total Pasiva</b></td><td><b>Rp ${(u+modal).toLocaleString()}</b></td></tr>
+            <tr><th colspan="2" style="text-align:center; font-size:14px;">AKTIVA (ASSETS)</th></tr>
+            <tr><td>Kas di Tangan / Bank</td><td class="text-right text-in">${formatRp(saldo)}</td></tr>
+            <tr style="border-top:2px solid #000; font-weight:bold; background:#edf2f7;"><td>TOTAL AKTIVA</td><td class="text-right">${formatRp(saldo)}</td></tr>
+            
+            <tr><th colspan="2" style="text-align:center; font-size:14px; margin-top:10px;">PASIVA (LIABILITIES & EQUITY)</th></tr>
+            <tr><td>Kewajiban (Utang)</td><td class="text-right text-out">${formatRp(u)}</td></tr>
+            <tr><td>Ekuitas (Modal Bersih)</td><td class="text-right">${formatRp(modal)}</td></tr>
+            <tr style="border-top:2px solid #000; font-weight:bold; background:#edf2f7;"><td>TOTAL PASIVA</td><td class="text-right">${formatRp(u+modal)}</td></tr>
         </table>`;
         
+        // Tampilan Laba Rugi
+        let labaBersih = p - b;
         document.getElementById('view-lr').innerHTML = `<table>
-            <tr><td>Pendapatan Operasional</td><td class="text-in">Rp ${p.toLocaleString()}</td></tr>
-            <tr><td>Beban Operasional</td><td class="text-out">Rp ${b.toLocaleString()}</td></tr>
-            <tr style="border-top:2px solid #333; font-size:14px;"><td><b>Laba / Rugi Bersih</b></td><td class="${(p-b)>=0?'text-in':'text-out'}"><b>Rp ${(p-b).toLocaleString()}</b></td></tr>
+            <tr><th colspan="2">PENDAPATAN (INCOME)</th></tr>
+            <tr><td>Pendapatan Operasional</td><td class="text-right text-in">${formatRp(p)}</td></tr>
+            
+            <tr><th colspan="2">BEBAN (EXPENSES)</th></tr>
+            <tr><td>Beban Operasional</td><td class="text-right text-out">${formatRp(b)}</td></tr>
+            
+            <tr style="border-top:2px solid #000; font-size:16px; background:${labaBersih >= 0 ? '#c6f6d5' : '#fed7d7'};">
+                <td><b>${labaBersih >= 0 ? 'LABA BERSIH' : 'RUGI BERSIH'}</b></td>
+                <td class="text-right"><b>${formatRp(labaBersih)}</b></td>
+            </tr>
         </table>`;
         
         document.getElementById('set-toko').value = localStorage.getItem('kspro_toko') || "";
         document.getElementById('set-bos').value = localStorage.getItem('kspro_bos') || "";
-        
-        cariData(); // Update juga tabel buku besarnya
+        cariData();
     }
 
-    async function bagikan(mode) {
-        let t = localStorage.getItem('kspro_toko') || "Toko Anda"; 
-        let bos = localStorage.getItem('kspro_bos') || "Pemilik";
-        let teks = `*LAPORAN ${mode.toUpperCase()}*\n🏬 ${t}\n----------------\n`;
-        
-        if(mode === 'neraca') {
-            let u=0; db.forEach(x=>{if(x.kat==='Utang') x.jen==='in'?u+=x.nom:u-=x.nom;});
-            teks += `HARTA (Kas) : Rp ${saldo.toLocaleString()}\nUTANG : Rp ${u.toLocaleString()}\nMODAL : Rp ${(saldo-u).toLocaleString()}\n`;
-        } else if(mode === 'lr') {
-            let p=0, b=0; db.forEach(x=>{if(x.kat==='Operasional') x.jen==='in'?p+=x.nom:b+=x.nom;});
-            teks += `Pendapatan : Rp ${p.toLocaleString()}\nBeban : Rp ${b.toLocaleString()}\n*Laba/Rugi : Rp ${(p-b).toLocaleString()}*\n`;
-        } else if(mode === 'buku') {
-            let hasil = cariData(); // Ambil data yang sedang di-filter
-            teks = `*BUKU BESAR (HASIL PENCARIAN)*\n🏬 ${t}\n----------------\n`;
-            hasil.forEach(x => { teks += `- ${x.tgl} | ${x.kat} | ${x.ket} : ${x.jen==='in'?'+':'-'}Rp ${x.nom.toLocaleString()}\n`; });
-        }
-        
-        teks += `----------------\nPenanggung Jawab:\n\n*${bos}*`;
-        if(navigator.share) { try { await navigator.share({text: teks}); } catch(e){} } else { alert("Silakan copy manual atau screenshot layar."); }
+    // FITUR CETAK PDF NATIVE (Sangat Rapi)
+    function cetakPDF(namaLaporan) {
+        document.title = "Laporan_" + namaLaporan.replace(/\s+/g, '_');
+        window.print();
+        setTimeout(() => { document.title = "Sistem Akuntansi Pro"; }, 1000);
     }
 
-    function bukaTab(id) { document.querySelectorAll('.page, .nav-item').forEach(e => e.classList.remove('active')); document.getElementById('p-'+id).classList.add('active'); event.currentTarget.classList.add('active'); }
-    if('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
+    // FITUR EXPORT EXCEL (.CSV)
+    function exportExcel() {
+        let hasil = cariData(); // Ambil data yang sedang di-filter
+        if(hasil.length === 0) return alert("Tidak ada data untuk di-export!");
+        
+        // Header Excel
+        let csvContent = "Tanggal,Kategori,Keterangan,Debit (Masuk),Kredit (Keluar)\n";
+        
+        // Isi Excel
+        hasil.forEach(x => {
+            let masuk = x.jen === 'in' ? x.nom : 0;
+            let keluar = x.jen === 'out' ? x.nom : 0;
+            // Gunakan tanda kutip untuk keterangan agar tidak error kalau ada koma di kalimat
+            csvContent += `${x.tgl},${x.kat},"${x.ket}",${masuk},${keluar}\n`;
+        });
+        
+        // Buat file dan download
+        let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        let toko = localStorage.getItem('kspro_toko') || "Perusahaan";
+        a.download = `BukuBesar_${toko.replace(/\s+/g, '')}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    function bukaTab(id) { 
+        document.querySelectorAll('.page, .nav-item').forEach(e => e.classList.remove('active')); 
+        document.getElementById('p-'+id).classList.add('active'); 
+        event.currentTarget.classList.add('active'); 
+    }
+    
     perbaruiSemua();
 </script>
 </body>
