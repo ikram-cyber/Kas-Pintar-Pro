@@ -3,101 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kas Pintar Pro | Enterprise</title>
+    <title>Kas Pintar Pro | Corporate Finance</title>
     <meta name="theme-color" content="#1a202c">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #0f4c81; --secondary: #1a202c; --success: #27ae60; --danger: #c0392b; --bg: #f4f7f6; --text: #2d3748; --card: #ffffff; }
+        :root { --primary: #0f4c81; --secondary: #1a202c; --success: #27ae60; --danger: #c0392b; --warn: #f39c12; --bg: #f4f7f6; --text: #2d3748; --card: #ffffff; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; padding-bottom: 80px; }
-        
-        /* Desain Card & Layout Premium */
+
         .card { background: var(--card); padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 15px; border: 1px solid #e2e8f0; }
-        .saldo-box { background: linear-gradient(135deg, #0f4c81, #2c3e50); color: white; text-align: center; padding: 25px 15px; border-radius: 12px; box-shadow: 0 10px 20px rgba(15, 76, 129, 0.2); }
+        .saldo-box { background: linear-gradient(135deg, #1a202c, #0f4c81); color: white; text-align: center; padding: 30px 15px; border-radius: 12px; box-shadow: 0 10px 20px rgba(15, 76, 129, 0.2); position:relative; overflow:hidden;}
         
-        /* Mini Dashboard Cards */
         .grid-4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
-        .metric-card { background: white; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; text-align: center; }
-        .metric-title { font-size: 11px; color: #718096; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px; }
-        .metric-value { font-size: 16px; font-weight: 800; margin-top: 5px; color: var(--secondary); }
-        
+        .metric-card { background: white; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; text-align: center; transition: 0.3s; }
+        .metric-title { font-size: 10px; color: #718096; text-transform: uppercase; font-weight: 900; letter-spacing: 0.5px; }
+        .metric-value { font-size: 18px; font-weight: 900; margin-top: 5px; color: var(--secondary); }
+
         h2, h3 { margin-top: 0; color: #1a202c; }
-        .header-print { display: none; text-align: center; margin-bottom: 20px; border-bottom: 3px double #000; padding-bottom: 10px; }
+        h3 { border-bottom: 2px solid #edf2f7; padding-bottom: 10px; font-size:14px; text-transform:uppercase; font-weight:900; display:flex; justify-content:space-between; align-items:center; }
         
-        /* Form & Tombol */
-        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #cbd5e0; box-sizing: border-box; font-size: 14px; transition: 0.3s; }
+        .header-print { display: none; text-align: center; margin-bottom: 20px; border-bottom: 3px double #000; padding-bottom: 10px; }
+
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #cbd5e0; box-sizing: border-box; font-size: 14px; transition: 0.3s; font-family:inherit;}
         input:focus, select:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1); }
+        
         .btn-row { display: flex; gap: 10px; margin-top: 10px; }
-        .btn-in { background: var(--success); color: white; border: none; font-weight: bold; flex: 1; cursor: pointer; }
-        .btn-out { background: var(--danger); color: white; border: none; font-weight: bold; flex: 1; cursor: pointer; }
+        .btn-in { background: var(--success); color: white; border: none; font-weight: 900; flex: 1; cursor: pointer; text-transform:uppercase;}
+        .btn-out { background: var(--danger); color: white; border: none; font-weight: 900; flex: 1; cursor: pointer; text-transform:uppercase;}
         .btn-pdf { background: #34495e; color: white; border: none; font-weight: bold; cursor: pointer; }
         .btn-excel { background: #27ae60; color: white; border: none; font-weight: bold; cursor: pointer; }
-        
-        /* Tabel Akuntansi Profesional */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; }
         th, td { padding: 10px; border-bottom: 1px solid #e2e8f0; text-align: left; }
-        th { background: #f8fafc; font-weight: 700; color: #4a5568; border-bottom: 2px solid #cbd5e0; text-transform: uppercase; font-size: 11px; }
-        .text-in { color: var(--success); font-weight: 700; }
-        .text-out { color: var(--danger); font-weight: 700; }
+        th { background: #f8fafc; font-weight: 900; color: #4a5568; border-bottom: 2px solid #cbd5e0; text-transform: uppercase; font-size: 10px; letter-spacing:0.5px;}
+        .text-in { color: var(--success); font-weight: 900; } .text-out { color: var(--danger); font-weight: 900; }
         .text-right { text-align: right; }
-        
-        /* Box Analisis Rasio */
-        .ratio-box { background: #ebf8ff; border-left: 4px solid var(--primary); padding: 15px; border-radius: 4px; margin-top: 20px; }
-        
-        /* Tab & Menu */
-        .page { display: none; animation: fadeIn 0.3s ease; }
-        .page.active { display: block; }
+
+        /* DuPont & Analytics Box */
+        .ratio-box { background: #f0fdf4; border-left: 4px solid var(--success); padding: 15px; border-radius: 6px; margin-top: 20px; }
+        .dupont-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-top: 15px; }
+        .dupont-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #cbd5e1; font-size: 12px; }
+        .dupont-item:last-child { border-bottom: none; font-weight: 900; font-size: 14px; color: var(--primary); padding-top:12px; margin-top:4px; border-top: 2px solid #cbd5e1;}
+
+        .page { display: none; animation: fadeIn 0.4s ease; } .page.active { display: block; }
         @keyframes fadeIn { from {opacity:0; transform:translateY(10px)} to {opacity:1; transform:translateY(0)} }
-        
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 10px 5px; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); z-index: 100; }
-        .nav-item { border: none; background: none; font-size: 11px; color: #a0aec0; display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 5px; margin: 0; width: 20%; transition: 0.3s; }
-        .nav-item.active { color: var(--primary); font-weight: bold; transform: translateY(-3px); }
-        .nav-item i { font-size: 20px; margin-bottom: 4px; font-style: normal; }
-        
-        /* TANDA TANGAN */
+
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -10px 20px rgba(0,0,0,0.04); z-index: 100; }
+        .nav-item { border: none; background: none; font-size: 9px; color: #a0aec0; display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 0; margin: 0; width: 20%; transition: 0.3s; font-weight:800; text-transform:uppercase;}
+        .nav-item.active { color: var(--primary); transform: translateY(-3px); }
+        .nav-item i { font-size: 22px; margin-bottom: 4px; font-style: normal; }
+
         .ttd-area { display: none; margin-top: 50px; text-align: right; font-size: 14px; }
         .ttd-area div { display: inline-block; text-align: center; width: 200px; }
-        
-        /* MODE CETAK PRO */
+
         @media print {
             body { background: white; padding: 0; margin: 0; font-size: 12pt; }
             .card { box-shadow: none; border: none; padding: 0; margin: 0; }
             .no-print, .bottom-nav { display: none !important; }
-            .header-print { display: block; }
-            .ttd-area { display: block; }
+            .header-print { display: block; } .ttd-area { display: block; }
             table, th, td { border-color: #000; color: #000; }
             th { background: #f0f0f0 !important; -webkit-print-color-adjust: exact; }
             .page { page-break-after: auto; }
+            .ratio-box, .dupont-box { border: 1px solid #000; -webkit-print-color-adjust: exact; }
         }
-    </script>
     </style>
 </head>
 <body>
 
     <div id="p-home" class="page active">
         <div class="saldo-box">
-            <p style="margin:0; font-size:12px; opacity:0.8; text-transform:uppercase; letter-spacing:2px;">Total Aktiva (Kas Saat Ini)</p>
-            <h1 id="v-saldo" style="margin:5px 0 0 0; font-size: 38px; font-weight:800;">Rp 0</h1>
+            <div style="position:absolute; right:-10%; top:-20%; font-size:120px; opacity:0.05;">🏛️</div>
+            <p style="margin:0; font-size:11px; opacity:0.8; text-transform:uppercase; letter-spacing:2px; font-weight:800;">Total Aktiva (Kas & Bank)</p>
+            <h1 id="v-saldo" style="margin:5px 0 0 0; font-size: 34px; font-weight:900;">Rp 0</h1>
+            <p style="margin:8px 0 0 0; font-size:11px; color:#a0aec0; font-weight:bold;">Tahun Buku Berjalan</p>
         </div>
 
+        <h3 style="margin-top:15px; border:none; padding:0;"><i class="fas fa-chart-pie"></i> Executive Summary</h3>
         <div class="grid-4 no-print">
-            <div class="metric-card"><div class="metric-title">Pendapatan</div><div class="metric-value text-in" id="m-pendapatan">Rp 0</div></div>
-            <div class="metric-card"><div class="metric-title">Beban Operasi</div><div class="metric-value text-out" id="m-beban">Rp 0</div></div>
-            <div class="metric-card"><div class="metric-title">Laba Bersih</div><div class="metric-value" id="m-laba">Rp 0</div></div>
-            <div class="metric-card"><div class="metric-title">Kewajiban / Utang</div><div class="metric-value text-out" id="m-utang">Rp 0</div></div>
+            <div class="metric-card"><div class="metric-title">Gross Revenue</div><div class="metric-value text-in" id="m-pendapatan">Rp 0</div></div>
+            <div class="metric-card"><div class="metric-title">Operating Expense</div><div class="metric-value text-out" id="m-beban">Rp 0</div></div>
+            <div class="metric-card"><div class="metric-title">Net Income (Laba)</div><div class="metric-value" id="m-laba">Rp 0</div></div>
+            <div class="metric-card"><div class="metric-title">Total Kewajiban</div><div class="metric-value text-out" id="m-utang">Rp 0</div></div>
+        </div>
+
+        <div class="card no-print" style="margin-top: 15px; border-top: 3px solid var(--primary);">
+            <h3>🔬 Advanced Financial Analytics</h3>
+            <div class="dupont-box">
+                <div style="font-weight:900; color:var(--secondary); margin-bottom:10px; font-size:13px; text-transform:uppercase;">The DuPont System of Analysis</div>
+                <div class="dupont-item"><span>Net Profit Margin (NPM)</span><span id="dp-npm">0.00%</span></div>
+                <div class="dupont-item"><span>Asset Turnover (Efisiensi)</span><span id="dp-ato">0.00x</span></div>
+                <div class="dupont-item"><span>Equity Multiplier (Leverage)</span><span id="dp-em">0.00x</span></div>
+                <div class="dupont-item"><span>Return on Equity (ROE)</span><span id="dp-roe">0.00%</span></div>
+            </div>
+            <div class="dupont-box" style="background:#fff7ed; border-color:#fed7aa;">
+                <div style="font-weight:900; color:#c2410c; margin-bottom:10px; font-size:13px; text-transform:uppercase;">Startup Metrics (Survival Rate)</div>
+                <div class="dupont-item"><span>Cash Burn Rate</span><span id="sr-burn" style="color:var(--danger); font-weight:bold;">Rp 0</span></div>
+                <div class="dupont-item"><span>Cash Runway (Estimasi Bertahan)</span><span id="sr-runway" style="color:var(--success); font-weight:900; font-size:16px;">Infinity</span></div>
+            </div>
         </div>
 
         <div class="card no-print" style="margin-top: 15px;">
+            <h3>📊 Grafik Kinerja Keuangan</h3>
             <canvas id="financeChart" height="200"></canvas>
         </div>
 
-        <div class="card" style="margin-top: 15px; border-top: 4px solid var(--primary);">
-            <h3 style="border-bottom: 1px solid #edf2f7; padding-bottom: 10px; font-size:16px;">Entri Jurnal (Input Data)</h3>
+        <div class="card" style="margin-top: 15px; border-top: 4px solid var(--success);">
+            <h3><i class="fas fa-edit"></i> Posting Jurnal (Entry Data)</h3>
             <input type="number" id="inp-amt" placeholder="Nominal Uang (Rp)">
-            <input type="text" id="inp-desc" placeholder="Keterangan Transaksi">
-            <select id="inp-cat">
-                <option value="Operasional">Pendapatan / Beban (Operasional)</option>
-                <option value="Utang">Utang / Cicilan (Kewajiban)</option>
-                <option value="Modal">Modal / Prive (Ekuitas)</option>
+            <input type="text" id="inp-desc" placeholder="Keterangan / Referensi Transaksi">
+            <select id="inp-cat" style="font-weight:bold; background:#f8fafc;">
+                <option value="Operasional">Aktivitas Operasi (Pendapatan/Beban)</option>
+                <option value="Utang">Aktivitas Pendanaan (Utang/Cicilan)</option>
+                <option value="Modal">Aktivitas Pendanaan (Modal Disetor/Prive)</option>
             </select>
             <input type="date" id="inp-date">
             <div class="btn-row">
@@ -111,31 +128,31 @@
         <div class="card">
             <div class="header-print">
                 <h2 id="kop-buku-toko">NAMA PERUSAHAAN</h2>
-                <p style="margin:5px 0 0 0; font-weight:bold;">LAPORAN BUKU BESAR (GENERAL LEDGER)</p>
+                <p style="margin:5px 0 0 0; font-weight:900;">LAPORAN BUKU BESAR (GENERAL LEDGER)</p>
                 <p style="margin:5px 0 0 0; font-size:12px;" id="kop-buku-tgl"></p>
             </div>
             <div class="no-print">
-                <h3 style="margin-top:0;">Buku Besar & Pencarian</h3>
+                <h3>📖 Buku Besar & Filter</h3>
                 <div style="background:#f8fafc; padding:15px; border-radius:8px; border:1px solid #e2e8f0;">
-                    <input type="text" id="cari-teks" placeholder="🔍 Cari keterangan..." onkeyup="cariData()">
-                    <select id="cari-kat" onchange="cariData()">
-                        <option value="Semua">Semua Kategori Akun</option>
-                        <option value="Operasional">Akun Operasional</option>
-                        <option value="Utang">Akun Kewajiban (Utang)</option>
+                    <input type="text" id="cari-teks" placeholder="🔍 Cari referensi..." onkeyup="cariData()">
+                    <select id="cari-kat" onchange="cariData()" style="font-weight:bold;">
+                        <option value="Semua">Semua Kategori Akun (GL)</option>
+                        <option value="Operasional">Akun Laba/Rugi (Operasional)</option>
+                        <option value="Utang">Akun Liabilitas (Utang)</option>
                         <option value="Modal">Akun Ekuitas (Modal)</option>
                     </select>
                     <div style="display:flex; gap:10px; margin-top:5px;">
-                        <div style="flex:1;"><label style="font-size:11px; font-weight:bold;">Dari:</label><input type="date" id="cari-mulai" onchange="cariData()"></div>
-                        <div style="flex:1;"><label style="font-size:11px; font-weight:bold;">Sampai:</label><input type="date" id="cari-akhir" onchange="cariData()"></div>
+                        <div style="flex:1;"><label>Dari Periode:</label><input type="date" id="cari-mulai" onchange="cariData()"></div>
+                        <div style="flex:1;"><label>Sampai Periode:</label><input type="date" id="cari-akhir" onchange="cariData()"></div>
                     </div>
                     <div class="btn-row">
-                        <button class="btn-pdf" onclick="cetakPDF('Buku Besar')">🖨️ Cetak PDF</button>
-                        <button class="btn-excel" onclick="exportExcel()">📊 Export Excel</button>
+                        <button class="btn-pdf" onclick="cetakPDF('Buku Besar')">🖨️ CETAK PDF</button>
+                        <button class="btn-excel" onclick="exportExcel()">📊 EXPORT CSV</button>
                     </div>
                 </div>
             </div>
             <div style="overflow-x:auto;"><div id="view-buku"></div></div>
-            <div class="ttd-area"><div><p>Penanggung Jawab,</p><br><br><br><p style="font-weight:bold; text-decoration:underline;" id="ttd-nama-1">Pemilik</p></div></div>
+            <div class="ttd-area"><div><p>Penanggung Jawab,</p><br><br><br><p style="font-weight:bold; text-decoration:underline;" id="ttd-nama-1">CFO / Pemilik</p></div></div>
         </div>
     </div>
 
@@ -143,29 +160,24 @@
         <div class="card">
             <div class="header-print">
                 <h2 id="kop-neraca-toko">NAMA PERUSAHAAN</h2>
-                <p style="margin:5px 0 0 0; font-weight:bold;">LAPORAN POSISI KEUANGAN (NERACA)</p>
+                <p style="margin:5px 0 0 0; font-weight:900;">LAPORAN POSISI KEUANGAN (NERACA / BALANCE SHEET)</p>
                 <p style="margin:5px 0 0 0; font-size:12px;" id="kop-neraca-tgl"></p>
             </div>
             <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:15px;">
-                <h3 style="margin:0;">Neraca Keuangan</h3>
+                <h3 style="margin:0; border:none; padding:0;">⚖️ Laporan Neraca</h3>
                 <button class="btn-pdf" style="width:auto; margin:0; padding:8px 15px;" onclick="cetakPDF('Neraca')">🖨️ Cetak</button>
             </div>
             <div id="view-neraca"></div>
-            
             <div class="ratio-box no-print">
-                <h4 style="margin:0 0 10px 0; color:var(--primary);"><i class="fas fa-chart-line"></i> Analisis Rasio Keuangan Otomatis</h4>
-                <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                    <span style="font-size:13px;">Net Profit Margin (NPM):</span>
-                    <strong id="ratio-npm">0%</strong>
+                <h4 style="margin:0 0 10px 0; color:var(--success); font-weight:900; text-transform:uppercase;"><i class="fas fa-shield-alt"></i> Solvency & Liquidity Ratios</h4>
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-weight:bold;">
+                    <span style="font-size:12px;">Debt to Asset Ratio (DAR):</span><strong id="ratio-dar">0%</strong>
                 </div>
-                <div style="display:flex; justify-content:space-between;">
-                    <span style="font-size:13px;">Debt to Asset Ratio (DAR):</span>
-                    <strong id="ratio-dar">0%</strong>
+                <div style="display:flex; justify-content:space-between; font-weight:bold;">
+                    <span style="font-size:12px;">Debt to Equity Ratio (DER):</span><strong id="ratio-der">0%</strong>
                 </div>
-                <p style="font-size:11px; color:#718096; margin:10px 0 0 0; font-style:italic;">*Sistem otomatis menilai kesehatan struktur modal dan profitabilitas.</p>
             </div>
-
-            <div class="ttd-area"><div><p>Dibuat Oleh,</p><br><br><br><p style="font-weight:bold; text-decoration:underline;" id="ttd-nama-2">Pemilik</p></div></div>
+            <div class="ttd-area"><div><p>Dibuat Oleh,</p><br><br><br><p style="font-weight:bold; text-decoration:underline;" id="ttd-nama-2">CFO / Pemilik</p></div></div>
         </div>
     </div>
 
@@ -173,48 +185,55 @@
         <div class="card">
             <div class="header-print">
                 <h2 id="kop-lr-toko">NAMA PERUSAHAAN</h2>
-                <p style="margin:5px 0 0 0; font-weight:bold;">LAPORAN LABA RUGI (INCOME STATEMENT)</p>
+                <p style="margin:5px 0 0 0; font-weight:900;">INCOME STATEMENT & CASH FLOWS</p>
                 <p style="margin:5px 0 0 0; font-size:12px;" id="kop-lr-tgl"></p>
             </div>
             <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:10px; margin-bottom:15px;">
-                <h3 style="margin:0;">Laba / Rugi</h3>
-                <button class="btn-pdf" style="width:auto; margin:0; padding:8px 15px;" onclick="cetakPDF('Laba Rugi')">🖨️ Cetak</button>
+                <h3 style="margin:0; border:none; padding:0;">📈 Laba Rugi & Arus Kas</h3>
+                <button class="btn-pdf" style="width:auto; margin:0; padding:8px 15px;" onclick="cetakPDF('Income_Statement')">🖨️ Cetak</button>
             </div>
+            
+            <div style="font-weight:900; text-align:center; background:#f1f5f9; padding:10px; margin-bottom:10px; text-transform:uppercase;">I. Laporan Laba Rugi Komprehensif</div>
             <div id="view-lr"></div>
-            <div class="ttd-area"><div><p>Dibuat Oleh,</p><br><br><br><p style="font-weight:bold; text-decoration:underline;" id="ttd-nama-3">Pemilik</p></div></div>
+
+            <div style="font-weight:900; text-align:center; background:#f1f5f9; padding:10px; margin:20px 0 10px 0; text-transform:uppercase;">II. Laporan Arus Kas (Metode Langsung)</div>
+            <div id="view-cashflow"></div>
+
+            <div class="ttd-area"><div><p>Dibuat Oleh,</p><br><br><br><p style="font-weight:bold; text-decoration:underline;" id="ttd-nama-3">CFO / Pemilik</p></div></div>
         </div>
     </div>
 
     <div id="p-seting" class="page no-print">
         <div class="card">
-            <h3>Pengaturan Enterprise</h3>
-            <label style="font-size:12px; font-weight:bold;">Nama Entitas / Perusahaan (Untuk Kop Laporan):</label>
+            <h3>⚙️ Corporate Configurations</h3>
+            <label>Nama Entitas / Perusahaan (Kop Laporan):</label>
             <input type="text" id="set-toko" placeholder="Contoh: PT. Ikram Cyber" oninput="simpanSet()">
-            <label style="font-size:12px; font-weight:bold; margin-top:10px; display:block;">Nama Penanggung Jawab / Direktur:</label>
-            <input type="text" id="set-bos" placeholder="Contoh: Ikram, S.Ak" oninput="simpanSet()">
+            <label style="margin-top:10px;">Nama CFO / Penanggung Jawab (TTD):</label>
+            <input type="text" id="set-bos" placeholder="Contoh: Ikram, MBA., CFA." oninput="simpanSet()">
             <hr style="margin:20px 0; border:0; border-top:1px solid #e2e8f0;">
-            <button onclick="if(confirm('BAHAYA: Anda akan menghapus seluruh database jurnal. Lanjutkan?')) { localStorage.clear(); location.reload(); }" style="background:var(--danger); color:white; padding:15px; font-size:14px; font-weight:bold;">⚠️ FACTORY RESET (HAPUS DATABASE)</button>
+            <button onclick="if(confirm('CRITICAL SYSTEM OVERRIDE: Anda akan menghapus seluruh database jurnal. Lanjutkan Factory Reset?')) { localStorage.clear(); location.reload(); }" style="background:var(--danger); color:white; padding:15px; font-size:14px; font-weight:900; text-transform:uppercase;">⚠️ Format Database</button>
         </div>
     </div>
 
     <div class="bottom-nav no-print">
-        <button class="nav-item active" onclick="bukaTab('home')"><i>📊</i>Dashboard</button>
-        <button class="nav-item" onclick="bukaTab('buku')"><i>📖</i>Buku Besar</button>
-        <button class="nav-item" onclick="bukaTab('neraca')"><i>⚖️</i>Neraca</button>
-        <button class="nav-item" onclick="bukaTab('lr')"><i>📈</i>Laba Rugi</button>
-        <button class="nav-item" onclick="bukaTab('seting')"><i>⚙️</i>Seting</button>
+        <button class="nav-item active" onclick="bukaTab('home')"><i class="fas fa-chart-line"></i>Dash</button>
+        <button class="nav-item" onclick="bukaTab('buku')"><i class="fas fa-book-open"></i>GL Jurnal</button>
+        <button class="nav-item" onclick="bukaTab('neraca')"><i class="fas fa-balance-scale"></i>Neraca</button>
+        <button class="nav-item" onclick="bukaTab('lr')"><i class="fas fa-file-invoice-dollar"></i>Finance</button>
+        <button class="nav-item" onclick="bukaTab('seting')"><i class="fas fa-cogs"></i>Seting</button>
     </div>
 
-    <div style="text-align: center; padding: 20px; color: #a0aec0; font-size: 11px; font-weight: bold; letter-spacing: 1px; margin-bottom: 10px;" class="no-print">&copy; 2026 Ikram Cyber System</div><script>
+    <div style="text-align: center; padding: 20px; color: #a0aec0; font-size: 11px; font-weight: bold; letter-spacing: 1px; margin-bottom: 10px;" class="no-print">&copy; 2026 Ikram Cyber System</div>
+
+    <script>
         let db = JSON.parse(localStorage.getItem('kspro_db')) || [];
         let saldo = parseInt(localStorage.getItem('kspro_saldo')) || 0;
         let chartInstance = null;
 
-        // Keamanan Tanggal (Anti-Masa Depan)
         let dateObj = new Date();
         let offset = dateObj.getTimezoneOffset() * 60000;
         let localISOTime = (new Date(dateObj - offset)).toISOString().slice(0, 10);
-        
+
         document.getElementById('inp-date').value = localISOTime;
         document.getElementById('inp-date').setAttribute('max', localISOTime);
         document.getElementById('cari-mulai').value = new Date(dateObj.getFullYear(), dateObj.getMonth(), 1).toISOString().split('T')[0];
@@ -230,13 +249,13 @@
             let c = document.getElementById('inp-cat').value;
             let t = document.getElementById('inp-date').value;
 
-            if(!n) return alert("System Error: Nominal tidak valid!");
-            if(t > localISOTime) { alert("ERROR PSAK: Transaksi tidak dapat di-post di tanggal masa depan."); document.getElementById('inp-date').value = localISOTime; return; }
+            if(!n) return alert("System Error: Nominal Invalid!");
+            if(t > localISOTime) { alert("ERROR PSAK: Transaksi future date dilarang."); document.getElementById('inp-date').value = localISOTime; return; }
 
             j === 'in' ? saldo += n : saldo -= n;
             db.push({tgl:t, ket:d, kat:c, nom:n, jen:j});
             document.getElementById('inp-amt').value = ""; document.getElementById('inp-desc').value = "";
-            simpan();
+            simpan(); alert("Posting Jurnal Sukses!");
         }
 
         function cariData() {
@@ -244,7 +263,7 @@
             let kat = document.getElementById('cari-kat').value;
             let tMulai = document.getElementById('cari-mulai').value;
             let tAkhir = document.getElementById('cari-akhir').value;
-
+            
             let hasil = db.filter(x => {
                 let matchTeks = x.ket.toLowerCase().includes(teks);
                 let matchKat = (kat === 'Semua' || x.kat === kat);
@@ -259,29 +278,28 @@
         function formatRp(angka) { return "Rp " + angka.toLocaleString('id-ID'); }
 
         function tampilkanTabelBuku(data) {
-            let html = "<table><tr><th>Tanggal</th><th>Kategori</th><th>Keterangan</th><th class='text-right'>Debit</th><th class='text-right'>Kredit</th></tr>";
+            let html = "<table><tr><th>Tgl</th><th>Akun GL</th><th>Keterangan</th><th class='text-right'>Debit</th><th class='text-right'>Kredit</th></tr>";
             let totalD = 0, totalK = 0;
-            if(data.length === 0) html += "<tr><td colspan='5' style='text-align:center;'>Tidak ada aktivitas jurnal</td></tr>";
-            
+            if(data.length === 0) html += "<tr><td colspan='5' style='text-align:center; padding:20px; font-weight:bold; color:#a0aec0;'>Tidak ada aktivitas jurnal</td></tr>";
+
             data.slice().forEach(x => {
-                let tglFormat = x.tgl.split('-')[2] + '/' + x.tgl.split('-')[1] + '/' + x.tgl.split('-')[0];
+                let tglFormat = x.tgl.split('-')[2] + '/' + x.tgl.split('-')[1];
                 let isDebit = x.jen === 'in';
                 html += `<tr>
-                    <td>${tglFormat}</td>
-                    <td><span style="background:#edf2f7; padding:2px 6px; border-radius:4px; font-size:11px;">${x.kat}</span></td>
+                    <td style="font-weight:bold;">${tglFormat}</td>
+                    <td><span style="background:#edf2f7; padding:4px 6px; border-radius:4px; font-size:9px; font-weight:bold; text-transform:uppercase;">${x.kat}</span></td>
                     <td>${x.ket}</td>
                     <td class="text-right ${isDebit ? 'text-in' : ''}">${isDebit ? formatRp(x.nom) : '-'}</td>
                     <td class="text-right ${!isDebit ? 'text-out' : ''}">${!isDebit ? formatRp(x.nom) : '-'}</td>
                 </tr>`;
                 if(isDebit) totalD += x.nom; else totalK += x.nom;
             });
-
-            html += `<tr style="border-top:2px solid #cbd5e0; font-weight:bold;">
-                <td colspan="3" class="text-right">TOTAL MUTASI</td>
+            html += `<tr style="border-top:2px solid #cbd5e0; font-weight:900;">
+                <td colspan="3" class="text-right">MUTASI KOTOR</td>
                 <td class="text-right text-in">${formatRp(totalD)}</td>
                 <td class="text-right text-out">${formatRp(totalK)}</td>
             </tr>
-            <tr style="background:#f8fafc; font-weight:bold; font-size:14px;">
+            <tr style="background:#f8fafc; font-weight:900; font-size:14px;">
                 <td colspan="3" class="text-right">NET SALDO BERJALAN</td>
                 <td colspan="2" class="text-right" style="color:var(--primary);">${formatRp(totalD - totalK)}</td>
             </tr></table>`;
@@ -291,98 +309,128 @@
         function renderChart(pendapatan, beban, laba) {
             const ctx = document.getElementById('financeChart').getContext('2d');
             if (chartInstance) { chartInstance.destroy(); }
-            
             chartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Pendapatan', 'Beban', 'Net Profit'],
-                    datasets: [{
-                        label: 'Metrik Keuangan',
-                        data: [pendapatan, beban, laba],
-                        backgroundColor: ['#27ae60', '#c0392b', '#0f4c81'],
-                        borderRadius: 5
-                    }]
+                    labels: ['Pendapatan Bruto', 'Beban Operasi', 'Laba Bersih'],
+                    datasets: [{ label: 'Metrik Finansial', data: [pendapatan, beban, laba], backgroundColor: ['#27ae60', '#c0392b', '#0f4c81'], borderRadius: 6 }]
                 },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
-                }
+                options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
             });
         }
 
         function perbaruiSemua() {
             document.getElementById('v-saldo').innerText = formatRp(saldo);
-
-            let toko = localStorage.getItem('kspro_toko') || "ENTITAS KORPORASI";
-            let bos = localStorage.getItem('kspro_bos') || "Direktur Keuangan";
+            let toko = localStorage.getItem('kspro_toko') || "CORPORATE ENTITY";
+            let bos = localStorage.getItem('kspro_bos') || "CFO / Direktur Keuangan";
             let tglCetak = "Periode Cetak: " + new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'});
             
             ['buku', 'neraca', 'lr'].forEach(id => {
                 document.getElementById(`kop-${id}-toko`).innerText = toko.toUpperCase();
                 document.getElementById(`kop-${id}-tgl`).innerText = tglCetak;
             });
-            document.getElementById('ttd-nama-1').innerText = bos;
-            document.getElementById('ttd-nama-2').innerText = bos;
-            document.getElementById('ttd-nama-3').innerText = bos;
+            document.getElementById('ttd-nama-1').innerText = bos; document.getElementById('ttd-nama-2').innerText = bos; document.getElementById('ttd-nama-3').innerText = bos;
 
-            // KALKULASI AKUNTANSI PRO
-            let u=0, p=0, b=0, modal_in=0, modal_out=0;
-            db.forEach(x => { 
-                if(x.kat==='Utang') x.jen==='in' ? u+=x.nom : u-=x.nom; 
-                if(x.kat==='Operasional') x.jen==='in' ? p+=x.nom : b+=x.nom; 
-                if(x.kat==='Modal') x.jen==='in' ? modal_in+=x.nom : modal_out+=x.nom; 
+            // KALKULASI AKUNTANSI PRO (CASH FLOW MAPPING)
+            let op_in=0, op_out=0, ut_in=0, ut_out=0, mo_in=0, mo_out=0;
+            db.forEach(x => {
+                if(x.kat==='Operasional') x.jen==='in' ? op_in+=x.nom : op_out+=x.nom;
+                if(x.kat==='Utang') x.jen==='in' ? ut_in+=x.nom : ut_out+=x.nom;
+                if(x.kat==='Modal') x.jen==='in' ? mo_in+=x.nom : mo_out+=x.nom;
             });
 
-            let labaBersih = p - b;
-            let ekuitasPemilik = modal_in - modal_out;
+            // NERACA (BALANCE SHEET) COMPONENT
+            let totalUtang = ut_in - ut_out;
+            let labaBersih = op_in - op_out;
+            let ekuitasPemilik = mo_in - mo_out;
             let totalEkuitas = ekuitasPemilik + labaBersih;
+            let totalAset = saldo;
 
-            // Update Mini Dashboard Cards
-            document.getElementById('m-pendapatan').innerText = formatRp(p);
-            document.getElementById('m-beban').innerText = formatRp(b);
+            // Update Dash Cards
+            document.getElementById('m-pendapatan').innerText = formatRp(op_in);
+            document.getElementById('m-beban').innerText = formatRp(op_out);
             document.getElementById('m-laba').innerText = formatRp(labaBersih);
             document.getElementById('m-laba').style.color = labaBersih >= 0 ? 'var(--success)' : 'var(--danger)';
-            document.getElementById('m-utang').innerText = formatRp(u);
+            document.getElementById('m-utang').innerText = formatRp(totalUtang);
 
-            renderChart(p, b, labaBersih);
+            renderChart(op_in, op_out, labaBersih);
 
-            // NERACA (STRICT: ASET = KEWAJIBAN + EKUITAS)
+            // DUPONT SYSTEM ENGINE
+            let npm = op_in > 0 ? (labaBersih / op_in) : 0;
+            let ato = totalAset > 0 ? (op_in / totalAset) : 0;
+            let em = totalEkuitas > 0 ? (totalAset / totalEkuitas) : 0;
+            let roe = totalEkuitas > 0 ? (labaBersih / totalEkuitas) : 0;
+
+            document.getElementById('dp-npm').innerText = (npm * 100).toFixed(2) + '%';
+            document.getElementById('dp-ato').innerText = ato.toFixed(2) + 'x';
+            document.getElementById('dp-em').innerText = em.toFixed(2) + 'x';
+            document.getElementById('dp-roe').innerText = (roe * 100).toFixed(2) + '%';
+            document.getElementById('dp-roe').style.color = roe >= 0 ? 'var(--success)' : 'var(--danger)';
+
+            // STARTUP RUNWAY ENGINE
+            let burnRate = op_out; // Total Expense
+            document.getElementById('sr-burn').innerText = formatRp(burnRate);
+            let runway = burnRate > 0 ? (saldo / burnRate).toFixed(1) + ' Bulan' : 'Infinity 🚀';
+            document.getElementById('sr-runway').innerText = runway;
+            document.getElementById('sr-runway').style.color = (burnRate > 0 && (saldo/burnRate) < 3) ? 'var(--danger)' : 'var(--success)';
+
+            // NERACA RENDER
             document.getElementById('view-neraca').innerHTML = `<table>
                 <tr><th colspan="2" style="text-align:center; background:#edf2f7 !important;">AKTIVA (ASSETS)</th></tr>
                 <tr><td>Kas & Setara Kas</td><td class="text-right text-in">${formatRp(saldo)}</td></tr>
-                <tr style="border-top:2px solid #000; font-weight:bold; background:#f8fafc;"><td>TOTAL AKTIVA</td><td class="text-right">${formatRp(saldo)}</td></tr>
+                <tr style="border-top:2px solid #000; font-weight:900; background:#f8fafc; font-size:14px;"><td>TOTAL AKTIVA</td><td class="text-right">${formatRp(saldo)}</td></tr>
                 
                 <tr><th colspan="2" style="text-align:center; background:#edf2f7 !important; margin-top:10px;">PASIVA (LIABILITIES & EQUITY)</th></tr>
-                <tr><td><b>Kewajiban Jangka Pendek</b></td><td></td></tr>
-                <tr><td style="padding-left:20px;">Hutang Usaha / Lainnya</td><td class="text-right text-out">${formatRp(u)}</td></tr>
+                <tr><td><b>Kewajiban (Liabilitas)</b></td><td></td></tr>
+                <tr><td style="padding-left:20px;">Hutang Usaha / Lainnya</td><td class="text-right text-out">${formatRp(totalUtang)}</td></tr>
                 <tr><td><b>Ekuitas (Modal)</b></td><td></td></tr>
                 <tr><td style="padding-left:20px;">Modal Disetor / Prive</td><td class="text-right">${formatRp(ekuitasPemilik)}</td></tr>
                 <tr><td style="padding-left:20px;">Laba (Rugi) Berjalan</td><td class="text-right">${formatRp(labaBersih)}</td></tr>
-                <tr style="border-top:2px solid #000; font-weight:bold; background:#f8fafc;"><td>TOTAL PASIVA</td><td class="text-right">${formatRp(u + totalEkuitas)}</td></tr>
+                <tr style="border-top:2px solid #000; font-weight:900; background:#f8fafc; font-size:14px;"><td>TOTAL PASIVA</td><td class="text-right">${formatRp(totalUtang + totalEkuitas)}</td></tr>
             </table>`;
 
-            // AUTO FINANCIAL RATIO CALCULATION
-            let npm = p > 0 ? ((labaBersih / p) * 100).toFixed(2) : 0;
-            let dar = saldo > 0 ? ((u / saldo) * 100).toFixed(2) : 0;
-            document.getElementById('ratio-npm').innerText = `${npm}%`;
-            document.getElementById('ratio-npm').style.color = npm >= 10 ? 'var(--success)' : 'var(--danger)';
+            let dar = totalAset > 0 ? ((totalUtang / totalAset) * 100).toFixed(2) : 0;
+            let der = totalEkuitas > 0 ? ((totalUtang / totalEkuitas) * 100).toFixed(2) : 0;
             document.getElementById('ratio-dar').innerText = `${dar}%`;
             document.getElementById('ratio-dar').style.color = dar < 50 ? 'var(--success)' : 'var(--danger)';
+            document.getElementById('ratio-der').innerText = `${der}%`;
+            document.getElementById('ratio-der').style.color = der < 100 ? 'var(--success)' : 'var(--danger)';
 
-            // LABA RUGI BERTINGKAT (STANDAR PSAK)
+            // INCOME STATEMENT RENDER
             document.getElementById('view-lr').innerHTML = `<table>
                 <tr><th colspan="2">PENDAPATAN (REVENUES)</th></tr>
-                <tr><td style="padding-left:20px;">Pendapatan Bruto Operasional</td><td class="text-right text-in">${formatRp(p)}</td></tr>
-                <tr style="border-top:1px solid #000; font-weight:bold;"><td>Total Pendapatan</td><td class="text-right">${formatRp(p)}</td></tr>
+                <tr><td style="padding-left:20px;">Pendapatan Bruto Operasional</td><td class="text-right text-in">${formatRp(op_in)}</td></tr>
+                <tr style="border-top:1px solid #000; font-weight:900;"><td>Total Pendapatan</td><td class="text-right">${formatRp(op_in)}</td></tr>
                 
                 <tr><th colspan="2">BEBAN (EXPENSES)</th></tr>
-                <tr><td style="padding-left:20px;">Beban Operasional & Administrasi</td><td class="text-right text-out">${formatRp(b)}</td></tr>
-                <tr style="border-top:1px solid #000; font-weight:bold;"><td>Total Beban</td><td class="text-right">${formatRp(b)}</td></tr>
+                <tr><td style="padding-left:20px;">Beban Operasional & Administrasi</td><td class="text-right text-out">${formatRp(op_out)}</td></tr>
+                <tr style="border-top:1px solid #000; font-weight:900;"><td>Total Beban</td><td class="text-right">${formatRp(op_out)}</td></tr>
                 
-                <tr style="border-top:3px double #000; font-size:16px; background:${labaBersih >= 0 ? '#e6fffa' : '#fff5f5'};">
+                <tr style="border-top:3px double #000; font-size:15px; background:${labaBersih >= 0 ? '#e6fffa' : '#fff5f5'};">
                     <td><b>${labaBersih >= 0 ? 'LABA BERSIH (NET INCOME)' : 'RUGI BERSIH (NET LOSS)'}</b></td>
                     <td class="text-right"><b>${formatRp(labaBersih)}</b></td>
+                </tr>
+            </table>`;
+
+            // CASH FLOW STATEMENT RENDER (PSAK 2)
+            let cfOp = op_in - op_out;
+            let cfFin = (ut_in - ut_out) + (mo_in - mo_out);
+            let netCashFlow = cfOp + cfFin;
+
+            document.getElementById('view-cashflow').innerHTML = `<table>
+                <tr><td colspan="2"><b>A. Arus Kas dari Aktivitas Operasi</b></td></tr>
+                <tr><td style="padding-left:20px;">Penerimaan dari Pelanggan</td><td class="text-right">${formatRp(op_in)}</td></tr>
+                <tr><td style="padding-left:20px;">Pembayaran Kas untuk Beban</td><td class="text-right">(${formatRp(op_out)})</td></tr>
+                <tr style="background:#f8fafc; font-weight:bold;"><td>Kas Bersih Aktivitas Operasi</td><td class="text-right" style="color:${cfOp >= 0 ? 'var(--success)' : 'var(--danger)'}">${formatRp(cfOp)}</td></tr>
+                
+                <tr><td colspan="2"><b>B. Arus Kas dari Aktivitas Pendanaan</b></td></tr>
+                <tr><td style="padding-left:20px;">Penerimaan (Penyetoran Modal & Utang Masuk)</td><td class="text-right">${formatRp(ut_in + mo_in)}</td></tr>
+                <tr><td style="padding-left:20px;">Pengeluaran (Prive & Pembayaran Utang)</td><td class="text-right">(${formatRp(ut_out + mo_out)})</td></tr>
+                <tr style="background:#f8fafc; font-weight:bold;"><td>Kas Bersih Aktivitas Pendanaan</td><td class="text-right" style="color:${cfFin >= 0 ? 'var(--success)' : 'var(--danger)'}">${formatRp(cfFin)}</td></tr>
+                
+                <tr style="border-top:3px double #000; font-size:15px; font-weight:900;">
+                    <td>KENAIKAN (PENURUNAN) KAS BERSIH</td>
+                    <td class="text-right" style="color:var(--primary)">${formatRp(netCashFlow)}</td>
                 </tr>
             </table>`;
 
@@ -392,37 +440,24 @@
         }
 
         function cetakPDF(namaLaporan) {
-            document.title = "Report_" + namaLaporan.replace(/\s+/g, '_') + "_" + new Date().getTime();
-            window.print();
-            setTimeout(() => { document.title = "Kas Pintar Pro"; }, 1000);
+            document.title = "FinancialReport_" + namaLaporan.replace(/\s+/g, '_') + "_" + new Date().getTime();
+            window.print(); setTimeout(() => { document.title = "Kas Pintar Pro"; }, 1000);
         }
 
         function exportExcel() {
-            let hasil = cariData();
-            if(hasil.length === 0) return alert("System Warning: Data kosong!");
+            let hasil = cariData(); if(hasil.length === 0) return alert("Warning: Jurnal kosong!");
             let csvContent = "Tanggal,Kategori Akun,Keterangan Transaksi,Debit (In),Kredit (Out)\n";
-            hasil.forEach(x => {
-                let masuk = x.jen === 'in' ? x.nom : 0;
-                let keluar = x.jen === 'out' ? x.nom : 0;
-                csvContent += `${x.tgl},${x.kat},"${x.ket}",${masuk},${keluar}\n`;
-            });
+            hasil.forEach(x => { let masuk = x.jen === 'in' ? x.nom : 0; let keluar = x.jen === 'out' ? x.nom : 0; csvContent += `${x.tgl},${x.kat},"${x.ket}",${masuk},${keluar}\n`; });
             let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            let url = URL.createObjectURL(blob);
-            let a = document.createElement("a");
-            a.href = url;
-            let toko = localStorage.getItem('kspro_toko') || "Company";
-            a.download = `Ledger_${toko.replace(/\s+/g, '')}.csv`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            let url = URL.createObjectURL(blob); let a = document.createElement("a"); a.href = url;
+            let toko = localStorage.getItem('kspro_toko') || "Company"; a.download = `GeneralLedger_${toko.replace(/\s+/g, '')}.csv`;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
         }
 
         function bukaTab(id) {
             document.querySelectorAll('.page, .nav-item').forEach(e => e.classList.remove('active'));
-            document.getElementById('p-'+id).classList.add('active');
-            event.currentTarget.classList.add('active');
+            document.getElementById('p-'+id).classList.add('active'); event.currentTarget.classList.add('active'); window.scrollTo(0,0);
         }
-
         perbaruiSemua();
     </script>
 </body>
