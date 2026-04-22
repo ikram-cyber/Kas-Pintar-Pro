@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mode Akuntan | Kas Pintar Pro</title>
+    <title>Mode Akuntan Pro | Ikram Cyber System</title>
     <meta name="theme-color" content="#1e293b">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; }
-        .page { display: none; animation: fadeIn 0.3s ease; } .page.active { display: block; }
+        .page { display: none; animation: fadeIn 0.2s ease; } .page.active { display: block; }
         @keyframes fadeIn { from {opacity:0; transform:translateY(10px)} to {opacity:1; transform:translateY(0)} }
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -10px 25px rgba(0,0,0,0.1); z-index: 50; border-top: 1px solid #e2e8f0; }
         .nav-item { color: #94a3b8; display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 25%; text-transform: uppercase; }
@@ -18,12 +18,12 @@
         .table-pro { width: 100%; border-collapse: collapse; font-size: 10px; }
         .table-pro th, .table-pro td { border: 1px solid #94a3b8; padding: 6px 8px; }
         .table-pro th { background-color: #f1f5f9; font-weight: 900; text-align: center; }
+        .bg-debit { background-color: #f0fdf4; } .bg-kredit { background-color: #fff1f2; }
         @media print {
             @page { size: landscape; margin: 1cm; }
-            body { background: white; padding: 0 !important; margin: 0 !important; }
+            body { background: white; padding: 0 !important; }
             .no-print, .bottom-nav { display: none !important; }
-            .page { display: none !important; }
-            .page.active { display: block !important; }
+            .page { display: none !important; } .page.active { display: block !important; }
             .print-header { display: flex !important; justify-content: space-between; align-items: center; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 20px; }
             .print-logo { max-height: 50px; }
             table { font-size: 8px !important; width: 100% !important; min-width: 0 !important; }
@@ -35,10 +35,10 @@
     <div class="bg-slate-800 text-white p-5 shadow-lg no-print relative z-[60]">
         <div class="flex justify-between items-center">
             <div>
-                <h1 class="text-xl font-black text-emerald-400">MODE AKUNTAN</h1>
-                <p class="text-[9px] font-bold opacity-80 uppercase h-pt-pro">PERUSAHAAN</p>
+                <h1 class="text-xl font-black text-emerald-400 tracking-tighter">AKUNTAN PRO</h1>
+                <p class="text-[9px] font-bold opacity-80 uppercase h-pt-pro">PT PERUSAHAAN</p>
             </div>
-            <a href="index.html" class="bg-slate-700 text-white px-4 py-2 rounded text-[10px] font-black border border-slate-600 shadow-xl">
+            <a href="index.html" class="bg-slate-700 text-white px-4 py-2 rounded text-[10px] font-black border border-slate-600 shadow-xl active:scale-95 transition-all">
                 <i class="fas fa-exchange-alt mr-1"></i> PRAKTIS
             </a>
         </div>
@@ -46,33 +46,37 @@
 
     <div id="p-input" class="page active px-4 mt-5">
         <div class="bg-white p-5 rounded-xl border shadow-sm mb-5">
-            <h3 class="font-black text-sm uppercase mb-4 border-b pb-2">Jurnal Umum & Pajak</h3>
-            <input type="date" id="j-tgl" class="w-full p-3 mb-3 border rounded text-sm font-bold bg-slate-50">
+            <h3 class="font-black text-xs uppercase mb-4 border-b pb-2 text-slate-500">Entry Jurnal Umum</h3>
+            <input type="date" id="j-tgl" class="w-full p-3 mb-3 border rounded-lg text-sm font-bold bg-slate-50 outline-none">
+            
             <div class="grid grid-cols-2 gap-2 mb-3">
-                <div><label class="text-[9px] font-black text-emerald-600 ml-1">DEBIT (+)</label><select id="j-debit" class="w-full p-3 border border-emerald-300 rounded-lg text-xs font-bold bg-emerald-50"></select></div>
-                <div><label class="text-[9px] font-black text-rose-600 ml-1">KREDIT (-)</label><select id="j-kredit" class="w-full p-3 border border-rose-300 rounded-lg text-xs font-bold bg-rose-50"></select></div>
+                <div><label class="text-[9px] font-black text-emerald-600 ml-1">DEBIT (+)</label><select id="j-debit" class="w-full p-3 border rounded-lg text-xs font-bold bg-emerald-50 outline-none"></select></div>
+                <div><label class="text-[9px] font-black text-rose-600 ml-1">KREDIT (-)</label><select id="j-kredit" class="w-full p-3 border rounded-lg text-xs font-bold bg-rose-50 outline-none"></select></div>
             </div>
-            <div class="bg-yellow-50 p-3 rounded border border-yellow-200 mb-3">
-                <label class="flex items-center gap-2 text-[10px] font-black uppercase text-yellow-800 cursor-pointer">
-                    <input type="checkbox" id="j-tax-auto" class="w-4 h-4"> Gunakan PPN 11% (Inklusif)
+
+            <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 mb-3">
+                <label class="flex items-center gap-2 text-[10px] font-black uppercase text-amber-800 cursor-pointer">
+                    <input type="checkbox" id="j-tax-auto" class="w-4 h-4"> Tambah PPN 11% Otomatis
                 </label>
             </div>
-            <input type="number" id="j-nom" placeholder="Nominal Rp" class="w-full p-3 mb-3 border rounded font-black text-center text-lg">
-            <input type="text" id="j-ket" placeholder="Keterangan Transaksi" class="w-full p-3 mb-4 border rounded text-sm">
-            <button onclick="simpanJurnal()" class="w-full bg-indigo-600 text-white font-black py-4 rounded-lg text-xs tracking-widest shadow-lg">POSTING JURNAL</button>
+
+            <input type="number" id="j-nom" placeholder="Nominal Rp" class="w-full p-4 mb-3 border rounded-xl font-black text-center text-xl shadow-inner outline-none">
+            <input type="text" id="j-ket" placeholder="Keterangan Transaksi" class="w-full p-3 mb-4 border rounded-lg text-sm outline-none">
+            
+            <button onclick="simpanJurnal()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-xl text-xs tracking-widest shadow-lg transition-all active:scale-95">POSTING JURNAL</button>
         </div>
     </div>
 
     <div id="p-jurnal" class="page px-4 mt-5">
         <div class="bg-white rounded-xl border p-4 shadow-sm">
             <div class="no-print flex justify-between items-center mb-4">
-                <h3 class="font-black text-sm uppercase">Riwayat Jurnal (General Journal)</h3>
-                <button onclick="window.print()" class="bg-slate-800 text-white px-3 py-1.5 rounded text-[10px] font-bold">PRINT</button>
+                <h3 class="font-black text-sm uppercase">Buku Jurnal</h3>
+                <button onclick="window.print()" class="bg-slate-800 text-white px-3 py-1.5 rounded text-[10px] font-bold shadow-md">PRINT</button>
             </div>
             <div class="overflow-x-auto">
                 <table class="table-pro text-[11px]">
                     <thead>
-                        <tr><th>Tgl</th><th class="text-center">Ref</th><th>Akun & Keterangan</th><th class="text-right">Debit</th><th class="text-right">Kredit</th><th class="no-print">X</th></tr>
+                        <tr><th class="w-16">Tgl</th><th class="w-12 text-center">Ref</th><th>Nama Akun & Keterangan</th><th class="text-right w-24">Debit</th><th class="text-right w-24">Kredit</th><th class="no-print w-8">X</th></tr>
                     </thead>
                     <tbody id="v-jurnal"></tbody>
                 </table>
@@ -86,63 +90,63 @@
                 <img class="pr-logo-pro print-logo" src="">
                 <div class="text-right">
                     <h1 class="text-xl font-black h-pt-pro">PT NAME</h1>
-                    <p class="text-[9px] font-bold uppercase">10-Column Worksheet</p>
+                    <p class="text-[9px] font-bold uppercase tracking-widest">Neraca Lajur (10 Column Worksheet)</p>
                 </div>
             </div>
             <div class="flex justify-between items-center mb-4 no-print">
-                <h3 class="font-black text-sm uppercase">Neraca Lajur 10 Kolom</h3>
-                <button onclick="window.print()" class="bg-slate-800 text-white px-3 py-1.5 rounded text-[10px] font-bold">PRINT LANDSCAPE</button>
+                <h3 class="font-black text-sm uppercase">Worksheet 10 Kolom</h3>
+                <button onclick="window.print()" class="bg-slate-800 text-white px-3 py-1 rounded text-xs font-bold">PRINT LANDSCAPE</button>
             </div>
             <div class="overflow-x-auto">
                 <table class="table-pro" style="min-width:1100px">
                     <thead>
-                        <tr><th rowspan="2">Ref</th><th rowspan="2">Nama Akun</th><th colspan="2">Neraca Saldo</th><th colspan="2">AJP</th><th colspan="2">NSD</th><th colspan="2">Laba/Rugi</th><th colspan="2">Neraca</th></tr>
+                        <tr><th rowspan="2">Ref</th><th rowspan="2" class="text-left">Nama Akun</th><th colspan="2">Neraca Saldo</th><th colspan="2">AJP</th><th colspan="2">NSD</th><th colspan="2">Laba/Rugi</th><th colspan="2">Neraca</th></tr>
                         <tr><th>D</th><th>K</th><th>D</th><th>K</th><th>D</th><th>K</th><th>D</th><th>K</th><th>D</th><th>K</th></tr>
                     </thead>
                     <tbody id="v-lajur"></tbody>
-                    <tfoot id="v-lajur-foot" class="font-bold bg-slate-50"></tfoot>
+                    <tfoot id="v-lajur-foot" class="font-black bg-slate-50"></tfoot>
                 </table>
             </div>
         </div>
     </div>
 
     <div id="p-seting" class="page px-4 mt-5 no-print">
-        <div class="bg-white p-5 rounded-xl border shadow-sm mb-5">
-            <h3 class="font-black text-sm uppercase border-b pb-3 mb-4">Branding & Data</h3>
-            <label class="text-[9px] font-black uppercase text-slate-500">Upload Logo</label>
-            <input type="file" accept="image/*" class="w-full text-xs mb-4" onchange="handleLogo(this)">
+        <div class="bg-white p-5 rounded-xl border shadow-sm mb-5 text-center">
+            <h3 class="font-black text-sm uppercase border-b pb-3 mb-5 text-left"><i class="fas fa-tools mr-1"></i> Admin & Data</h3>
             
-            <label class="text-[9px] font-black uppercase text-slate-500">Nama PT (Pro)</label>
-            <input type="text" id="set-toko-pro" class="w-full p-2 mb-4 border rounded font-bold" oninput="simpanSetPro()">
+            <label class="text-[10px] font-black uppercase text-slate-400 block text-left mb-1">Logo Kop Surat</label>
+            <input type="file" accept="image/*" class="w-full text-xs mb-5 p-2 border rounded" onchange="handleLogo(this)">
+            
+            <label class="text-[10px] font-black uppercase text-slate-400 block text-left mb-1">Nama Perusahaan</label>
+            <input type="text" id="set-toko-pro" class="w-full p-3 mb-6 border rounded-lg font-bold outline-none focus:border-indigo-500" oninput="simpanSetPro()">
 
-            <div class="grid grid-cols-2 gap-2 mt-4">
-                <button onclick="exportFullBackup()" class="bg-indigo-600 text-white py-3 rounded-lg text-[10px] font-black shadow-md">BACKUP SEMUA</button>
-                <label class="bg-emerald-600 text-white py-3 rounded-lg text-[10px] font-black shadow-md text-center cursor-pointer">
-                    RESTORE <input type="file" class="hidden" onchange="importFullBackup(this)">
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <button onclick="exportFullBackup()" class="bg-indigo-600 text-white py-4 rounded-xl text-[10px] font-black shadow-lg active:scale-95 transition-all">
+                    <i class="fas fa-cloud-download-alt text-lg block mb-1"></i> BACKUP SEMUA
+                </button>
+                <label class="bg-emerald-600 text-white py-4 rounded-xl text-[10px] font-black shadow-lg text-center cursor-pointer active:scale-95 transition-all">
+                    <i class="fas fa-cloud-upload-alt text-lg block mb-1"></i> RESTORE DATA
+                    <input type="file" class="hidden" onchange="importFullBackup(this)">
                 </label>
             </div>
+            <button onclick="if(confirm('Hapus Jurnal Pro?')) { localStorage.removeItem('kspro_db_pro'); location.reload(); }" class="text-rose-600 text-[10px] font-black uppercase hover:underline">Hapus Database Jurnal Pro</button>
         </div>
     </div>
 
     <nav class="bottom-nav no-print">
-        <button class="nav-item active" onclick="bukaTab('input')"><i class="fas fa-pen-nib"></i>Input</button>
-        <button class="nav-item" onclick="bukaTab('jurnal')"><i class="fas fa-list"></i>Jurnal</button>
-        <button class="nav-item" onclick="bukaTab('worksheet')"><i class="fas fa-table"></i>Lajur</button>
-        <button class="nav-item" onclick="bukaTab('seting')"><i class="fas fa-cog"></i>Seting</button>
+        <button class="nav-item active" onclick="bukaTab('input')"><i class="fas fa-pen-nib mb-1 text-lg"></i>Input</button>
+        <button class="nav-item" onclick="bukaTab('jurnal')"><i class="fas fa-list mb-1 text-lg"></i>Jurnal</button>
+        <button class="nav-item" onclick="bukaTab('worksheet')"><i class="fas fa-table mb-1 text-lg"></i>Lajur</button>
+        <button class="nav-item" onclick="bukaTab('seting')"><i class="fas fa-cog mb-1 text-lg"></i>Seting</button>
     </nav>
 
     <script>
         const COA = [
-            { no: '101', nama: 'Kas', tipe: 'Aset', sn: 'D' },
-            { no: '102', nama: 'Piutang', tipe: 'Aset', sn: 'D' },
-            { no: '103', nama: 'Perlengkapan', tipe: 'Aset', sn: 'D' },
-            { no: '121', nama: 'Peralatan', tipe: 'Aset', sn: 'D' },
-            { no: '122', nama: 'Akum. Peny. Peralatan', tipe: 'Aset', sn: 'K' },
-            { no: '201', nama: 'Utang Dagang', tipe: 'Kewajiban', sn: 'K' },
-            { no: '205', nama: 'Utang PPN', tipe: 'Kewajiban', sn: 'K' },
-            { no: '301', nama: 'Modal', tipe: 'Ekuitas', sn: 'K' },
-            { no: '401', nama: 'Pendapatan Jasa', tipe: 'Pendapatan', sn: 'K' },
-            { no: '501', nama: 'Beban Gaji', tipe: 'Beban', sn: 'D' },
+            { no: '101', nama: 'Kas', tipe: 'Aset', sn: 'D' }, { no: '102', nama: 'Piutang Dagang', tipe: 'Aset', sn: 'D' },
+            { no: '103', nama: 'Perlengkapan', tipe: 'Aset', sn: 'D' }, { no: '121', nama: 'Peralatan', tipe: 'Aset', sn: 'D' },
+            { no: '122', nama: 'Akum. Peny. Peralatan', tipe: 'Aset', sn: 'K' }, { no: '201', nama: 'Utang Dagang', tipe: 'Kewajiban', sn: 'K' },
+            { no: '205', nama: 'Utang PPN', tipe: 'Kewajiban', sn: 'K' }, { no: '301', nama: 'Modal Pemilik', tipe: 'Ekuitas', sn: 'K' },
+            { no: '401', nama: 'Pendapatan Jasa', tipe: 'Pendapatan', sn: 'K' }, { no: '501', nama: 'Beban Gaji', tipe: 'Beban', sn: 'D' },
             { no: '502', nama: 'Beban Sewa', tipe: 'Beban', sn: 'D' }
         ];
 
@@ -158,28 +162,22 @@
         }
 
         function exportFullBackup() {
-            const data = {
-                praktis: JSON.parse(localStorage.getItem('kspro_db')) || [],
-                pro: JSON.parse(localStorage.getItem('kspro_db_pro')) || []
-            };
+            const data = { praktis: localStorage.getItem('kspro_db'), pro: localStorage.getItem('kspro_db_pro'), settings: { toko: localStorage.getItem('kspro_toko_pro'), logo: localStorage.getItem('kspro_logo') } };
             const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `Backup_KasPintar_Full.json`;
-            a.click();
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+            a.download = `Backup_KasPintar_${new Date().toISOString().split('T')[0]}.json`; a.click();
         }
 
         function importFullBackup(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const data = JSON.parse(e.target.result);
-                    if(data.praktis) localStorage.setItem('kspro_db', JSON.stringify(data.praktis));
-                    if(data.pro) localStorage.setItem('kspro_db_pro', JSON.stringify(data.pro));
-                    alert("Restore Berhasil!"); location.reload();
-                };
-                reader.readAsText(input.files[0]);
-            }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const data = JSON.parse(e.target.result);
+                if(data.praktis) localStorage.setItem('kspro_db', data.praktis);
+                if(data.pro) localStorage.setItem('kspro_db_pro', data.pro);
+                if(data.settings) { localStorage.setItem('kspro_toko_pro', data.settings.toko); localStorage.setItem('kspro_logo', data.settings.logo); }
+                alert("Data Berhasil di-Restore!"); location.reload();
+            };
+            reader.readAsText(input.files[0]);
         }
 
         function simpanJurnal() {
@@ -188,28 +186,24 @@
             let k = document.getElementById('j-kredit').value;
             let tgl = document.getElementById('j-tgl').value;
             let ket = document.getElementById('j-ket').value;
-            let taxAuto = document.getElementById('j-tax-auto').checked;
-
-            if(!n || d==k) return alert("Periksa kembali!");
+            let tax = document.getElementById('j-tax-auto').checked;
+            if(!n || !tgl || d==k) return alert("Cek data input!");
             let id = Date.now();
-            
-            if(taxAuto) {
-                let tax = Math.round(n * 0.11);
-                dbPro.push({id, tgl, ref:d, pos:'D', nom:n+tax, ket, isAdj:false});
-                dbPro.push({id:id+1, tgl, ref:k, pos:'K', nom:n, ket, isAdj:false});
-                dbPro.push({id:id+2, tgl, ref:'205', pos:'K', nom:tax, ket:"PPN 11%", isAdj:false});
+            if(tax) {
+                let ppn = Math.round(n * 0.11);
+                dbPro.push({id, tgl, ref:d, pos:'D', nom:n+ppn, ket}, {id:id+1, tgl, ref:k, pos:'K', nom:n, ket}, {id:id+2, tgl, ref:'205', pos:'K', nom:ppn, ket:"PPN 11%"});
             } else {
-                dbPro.push({id, tgl, ref:d, pos:'D', nom:n, ket, isAdj:false}, {id:id+1, tgl, ref:k, pos:'K', nom:n, ket, isAdj:false});
+                dbPro.push({id, tgl, ref:d, pos:'D', nom:n, ket}, {id:id+1, tgl, ref:k, pos:'K', nom:n, ket});
             }
             localStorage.setItem('kspro_db_pro', JSON.stringify(dbPro));
-            alert("Terposting!"); render();
+            alert("Terposting ke Buku Besar!"); location.reload();
         }
 
         function hapusJurnal(id) {
-            if(confirm("Hapus sepasang jurnal?")) {
+            if(confirm("Hapus transaksi ini?")) {
                 dbPro = dbPro.filter(x => x.id !== id && x.id !== id+1 && x.id !== id-1);
                 localStorage.setItem('kspro_db_pro', JSON.stringify(dbPro));
-                render();
+                location.reload();
             }
         }
 
@@ -218,22 +212,22 @@
             dbPro.forEach((x, i) => {
                 if(x.pos==='D') {
                     let k = dbPro[i+1];
-                    hJ += `<tr><td>${x.tgl}</td><td class="text-center font-bold">${x.ref}</td><td><b>${COA.find(a=>a.no===x.ref).nama}</b><br><i class="text-slate-400">${x.ket}</i></td><td class="text-right text-emerald-600 font-bold">${formatRp(x.nom)}</td><td class="text-right">-</td><td class="no-print text-center"><button onclick="hapusJurnal(${x.id})">❌</button></td></tr>`;
-                    if(k) hJ += `<tr><td></td><td class="text-center">${k.ref}</td><td class="pl-6 italic text-slate-500">${COA.find(a=>a.no===k.ref).nama}</td><td class="text-right">-</td><td class="text-right text-rose-600 font-bold">${formatRp(k.nom)}</td><td></td></tr>`;
+                    let namaD = COA.find(a=>a.no===x.ref).nama;
+                    let namaK = COA.find(a=>a.no===k.ref).nama;
+                    hJ += `<tr><td class="p-2 border" rowspan="2">${x.tgl.slice(5)}</td><td class="p-2 border text-center font-bold">${x.ref}</td><td class="p-2 border"><b>${namaD}</b></td><td class="p-2 border text-right font-bold text-emerald-600">${formatRp(x.nom)}</td><td class="p-2 border text-right">-</td><td class="p-2 border text-center no-print" rowspan="2"><button onclick="hapusJurnal(${x.id})">❌</button></td></tr>`;
+                    hJ += `<tr><td class="p-2 border text-center text-slate-500">${k.ref}</td><td class="p-2 border pl-6 italic text-slate-600">${namaK} <br><span class="text-[9px] text-slate-400">${x.ket}</span></td><td class="p-2 border text-right">-</td><td class="p-2 border text-right font-bold text-rose-600">${formatRp(k.nom)}</td></tr>`;
                 }
             });
-            document.getElementById('v-jurnal').innerHTML = hJ;
+            document.getElementById('v-jurnal').innerHTML = hJ || '<tr><td colspan="6" class="text-center p-5">Kosong</td></tr>';
 
             let hL = '', totals = Array(10).fill(0);
             COA.forEach(akun => {
                 let deb = dbPro.filter(x => x.ref===akun.no && x.pos==='D').reduce((a,b)=>a+b.nom, 0);
                 let kre = dbPro.filter(x => x.ref===akun.no && x.pos==='K').reduce((a,b)=>a+b.nom, 0);
-                let nsD=0, nsK=0;
-                if(akun.sn==='D') { nsD = Math.max(0, deb-kre); nsK = Math.max(0, kre-deb); }
-                else { nsK = Math.max(0, kre-deb); nsD = Math.max(0, deb-kre); }
-
+                let nsD = akun.sn==='D' ? Math.max(0, deb-kre) : 0;
+                let nsK = akun.sn==='K' ? Math.max(0, kre-deb) : 0;
                 if(deb||kre) {
-                    hL += `<tr><td class="text-center">${akun.no}</td><td>${akun.nama}</td><td class="text-right">${formatRp(nsD)}</td><td class="text-right">${formatRp(nsK)}</td><td colspan="2">-</td><td class="text-right">${formatRp(nsD)}</td><td class="text-right">${formatRp(nsK)}</td><td colspan="4">-</td></tr>`;
+                    hL += `<tr><td class="text-center font-bold">${akun.no}</td><td>${akun.nama}</td><td class="text-right">${formatRp(nsD)}</td><td class="text-right">${formatRp(nsK)}</td><td colspan="2">-</td><td class="text-right font-bold">${formatRp(nsD)}</td><td class="text-right font-bold">${formatRp(nsK)}</td><td colspan="4">-</td></tr>`;
                 }
             });
             document.getElementById('v-lajur').innerHTML = hL;
