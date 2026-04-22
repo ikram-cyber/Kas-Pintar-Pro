@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Akuntan Pro | Ikram Cyber System</title>
+    <title>Corporate Audit | Ikram Cyber System</title>
     <meta name="theme-color" content="#0f172a">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -28,7 +28,7 @@
             .no-print, .bottom-nav { display: none !important; }
             .page { display: none !important; } .page.active { display: block !important; }
             .print-header { display: flex !important; justify-content: space-between; align-items: flex-start; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 20px; }
-            table { font-size: 7px !important; width: 100% !important; min-width: 0 !important; border-collapse: collapse; } .table-pro th, .table-pro td { padding: 3px 2px !important; } .overflow-x-auto { overflow: visible !important; }
+            table { font-size: 9px !important; width: 100% !important; border-collapse: collapse; }
             .table-pro th { background-color: #f1f5f9 !important; color: #000 !important; -webkit-print-color-adjust: exact; border: 1px solid #000 !important; }
             .table-pro td { border: 1px solid #000 !important; }
             .ttd-area { display: flex !important; justify-content: space-between; margin-top: 40px; page-break-inside: avoid; color: #000; text-align: center; }
@@ -42,7 +42,7 @@
         <div class="absolute -right-6 -top-6 text-9xl opacity-10"><i class="fas fa-balance-scale-right"></i></div>
         <div class="flex justify-between items-start relative z-10">
             <div>
-                <h1 class="text-2xl font-black tracking-wide text-emerald-400 drop-shadow-md"><i class="fas fa-shield-halved mr-1"></i> AUDIT PRO</h1>
+                <h1 class="text-2xl font-black tracking-wide text-emerald-400 drop-shadow-md"><i class="fas fa-shield-halved mr-1"></i> CORPORATE AUDIT</h1>
                 <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest text-emerald-100 mt-1 h-pt-pro">PERUSAHAAN</p>
             </div>
             <div class="flex flex-col items-end">
@@ -196,7 +196,7 @@
 
     <div id="p-seting" class="page px-4 mt-6 no-print">
         <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg mb-5">
-            <h3 class="font-black text-slate-800 text-sm uppercase border-b border-slate-100 pb-3 mb-5"><i class="fas fa-cogs mr-2 text-slate-500"></i> Konfigurasi Pro</h3>
+            <h3 class="font-black text-slate-800 text-sm uppercase border-b border-slate-100 pb-3 mb-5"><i class="fas fa-cogs mr-2 text-slate-500"></i> Konfigurasi Sistem</h3>
             
             <label class="text-[10px] font-black uppercase text-slate-400 mb-1 block">Logo Kop Surat Laporan</label>
             <input type="file" accept="image/*" class="w-full text-xs mb-5 p-2 border border-slate-300 rounded-xl bg-slate-50" onchange="handleLogo(this)">
@@ -217,13 +217,15 @@
                 </label>
             </div>
 
-            <button onclick="if(confirm('Hapus seluruh Jurnal Pro permanen?')) { localStorage.removeItem('kspro_db_pro'); location.reload(); }" class="w-full bg-white text-rose-500 border border-rose-200 hover:bg-rose-50 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all">
-                Kosongkan Database Pro
+            <button onclick="if(confirm('Hapus seluruh Jurnal permanen?')) { localStorage.removeItem('kspro_db_pro'); location.reload(); }" class="w-full bg-white text-rose-500 border border-rose-200 hover:bg-rose-50 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all">
+                Kosongkan Database
             </button>
         </div>
     </div>
 
-    <div class="text-center py-6 text-slate-400 text-[10px] font-black tracking-widest uppercase mb-10 no-print">&copy; 2026 Ikram Cyber System</div><nav class="bottom-nav no-print">
+    <div class="text-center py-6 text-slate-400 text-[10px] font-black tracking-widest uppercase mb-10 no-print">&copy; 2026 Ikram Cyber System</div>
+
+    <nav class="bottom-nav no-print">
         <button class="nav-item active" onclick="bukaTab('input')"><i class="fas fa-brain mb-1 text-lg"></i>Audit</button>
         <button class="nav-item" onclick="bukaTab('jurnal')"><i class="fas fa-book mb-1 text-lg"></i>Jurnal</button>
         <button class="nav-item" onclick="bukaTab('worksheet')"><i class="fas fa-table mb-1 text-lg"></i>Lajur</button>
@@ -262,7 +264,7 @@
         function exportFullBackup() {
             const data = { praktis: localStorage.getItem('kspro_db'), pro: localStorage.getItem('kspro_db_pro'), t: localStorage.getItem('kspro_toko'), l: localStorage.getItem('kspro_logo'), b: localStorage.getItem('kspro_bos') };
             const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Backup_KasPintar_PRO.json`; a.click();
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Backup_Data_Audit.json`; a.click();
         }
 
         function importFullBackup(input) {
@@ -304,7 +306,7 @@
             document.querySelectorAll('.pr-date').forEach(el => el.innerText = tglCetak);
             
             let safeToko = toko.split(" ").join("_");
-            let qrData = "VERIFIED_PRO_" + safeToko + "_" + Date.now();
+            let qrData = "VERIFIED_AUDIT_" + safeToko + "_" + Date.now();
             document.querySelectorAll('.pr-qr').forEach(img => img.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + qrData);
         }
 
@@ -373,7 +375,7 @@
             }
             let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             let link = document.createElement("a"); link.href = URL.createObjectURL(blob);
-            link.download = `Export_${type}_Pro.csv`; link.click();
+            link.download = `Export_${type}.csv`; link.click();
         }
 
         function render() {
@@ -385,8 +387,10 @@
                 items.forEach((x, idx) => {
                     let nama = COA.find(a=>a.no===x.ref).nama;
                     if(x.pos === 'D') {
+                        // BARIS DEBIT - Tambahkan no-print di kolom paling kanan
                         hJ += `<tr class="border-t border-slate-200 hover:bg-slate-50"><td class="p-2">${idx===0 ? x.tgl.slice(5) : ''}</td><td class="p-2 text-center font-bold text-slate-700">${x.ref}</td><td class="p-2 font-bold text-slate-800">${nama}<br><span class="text-[9px] font-normal text-slate-400">${x.ket}</span></td><td class="p-2 text-right font-black text-emerald-600">${formatRp(x.nom)}</td><td class="p-2 text-right">-</td><td class="p-2 text-center no-print">${idx===0 ? `<button onclick="hapusJurnal(${x.grp})" class="text-rose-400 hover:text-rose-600 bg-rose-50 px-2 py-1 rounded"><i class="fas fa-trash"></i></button>` : ''}</td></tr>`;
                     } else {
+                        // BARIS KREDIT - Tambahkan no-print di kolom kosong paling kanan agar tidak muncul saat cetak
                         hJ += `<tr class="hover:bg-slate-50"><td class="p-2"></td><td class="p-2 text-center text-slate-500">${x.ref}</td><td class="p-2 pl-6 italic text-slate-600">${nama}<br><span class="text-[9px] font-normal not-italic text-slate-400">${x.ket}</span></td><td class="p-2 text-right">-</td><td class="p-2 text-right font-black text-rose-600">${formatRp(x.nom)}</td><td class="p-2 no-print"></td></tr>`;
                     }
                 });
@@ -409,7 +413,7 @@
                 
                 if(akun.tipe==='Ekuitas') ekuitas += nsK;
                 if(akun.tipe==='Pendapatan') pendapatan += nsK;
-                if(akun.no==='205') hutangPPN = nsK - nsD; // Saldo normal kredit
+                if(akun.no==='205') hutangPPN = nsK - nsD; 
 
                 if(deb || kre) {
                     hL += `<tr><td class="text-center font-bold">${akun.no}</td><td class="font-bold">${akun.nama}</td><td class="bg-debit text-right">${formatRp(nsD)}</td><td class="bg-kredit text-right">${formatRp(nsK)}</td><td class="bg-debit text-right">-</td><td class="bg-kredit text-right">-</td><td class="bg-debit text-right font-bold">${formatRp(nsD)}</td><td class="bg-kredit text-right font-bold">${formatRp(nsK)}</td><td class="bg-debit text-right">${formatRp(lrD)}</td><td class="bg-kredit text-right">${formatRp(lrK)}</td><td class="bg-debit text-right">${formatRp(nrD)}</td><td class="bg-kredit text-right">${formatRp(nrK)}</td></tr>`;
