@@ -12,17 +12,14 @@
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; }
         .page { display: none; animation: fadeIn 0.4s ease; } .page.active { display: block; }
         @keyframes fadeIn { from {opacity:0; transform:translateY(10px)} to {opacity:1; transform:translateY(0)} }
-        
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -10px 25px rgba(0,0,0,0.1); z-index: 50; border-top: 1px solid #e2e8f0; }
         .nav-item { color: #94a3b8; display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 20%; text-transform: uppercase; }
         .nav-item.active { color: #6366f1; transform: translateY(-3px); }
-        
         .table-10k { width: 100%; border-collapse: collapse; min-width: 1000px; font-size: 10px; }
         .table-10k th, .table-10k td { border: 1px solid #94a3b8; padding: 6px 8px; }
         .table-10k th { background-color: #f1f5f9; font-weight: 900; text-align: center; }
         .bg-debit { background-color: #f0fdf4; }
         .bg-kredit { background-color: #fff1f2; }
-
         @media print {
             @page { size: landscape; margin: 1cm; }
             body { background: white; padding: 0 !important; margin: 0 !important; }
@@ -175,7 +172,7 @@
             document.getElementById('h-pt').innerText = toko.toUpperCase();
             document.querySelectorAll('.pr-toko').forEach(el => el.innerText = toko.toUpperCase());
             document.querySelectorAll('.pr-bos').forEach(el => el.innerText = bos);
-            let qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=VERIFIED_PRO_${toko.replace(/\s/g,'_')}_${Date.now()}`;
+            let qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=VERIFIED_PRO_${toko.replace(/\s+/g,'_')}_${Date.now()}`;
             document.querySelectorAll('.pr-qr').forEach(img => img.src = qrUrl);
         }
 
@@ -190,14 +187,14 @@
             let id = Date.now();
             dbPro.push({id, tgl, ref:d, pos:'D', nom:n, ket, isAdj}, {id:id+1, tgl, ref:k, pos:'K', nom:n, ket, isAdj});
             localStorage.setItem('kspro_db_pro', JSON.stringify(dbPro));
-            alert("Terposting!"); location.reload();
+            alert("Terposting!"); render();
         }
 
         function hapusJurnal(id) {
             if(confirm("Hapus?")) {
                 dbPro = dbPro.filter(x => x.id !== id && x.id !== id+1 && x.id !== id-1);
                 localStorage.setItem('kspro_db_pro', JSON.stringify(dbPro));
-                location.reload();
+                render();
             }
         }
 
@@ -215,8 +212,8 @@
             COA.forEach(akun => {
                 let d = dbPro.filter(x => x.ref===akun.no && !x.isAdj && x.pos==='D').reduce((a,b)=>a+b.nom, 0);
                 let k = dbPro.filter(x => x.ref===akun.no && !x.isAdj && x.pos==='K').reduce((a,b)=>a+b.nom, 0);
-                let nsD = akun.sn==='D' ? Math.max(0, d-k) : Math.max(0, d-k); 
-                let nsK = akun.sn==='K' ? Math.max(0, k-d) : Math.max(0, k-d);
+                
+                let nsD = 0, nsK = 0;
                 if(akun.sn==='D') { nsD = d-k > 0 ? d-k : 0; nsK = d-k < 0 ? Math.abs(d-k) : 0; }
                 else { nsK = k-d > 0 ? k-d : 0; nsD = k-d < 0 ? Math.abs(k-d) : 0; }
 
@@ -236,9 +233,29 @@
                     [nsD,nsK,ajpD,ajpK,nsdD,nsdK,lrD,lrK,nD,nK].forEach((v,i) => totals[i]+=v);
                 }
             });
-            let laba = totals[9]-totals[8];
+
+            // HITUNG LABA BERSIH OTOMATIS (Sempurnaan Sesuai Gambar)
+            let laba = totals[7] - totals[6]; // Kredit NSD - Debit NSD untuk Pendapatan/Beban
+            let labaD = laba > 0 ? laba : 0;
+            let labaK = laba < 0 ? Math.abs(laba) : 0;
+
             document.getElementById('v-lajur').innerHTML = hL;
-            document.getElementById('v-lajur-foot').innerHTML = `<tr><td colspan="2">TOTAL</td>${totals.map(v => `<td class="text-right">${formatRp(v)}</td>`).join('')}</tr>`;
+            document.getElementById('v-lajur-foot').innerHTML = `
+                <tr class="bg-slate-100">
+                    <td colspan="2">TOTAL SEMENTARA</td>
+                    <td class="text-right">${formatRp(totals[0])}</td><td class="text-right">${formatRp(totals[1])}</td>
+                    <td class="text-right">${formatRp(totals[2])}</td><td class="text-right">${formatRp(totals[3])}</td>
+                    <td class="text-right">${formatRp(totals[4])}</td><td class="text-right">${formatRp(totals[5])}</td>
+                    <td class="text-right">${formatRp(totals[6])}</td><td class="text-right">${formatRp(totals[7])}</td>
+                    <td class="text-right">${formatRp(totals[8])}</td><td class="text-right">${formatRp(totals[9])}</td>
+                </tr>
+                <tr class="text-indigo-700 bg-indigo-50">
+                    <td colspan="2">LABA (RUGI) BERSIH</td>
+                    <td colspan="6"></td>
+                    <td class="text-right">${laba > 0 ? formatRp(laba) : ''}</td><td class="text-right">${laba < 0 ? formatRp(Math.abs(laba)) : ''}</td>
+                    <td class="text-right">${laba < 0 ? formatRp(Math.abs(laba)) : ''}</td><td class="text-right">${laba > 0 ? formatRp(laba) : ''}</td>
+                </tr>
+            `;
         }
 
         function bukaTab(id) { document.querySelectorAll('.page, .nav-item').forEach(e => e.classList.remove('active')); document.getElementById('p-'+id).classList.add('active'); event.currentTarget.classList.add('active'); window.scrollTo(0,0); }
