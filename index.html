@@ -11,7 +11,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #1e293b; -webkit-tap-highlight-color: transparent; }
-        .page { display: none; animation: fadeIn 0.4s ease; } .page.active { display: block; }
+        .page { display: none; animation: fadeIn 0.3s ease; } .page.active { display: block; }
         @keyframes fadeIn { from {opacity:0; transform:translateY(10px)} to {opacity:1; transform:translateY(0)} }
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -10px 25px rgba(0,0,0,0.05); z-index: 50; border-top: 1px solid #e2e8f0; }
         .nav-item { color: #94a3b8; display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 20%; text-transform: uppercase; }
@@ -22,7 +22,6 @@
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         
-        /* HYBRID BIG-FOUR AUDIT PRINT LAYOUT */
         @media print {
             body { background: white; padding: 0 !important; margin: 0 !important; font-size: 10pt; color: #000; }
             .no-print, .bottom-nav { display: none !important; }
@@ -258,7 +257,10 @@
 
     <script>
         let db = JSON.parse(localStorage.getItem('kspro_db')) || [];
-        let saldo = parseInt(localStorage.getItem('kspro_saldo')) || 0;
+        // BUG FIX: Patch old data missing ID
+        db = db.map(x => { if(!x.id) x.id = Math.floor(Math.random() * 1000000); return x; });
+        
+        let saldo = 0; // BUG FIX: Dynamic Balance Calculation
         let chartInstance = null;
         let dateObj = new Date();
         let offset = dateObj.getTimezoneOffset() * 60000;
@@ -267,7 +269,18 @@
         document.getElementById('inp-date').value = localISOTime;
         document.getElementById('inp-date').setAttribute('max', localISOTime);
 
-        function simpan() { localStorage.setItem('kspro_db', JSON.stringify(db)); localStorage.setItem('kspro_saldo', saldo); perbaruiSemua(); }
+        function hitungSaldo() {
+            saldo = 0;
+            db.forEach(x => { saldo += (x.jen === 'in' ? x.nom : -x.nom); });
+            localStorage.setItem('kspro_saldo', saldo);
+        }
+
+        function simpan() { 
+            hitungSaldo();
+            localStorage.setItem('kspro_db', JSON.stringify(db)); 
+            perbaruiSemua(); 
+        }
+        
         function simpanSet() { 
             localStorage.setItem('kspro_toko', document.getElementById('set-toko').value); 
             localStorage.setItem('kspro_bos', document.getElementById('set-bos').value); 
@@ -276,7 +289,6 @@
             perbaruiSemua(); 
         }
 
-        // --- FIXED: API SYNC EXCHANGE RATE (PEMBULATAN INTEGER) ---
         async function syncRate() {
             let btn = document.getElementById('btn-sync-rate');
             try {
@@ -284,17 +296,14 @@
                 let res = await fetch('https://open.er-api.com/v6/latest/USD');
                 let data = await res.json();
                 if(data && data.rates && data.rates.IDR) {
-                    let liveRate = Math.round(data.rates.IDR); // Dibulatkan agar tidak muncul koma berantakan
+                    let liveRate = Math.round(data.rates.IDR);
                     document.getElementById('set-rate').value = liveRate;
                     localStorage.setItem('kspro_rate', liveRate);
                     perbaruiSemua();
                     alert("Sync Berhasil! Kurs Live:\n1 USD = Rp " + liveRate.toLocaleString('id-ID'));
                 }
-            } catch(e) {
-                alert("Sistem Gagal Mengambil Data Kurs. Cek koneksi internet Anda.");
-            } finally {
-                btn.innerHTML = '<i class="fas fa-sync-alt mr-1"></i> AUTO';
-            }
+            } catch(e) { alert("Sistem Gagal Mengambil Data Kurs."); } 
+            finally { btn.innerHTML = '<i class="fas fa-sync-alt mr-1"></i> AUTO'; }
         }
 
         async function autoSyncRateSilent() {
@@ -314,13 +323,22 @@
             let n = parseInt(document.getElementById('inp-amt').value);
             let d = document.getElementById('inp-desc').value.trim() || "Auto Generated Entry";
             let c = document.getElementById('inp-cat').value;
-            let t = document.getElementById('inp-date').value;
-            if(!n) return alert("System Error: Nominal Invalid!");
+            let t = document.getElementById('inp-date').value || localISOTime;
+            
+            if(!n || n <= 0) return alert("System Error: Nominal Invalid (Harus lebih dari 0)!");
             if(t > localISOTime) { alert("ERROR: Transaksi di masa depan dilarang."); document.getElementById('inp-date').value = localISOTime; return; }
-            j === 'in' ? saldo += n : saldo -= n;
+            
             db.push({ id: Date.now(), tgl: t, ket: d, kat: c, nom: n, jen: j });
             document.getElementById('inp-amt').value = ""; document.getElementById('inp-desc').value = "";
             simpan(); alert("Posting Jurnal Sukses!");
+        }
+
+        // BUG FIX: FUNGSI HAPUS JURNAL INDIVIDUAL
+        function hapusJurnal(id) {
+            if(confirm("HAPUS PERMANEN transaksi ini dari Buku Besar?")) {
+                db = db.filter(x => x.id !== id);
+                simpan();
+            }
         }
 
         function cariData() {
@@ -342,17 +360,25 @@
         };
 
         function tampilkanTabelBuku(data) {
-            let html = `<table class="w-full text-left border-collapse"><thead class="bg-slate-100 text-slate-500 uppercase text-[10px] font-black border-b-2 border-slate-300"><tr><th class="p-2">Tgl / Date</th><th class="p-2">Akun / Account</th><th class="p-2">Keterangan / Ref</th><th class="p-2 text-right">Debit</th><th class="p-2 text-right">Kredit</th></tr></thead><tbody class="divide-y divide-slate-100">`;
+            let html = `<table class="w-full text-left border-collapse"><thead class="bg-slate-100 text-slate-500 uppercase text-[10px] font-black border-b-2 border-slate-300"><tr><th class="p-2">Tgl / Date</th><th class="p-2">Akun / Account</th><th class="p-2">Keterangan / Ref</th><th class="p-2 text-right">Debit</th><th class="p-2 text-right">Kredit</th><th class="p-2 text-center no-print">Aksi</th></tr></thead><tbody class="divide-y divide-slate-100">`;
             let totalD = 0, totalK = 0;
-            if(data.length === 0) html += "<tr><td colspan='5' class='text-center p-5 text-slate-400 font-bold'>Belum ada transaksi / No transactions</td></tr>";
+            if(data.length === 0) html += "<tr><td colspan='6' class='text-center p-5 text-slate-400 font-bold'>Belum ada transaksi / No transactions</td></tr>";
+            
             data.slice().sort((a,b)=>a.id-b.id).forEach(x => {
-                let p = x.tgl.split('-'); let tglFormat = `${p[2]}/${p[1]}`;
+                let p = x.tgl.split('-'); let tglFormat = p.length === 3 ? `${p[2]}/${p[1]}` : x.tgl;
                 let isDebit = x.jen === 'in';
                 let katEn = x.kat === 'Operasional' ? 'P&L' : (x.kat === 'Utang' ? 'Liability' : 'Equity');
-                html += `<tr class="hover:bg-slate-50"><td class="p-2 font-bold">${tglFormat}</td><td class="p-2"><span class="bg-slate-100 px-1.5 py-0.5 rounded text-[9px] font-black uppercase text-slate-600 border border-slate-200 print:border-none">${x.kat} (${katEn})</span></td><td class="p-2">${x.ket}</td><td class="p-2 text-right font-bold ${isDebit ? 'text-emerald-600 print:text-black' : ''}">${isDebit ? formatCurr(x.nom) : '-'}</td><td class="p-2 text-right font-bold ${!isDebit ? 'text-rose-600 print:text-black' : ''}">${!isDebit ? formatCurr(x.nom) : '-'}</td></tr>`;
+                html += `<tr class="hover:bg-slate-50">
+                    <td class="p-2 font-bold">${tglFormat}</td>
+                    <td class="p-2"><span class="bg-slate-100 px-1.5 py-0.5 rounded text-[9px] font-black uppercase text-slate-600 border border-slate-200 print:border-none">${x.kat} (${katEn})</span></td>
+                    <td class="p-2">${x.ket}</td>
+                    <td class="p-2 text-right font-bold ${isDebit ? 'text-emerald-600 print:text-black' : ''}">${isDebit ? formatCurr(x.nom) : '-'}</td>
+                    <td class="p-2 text-right font-bold ${!isDebit ? 'text-rose-600 print:text-black' : ''}">${!isDebit ? formatCurr(x.nom) : '-'}</td>
+                    <td class="p-2 text-center no-print"><button onclick="hapusJurnal(${x.id})" class="text-rose-500 hover:bg-rose-100 px-2 py-1 rounded transition-colors"><i class="fas fa-trash"></i></button></td>
+                </tr>`;
                 if(isDebit) totalD += x.nom; else totalK += x.nom;
             });
-            html += `<tr class="border-t-2 border-slate-300 font-black text-xs"><td colspan="3" class="p-2 text-right uppercase">Mutasi Kotor</td><td class="p-2 text-right text-emerald-600 print:text-black">${formatCurr(totalD)}</td><td class="p-2 text-right text-rose-600 print:text-black">${formatCurr(totalK)}</td></tr><tr class="bg-slate-50 font-black text-sm border-t border-slate-200"><td colspan="3" class="p-2 text-right uppercase">Saldo Netto / Net Balance</td><td colspan="2" class="p-2 text-right text-blue-800 print:text-black">${formatCurr(totalD - totalK)}</td></tr></tbody></table>`;
+            html += `<tr class="border-t-2 border-slate-300 font-black text-xs"><td colspan="3" class="p-2 text-right uppercase">Mutasi Kotor</td><td class="p-2 text-right text-emerald-600 print:text-black">${formatCurr(totalD)}</td><td class="p-2 text-right text-rose-600 print:text-black">${formatCurr(totalK)}</td><td class="no-print"></td></tr><tr class="bg-slate-50 font-black text-sm border-t border-slate-200"><td colspan="3" class="p-2 text-right uppercase">Saldo Netto / Net Balance</td><td colspan="2" class="p-2 text-right text-blue-800 print:text-black">${formatCurr(totalD - totalK)}</td><td class="no-print"></td></tr></tbody></table>`;
             document.getElementById('view-buku').innerHTML = html;
         }
 
@@ -365,7 +391,6 @@
             chartInstance = new Chart(ctx, { type: 'bar', data: { labels: ['Pendapatan/Rev', 'Beban/Exp', 'Laba/Net Inc'], datasets: [{ data: [pendapatan*mult, beban*mult, laba*mult], backgroundColor: ['#059669', '#e11d48', '#1e40af'], borderRadius: 6 }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, display: false }, x: { grid: { display: false } } } } });
         }
 
-        // --- FIXED: AI HEALTH LOGIC (MENGECEK SALDO UNTUK MENGHINDARI DDD DI TAHAP SEED) ---
         function calculateAIHealth(roe, dar, runwayTxt, op_in, op_out, totalUtang, saldo_akhir) {
             let box = document.getElementById('ai-health-box');
             let ratingTxt = document.getElementById('ai-health-rating');
@@ -378,7 +403,6 @@
                 ratingTxt.innerText = "N/A"; descTxt.innerText = "Belum ada data metrik / No data."; box.classList.add("bg-slate-50", "border-slate-200"); ratingTxt.className = "text-3xl font-black text-slate-400";
             } 
             else if (saldo_akhir > 0 && op_in === 0 && op_out === 0 && totalUtang === 0) {
-                // SEED FUNDING STAGE: Ada Saldo, tapi belum ada operasional (Pendapatan/Beban 0) dan belum ada utang.
                 ratingTxt.innerText = "SEED"; descTxt.innerText = "Tahap Pendanaan Awal. Modal kuat, nol operasional / Seed Funding stage."; box.classList.add("bg-purple-50", "border-purple-200"); ratingTxt.className = "text-3xl font-black text-purple-600";
             } 
             else if (roe >= 0.15 && dar <= 0.50 && runway >= 6) {
@@ -396,6 +420,8 @@
         }
 
         function perbaruiSemua() {
+            hitungSaldo(); // Mencegah Desync Saldo
+            
             let mode = localStorage.getItem('kspro_mode') || 'IDR';
             let isUSD = mode === 'USD';
             document.getElementById('set-mode').value = mode;
@@ -450,7 +476,6 @@
             let cfOp = op_in - op_out; let cfFin = (ut_in - ut_out) + (mo_in - mo_out); let netCashFlow = cfOp + cfFin;
             document.getElementById('view-cashflow').innerHTML = `<table class="w-full border-collapse text-xs border border-slate-300"><tr class="bg-slate-50 border-b border-slate-300"><th colspan="2" class="p-2">A. Arus Kas Operasi (Operating Cash Flows)</th></tr><tr class="border-b border-slate-200"><td class="p-2 pl-6">Penerimaan dari Pelanggan (Receipts)</td><td class="p-2 text-right">${formatCurr(op_in)}</td></tr><tr class="border-b border-slate-200"><td class="p-2 pl-6">Pembayaran untuk Beban (Payments)</td><td class="p-2 text-right">(${formatCurr(op_out)})</td></tr><tr class="font-bold bg-slate-100 border-b-2 border-black"><td class="p-2">Kas Bersih Operasi (Net Operating Cash)</td><td class="p-2 text-right ${cfOp >= 0 ? 'text-emerald-700' : 'text-rose-700'} print:text-black">${formatCurr(cfOp)}</td></tr><tr class="bg-slate-50 border-b border-slate-300"><th colspan="2" class="p-2">B. Arus Kas Pendanaan (Financing Cash Flows)</th></tr><tr class="border-b border-slate-200"><td class="p-2 pl-6">Penerimaan Modal/Utang (Funding In)</td><td class="p-2 text-right">${formatCurr(ut_in + mo_in)}</td></tr><tr class="border-b border-slate-200"><td class="p-2 pl-6">Pengeluaran Prive/Utang (Funding Out)</td><td class="p-2 text-right">(${formatCurr(ut_out + mo_out)})</td></tr><tr class="font-bold bg-slate-100 border-b-2 border-black"><td class="p-2">Kas Bersih Pendanaan (Net Financing Cash)</td><td class="p-2 text-right ${cfFin >= 0 ? 'text-emerald-700' : 'text-rose-700'} print:text-black">${formatCurr(cfFin)}</td></tr><tr class="font-black text-sm border-b-4 double border-black bg-blue-50 text-blue-900 print:bg-transparent print:text-black"><td class="p-3 uppercase">Kenaikan (Penurunan) Kas / Net Cash Flow</td><td class="p-3 text-right">${formatCurr(netCashFlow)}</td></tr></table>`;
 
-            // Hitung Cash Runway Khusus untuk di-lempar ke AI
             let runwayTxt = op_out > 0 ? (saldo / op_out).toFixed(1) : 'Infinity';
             calculateAIHealth(roe, dar, runwayTxt, op_in, op_out, totalUtang, saldo);
             cariData();
