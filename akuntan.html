@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #1e293b; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #0f172a; }
         .page { display: none; animation: fadeIn 0.4s ease; } .page.active { display: block; }
         @keyframes fadeIn { from {opacity:0; transform:translateY(15px)} to {opacity:1; transform:translateY(0)} }
         
@@ -22,7 +22,6 @@
         .table-pro th { background-color: #1e293b; color: #f8fafc; font-weight: 900; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; border-color: #334155; }
         .table-pro tbody tr:hover { background-color: #f8fafc; }
         
-        /* Print Layout Modern */
         @media print {
             @page { size: landscape; margin: 1cm; }
             body { background: white; padding: 0 !important; }
@@ -57,23 +56,31 @@
 
     <div id="p-input" class="page active px-4 mt-6">
         
-        <div class="bg-gradient-to-r from-indigo-900 to-slate-800 p-5 rounded-2xl shadow-lg relative overflow-hidden text-white mb-5 flex items-center justify-between border border-slate-700">
+        <div class="bg-gradient-to-r from-indigo-900 to-slate-800 p-5 rounded-2xl shadow-lg relative overflow-hidden text-white mb-4 flex items-center justify-between border border-slate-700">
             <div class="absolute -left-4 -bottom-4 text-7xl opacity-10"><i class="fas fa-robot"></i></div>
-            <div class="relative z-10">
-                <div class="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-1">AI Auditor Insight</div>
-                <div id="ai-audit-desc" class="text-xs font-bold text-slate-200">Menunggu data transaksi...</div>
+            <div class="relative z-10 w-3/4">
+                <div class="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-1"><i class="fas fa-microchip mr-1"></i> Executive & Tax Insight</div>
+                <div id="ai-audit-desc" class="text-[11px] font-bold text-slate-200 leading-snug">Menunggu kalkulasi transaksi dan pajak...</div>
             </div>
-            <div id="ai-audit-grade" class="text-4xl font-black text-white relative z-10 drop-shadow-lg">N/A</div>
+            <div id="ai-audit-grade" class="text-4xl font-black text-white relative z-10 drop-shadow-lg w-1/4 text-right">N/A</div>
         </div>
 
         <div class="grid grid-cols-2 gap-3 mb-6">
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center hover:border-emerald-300 transition-colors">
+            <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm text-center hover:border-emerald-300 transition-colors">
                 <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest"><i class="fas fa-chart-line mr-1 text-emerald-500"></i> Laba Bersih</div>
-                <div class="text-lg font-black text-emerald-600 mt-1" id="v-laba-pro">Rp 0</div>
+                <div class="text-sm font-black text-emerald-600 mt-1" id="v-laba-pro">Rp 0</div>
             </div>
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center hover:border-indigo-300 transition-colors">
-                <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest"><i class="fas fa-percent mr-1 text-indigo-500"></i> ROE Ratio</div>
-                <div class="text-lg font-black text-indigo-600 mt-1" id="v-roe-pro">0.00%</div>
+            <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm text-center hover:border-amber-300 transition-colors">
+                <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest"><i class="fas fa-landmark mr-1 text-amber-500"></i> Utang PPN 11%</div>
+                <div class="text-sm font-black text-amber-600 mt-1" id="v-ppn-pro">Rp 0</div>
+            </div>
+            <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm text-center hover:border-indigo-300 transition-colors">
+                <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest">NPM (Margin Laba)</div>
+                <div class="text-sm font-black text-indigo-600 mt-1" id="v-npm-pro">0.00%</div>
+            </div>
+            <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm text-center hover:border-indigo-300 transition-colors">
+                <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest">ROE (Return Equity)</div>
+                <div class="text-sm font-black text-indigo-600 mt-1" id="v-roe-pro">0.00%</div>
             </div>
         </div>
 
@@ -97,7 +104,7 @@
             <div class="bg-gradient-to-r from-amber-50 to-yellow-50 p-3 rounded-xl border border-amber-200 mb-4 shadow-sm">
                 <label class="flex items-center gap-2 text-[10px] font-black uppercase text-amber-800 cursor-pointer">
                     <input type="checkbox" id="j-tax-auto" class="w-4 h-4 rounded text-indigo-600 accent-amber-500"> 
-                    Hitung PPN 11% Otomatis
+                    Catat PPN 11% Keluaran/Masukan
                 </label>
             </div>
 
@@ -319,6 +326,8 @@
 
             if(useTax) {
                 let ppn = Math.round(nom * 0.11);
+                // Jika jurnal adalah pendapatan (Kredit ke akun 401), maka PPN Keluaran
+                // Total diterima = nom + PPN.
                 dbPro.push({id, grp: id, tgl, ref:d, pos:'D', nom:nom+ppn, ket});
                 dbPro.push({id:id+1, grp: id, tgl, ref:k, pos:'K', nom:nom, ket});
                 dbPro.push({id:id+2, grp: id, tgl, ref:'205', pos:'K', nom:ppn, ket:"PPN 11%"});
@@ -385,16 +394,22 @@
             document.getElementById('v-jurnal').innerHTML = hJ;
 
             let hL = '', totals = Array(10).fill(0);
-            let ekuitas = 0;
+            let ekuitas = 0, pendapatan = 0, hutangPPN = 0;
+            
             COA.forEach(akun => {
                 let deb = dbPro.filter(x => x.ref===akun.no && x.pos==='D').reduce((a,b)=>a+b.nom, 0);
                 let kre = dbPro.filter(x => x.ref===akun.no && x.pos==='K').reduce((a,b)=>a+b.nom, 0);
                 let nsD = 0, nsK = 0;
+                
                 if(akun.sn === 'D') { let bal = deb - kre; nsD = bal > 0 ? bal : 0; nsK = bal < 0 ? Math.abs(bal) : 0; } 
                 else { let bal = kre - deb; nsK = bal > 0 ? bal : 0; nsD = bal < 0 ? Math.abs(bal) : 0; }
+                
                 let lrD=0, lrK=0, nrD=0, nrK=0;
                 if(akun.tipe==='Pendapatan' || akun.tipe==='Beban') { lrD=nsD; lrK=nsK; } else { nrD=nsD; nrK=nsK; }
+                
                 if(akun.tipe==='Ekuitas') ekuitas += nsK;
+                if(akun.tipe==='Pendapatan') pendapatan += nsK;
+                if(akun.no==='205') hutangPPN = nsK - nsD; // Saldo normal kredit
 
                 if(deb || kre) {
                     hL += `<tr><td class="text-center font-bold">${akun.no}</td><td class="font-bold">${akun.nama}</td><td class="bg-debit text-right">${formatRp(nsD)}</td><td class="bg-kredit text-right">${formatRp(nsK)}</td><td class="bg-debit text-right">-</td><td class="bg-kredit text-right">-</td><td class="bg-debit text-right font-bold">${formatRp(nsD)}</td><td class="bg-kredit text-right font-bold">${formatRp(nsK)}</td><td class="bg-debit text-right">${formatRp(lrD)}</td><td class="bg-kredit text-right">${formatRp(lrK)}</td><td class="bg-debit text-right">${formatRp(nrD)}</td><td class="bg-kredit text-right">${formatRp(nrK)}</td></tr>`;
@@ -412,15 +427,42 @@
                 <tr class="bg-slate-800 text-white"><td colspan="2" class="text-right uppercase tracking-widest text-[9px]">Total Balance</td><td colspan="6"></td><td class="text-right font-black">${formatRp(totals[6]+labaD)}</td><td class="text-right font-black">${formatRp(totals[7]+labaK)}</td><td class="text-right font-black">${formatRp(totals[8]+labaK)}</td><td class="text-right font-black">${formatRp(totals[9]+labaD)}</td></tr>
             `;
 
+            // EXECUTIVE DASHBOARD LOGIC (Pimpinan & Pajak Melongo)
             document.getElementById('v-laba-pro').innerText = formatRp(laba);
-            let roe = ekuitas > 0 ? (laba / ekuitas * 100).toFixed(2) : 0;
-            document.getElementById('v-roe-pro').innerText = roe + "%";
+            document.getElementById('v-ppn-pro').innerText = formatRp(hutangPPN);
             
-            let auditTxt = document.getElementById('ai-audit-desc'); let auditGrd = document.getElementById('ai-audit-grade');
-            if(laba > 0 && roe > 10) { auditGrd.innerText = "A+"; auditTxt.innerText = "Sangat Sehat. ROE tinggi, pertumbuhan baik."; auditGrd.className = "text-4xl font-black text-emerald-400 drop-shadow-lg"; }
-            else if(laba > 0) { auditGrd.innerText = "B"; auditTxt.innerText = "Stabil. Perlu efisiensi beban operasional."; auditGrd.className = "text-4xl font-black text-blue-300 drop-shadow-lg"; }
-            else if(laba < 0) { auditGrd.innerText = "D"; auditTxt.innerText = "Peringatan! Perusahaan mencetak rugi."; auditGrd.className = "text-4xl font-black text-rose-400 drop-shadow-lg"; }
-            else { auditGrd.innerText = "N/A"; auditTxt.innerText = "Menunggu data transaksi..."; auditGrd.className = "text-4xl font-black text-slate-400 drop-shadow-lg"; }
+            let roe = ekuitas > 0 ? (laba / ekuitas * 100).toFixed(2) : "0.00";
+            let npm = pendapatan > 0 ? (laba / pendapatan * 100).toFixed(2) : "0.00";
+            document.getElementById('v-roe-pro').innerText = roe + "%";
+            document.getElementById('v-npm-pro').innerText = npm + "%";
+            
+            let auditTxt = document.getElementById('ai-audit-desc'); 
+            let auditGrd = document.getElementById('ai-audit-grade');
+            
+            let aiSentences = "";
+            if(laba > 0) {
+                if(roe >= 15) {
+                    auditGrd.innerText = "AAA"; auditGrd.className = "text-4xl font-black text-emerald-400 drop-shadow-lg";
+                    aiSentences = `Kinerja ekuitas prima (ROE ${roe}%). Margin laba operasional tercatat pada level ${npm}%. `;
+                } else {
+                    auditGrd.innerText = "BBB"; auditGrd.className = "text-4xl font-black text-blue-300 drop-shadow-lg";
+                    aiSentences = `Laba positif. Namun efisiensi biaya perlu ditekan untuk meningkatkan Margin Laba (${npm}%). `;
+                }
+            } else if(laba < 0) {
+                auditGrd.innerText = "CCC"; auditGrd.className = "text-4xl font-black text-rose-400 drop-shadow-lg";
+                aiSentences = `PERINGATAN: Defisit Operasional! Laba negatif tercatat ${formatRp(Math.abs(laba))}. `;
+            } else {
+                auditGrd.innerText = "N/A"; auditGrd.className = "text-4xl font-black text-slate-400 drop-shadow-lg";
+                aiSentences = `Belum ada Laba/Rugi tercatat. `;
+            }
+
+            if(hutangPPN > 0) {
+                aiSentences += `Kepatuhan pajak baik: Total PPN Terutang siap dilapor sejumlah ${formatRp(hutangPPN)}.`;
+            } else if(pendapatan > 0) {
+                aiSentences += `Tidak ada akumulasi PPN tercatat pada omset periode ini.`;
+            }
+
+            auditTxt.innerText = aiSentences;
         }
 
         function bukaTab(id) { document.querySelectorAll('.page, .nav-item').forEach(e => e.classList.remove('active')); document.getElementById('p-'+id).classList.add('active'); event.currentTarget.classList.add('active'); window.scrollTo(0,0); }
