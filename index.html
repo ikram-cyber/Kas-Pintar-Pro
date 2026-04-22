@@ -240,8 +240,14 @@
                 <option value="IFRS_USD">IFRS GLOBAL (USD - Dollar)</option>
             </select>
             
-            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Nilai Tukar (Kurs 1 USD ke IDR)</label>
-            <input type="number" id="set-rate" placeholder="Contoh: 15500" value="15500" class="w-full p-3 mb-4 border border-slate-300 rounded text-sm font-bold" oninput="simpanSet()">
+            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Live Exchange Rate (Kurs 1 USD = IDR)</label>
+            <div class="flex gap-2 mb-4">
+                <input type="number" id="set-rate" placeholder="Contoh: 15500" value="15500" class="w-full p-3 border border-slate-300 rounded text-sm font-bold bg-slate-50" oninput="simpanSet()">
+                <button id="btn-sync-rate" onclick="syncRate()" class="bg-blue-600 hover:bg-blue-800 text-white font-black px-4 rounded transition-colors shadow-md whitespace-nowrap text-xs flex items-center justify-center min-w-[90px]">
+                    <i class="fas fa-sync-alt mr-1"></i> AUTO
+                </button>
+            </div>
+            <p class="text-[9px] text-slate-500 -mt-2 mb-4 italic">Klik AUTO untuk menarik kurs USD ke IDR hari ini dari Server Valas Global (ExchangeRate-API).</p>
 
             <h3 class="font-black text-slate-800 text-sm uppercase tracking-wide border-b border-slate-200 pb-3 mb-4 mt-6"><i class="fas fa-id-card mr-1"></i> Data Perusahaan</h3>
             
@@ -290,6 +296,41 @@
             perbaruiSemua(); 
         }
 
+        // --- GLOBAL API SYNC EXCHANGE RATE ---
+        async function syncRate() {
+            let btn = document.getElementById('btn-sync-rate');
+            try {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                let res = await fetch('https://open.er-api.com/v6/latest/USD');
+                let data = await res.json();
+                if(data && data.rates && data.rates.IDR) {
+                    let liveRate = data.rates.IDR;
+                    document.getElementById('set-rate').value = liveRate;
+                    localStorage.setItem('kspro_rate', liveRate);
+                    perbaruiSemua();
+                    alert("Sync Berhasil! Kurs Live Wall Street:\n1 USD = Rp " + liveRate.toLocaleString('id-ID'));
+                }
+            } catch(e) {
+                alert("Sistem Gagal Mengambil Data Kurs. Cek koneksi internet Anda.");
+            } finally {
+                btn.innerHTML = '<i class="fas fa-sync-alt mr-1"></i> AUTO';
+            }
+        }
+
+        // Auto Sync on Boot in background
+        async function autoSyncRateSilent() {
+            try {
+                let res = await fetch('https://open.er-api.com/v6/latest/USD');
+                let data = await res.json();
+                if(data && data.rates && data.rates.IDR) {
+                    let liveRate = data.rates.IDR;
+                    document.getElementById('set-rate').value = liveRate;
+                    localStorage.setItem('kspro_rate', liveRate);
+                    perbaruiSemua();
+                }
+            } catch(e) { console.log("Silent sync failed"); }
+        }
+
         function catat(j) {
             let n = parseInt(document.getElementById('inp-amt').value);
             let d = document.getElementById('inp-desc').value.trim() || "Auto Generated Entry";
@@ -323,7 +364,6 @@
             tampilkanTabelBuku(hasil); return hasil;
         }
 
-        // --- HYBRID CURRENCY ENGINE ---
         const formatCurr = (angka) => {
             let mode = localStorage.getItem('kspro_mode') || 'SAK_IDR';
             let rate = parseFloat(localStorage.getItem('kspro_rate')) || 15500;
@@ -400,7 +440,6 @@
             document.getElementById('set-mode').value = mode;
             document.getElementById('set-rate').value = localStorage.getItem('kspro_rate') || 15500;
             
-            // Update Badges & Headers based on Hybrid Selection
             let badgeEl = document.getElementById('v-cur-badge');
             badgeEl.innerText = curText;
             if(curText === 'USD') {
@@ -464,7 +503,9 @@
         function exportExcel() { let hasil = cariData(); if(hasil.length === 0) return alert("Warning: Jurnal kosong!"); let csvContent = "Tanggal,Kategori Akun,Keterangan Transaksi,Debit (Masuk),Kredit (Keluar)\n"; hasil.forEach(x => { let masuk = x.jen === 'in' ? x.nom : 0; let keluar = x.jen === 'out' ? x.nom : 0; csvContent += `${x.tgl},${x.kat},"${x.ket}",${masuk},${keluar}\n`; }); let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }); let url = URL.createObjectURL(blob); let a = document.createElement("a"); a.href = url; let toko = localStorage.getItem('kspro_toko') || "Perusahaan"; a.download = `${toko.replace(/\s+/g, '')}_Ledger.csv`; document.body.appendChild(a); a.click(); document.body.removeChild(a); }
         function bukaTab(id) { document.querySelectorAll('.page, .nav-item').forEach(e => e.classList.remove('active')); document.getElementById('p-'+id).classList.add('active'); event.currentTarget.classList.add('active'); window.scrollTo(0,0); }
 
+        // Boot Init
         perbaruiSemua();
+        autoSyncRateSilent(); // Diam-diam narik kurs waktu aplikasi baru dibuka
     </script>
 </body>
 </html>
