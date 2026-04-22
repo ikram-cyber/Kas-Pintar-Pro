@@ -153,7 +153,9 @@
             <input type="file" accept="image/*" class="w-full text-xs mb-4 p-2 border border-slate-300 rounded bg-slate-50" onchange="handleLogo(this)">
 
             <label class="text-[10px] font-black uppercase text-slate-500 mb-1 block">Nama Perusahaan (Kop Surat)</label>
-            <input type="text" id="set-toko-pro" class="w-full p-3 mb-6 border border-slate-300 rounded font-bold outline-none focus:border-indigo-500" oninput="simpanSetPro()">
+            <input type="text" id="set-toko-pro" class="w-full p-3 mb-4 border border-slate-300 rounded font-bold outline-none focus:border-indigo-500" oninput="simpanSetPro()">
+            <label class="text-[10px] font-black uppercase text-slate-500 mb-1 block">Nama Pimpinan / CFO (TTD)</label>
+            <input type="text" id="set-bos-pro" class="w-full p-3 mb-6 border border-slate-300 rounded font-bold outline-none focus:border-indigo-500" oninput="simpanSetPro()">
 
             <div class="grid grid-cols-2 gap-3 mb-6">
                 <button onclick="exportFullBackup()" class="bg-slate-800 text-white py-4 rounded text-[10px] font-black shadow-md active:scale-95 transition-all">
@@ -228,7 +230,7 @@
             }
         }
 
-        function simpanSetPro() { localStorage.setItem('kspro_toko', document.getElementById('set-toko-pro').value); updateUI(); }
+        function simpanSetPro() { localStorage.setItem('kspro_toko', document.getElementById('set-toko-pro').value); localStorage.setItem('kspro_bos', document.getElementById('set-bos-pro').value); updateUI(); }
         function updateUI() {
             let toko = localStorage.getItem('kspro_toko') || "NAMA PERUSAHAAN";
             document.querySelectorAll('.h-pt-pro, .pr-toko').forEach(el => el.innerText = toko.toUpperCase());
@@ -361,7 +363,7 @@
         window.onload = () => {
             let opt = ''; COA.forEach(a => opt += `<option value="${a.no}">${a.no} - ${a.nama}</option>`);
             document.getElementById('j-debit').innerHTML = opt; document.getElementById('j-kredit').innerHTML = opt;
-            document.getElementById('j-tgl').value = new Date().toISOString().split('T')[0];
+            let today = new Date().toISOString().split('T')[0]; document.getElementById('j-tgl').value = today; document.getElementById('j-tgl').setAttribute('max', today);
             document.getElementById('set-toko-pro').value = localStorage.getItem('kspro_toko') || "";
             updateUI(); render();
         };
