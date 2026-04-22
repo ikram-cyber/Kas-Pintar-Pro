@@ -49,8 +49,8 @@
             <h3 class="font-black text-sm uppercase mb-4 border-b pb-2">Jurnal Umum & Pajak</h3>
             <input type="date" id="j-tgl" class="w-full p-3 mb-3 border rounded text-sm font-bold bg-slate-50">
             <div class="grid grid-cols-2 gap-2 mb-3">
-                <div><label class="text-[9px] font-black text-emerald-600 uppercase ml-1">Debit (+)</label><select id="j-debit" class="w-full p-3 border border-emerald-300 rounded-lg text-xs font-bold bg-emerald-50"></select></div>
-                <div><label class="text-[9px] font-black text-rose-600 uppercase ml-1">Kredit (-)</label><select id="j-kredit" class="w-full p-3 border border-rose-300 rounded-lg text-xs font-bold bg-rose-50"></select></div>
+                <div><label class="text-[9px] font-black text-emerald-600 ml-1">DEBIT (+)</label><select id="j-debit" class="w-full p-3 border border-emerald-300 rounded-lg text-xs font-bold bg-emerald-50"></select></div>
+                <div><label class="text-[9px] font-black text-rose-600 ml-1">KREDIT (-)</label><select id="j-kredit" class="w-full p-3 border border-rose-300 rounded-lg text-xs font-bold bg-rose-50"></select></div>
             </div>
             <div class="bg-yellow-50 p-3 rounded border border-yellow-200 mb-3">
                 <label class="flex items-center gap-2 text-[10px] font-black uppercase text-yellow-800 cursor-pointer">
@@ -66,8 +66,8 @@
     <div id="p-jurnal" class="page px-4 mt-5">
         <div class="bg-white rounded-xl border p-4 shadow-sm">
             <div class="no-print flex justify-between items-center mb-4">
-                <h3 class="font-black text-sm uppercase">Buku Harian</h3>
-                <button onclick="window.print()" class="bg-slate-800 text-white px-3 py-1 rounded text-xs font-bold">PRINT</button>
+                <h3 class="font-black text-sm uppercase">Riwayat Jurnal (General Journal)</h3>
+                <button onclick="window.print()" class="bg-slate-800 text-white px-3 py-1.5 rounded text-[10px] font-bold">PRINT</button>
             </div>
             <div class="overflow-x-auto">
                 <table class="table-pro text-[11px]">
@@ -90,13 +90,13 @@
                 </div>
             </div>
             <div class="flex justify-between items-center mb-4 no-print">
-                <h3 class="font-black text-sm uppercase">Worksheet 10 Kolom</h3>
-                <button onclick="window.print()" class="bg-slate-800 text-white px-3 py-1 rounded text-xs font-bold">PRINT LANDSCAPE</button>
+                <h3 class="font-black text-sm uppercase">Neraca Lajur 10 Kolom</h3>
+                <button onclick="window.print()" class="bg-slate-800 text-white px-3 py-1.5 rounded text-[10px] font-bold">PRINT LANDSCAPE</button>
             </div>
             <div class="overflow-x-auto">
-                <table class="table-pro" style="min-width:1000px">
+                <table class="table-pro" style="min-width:1100px">
                     <thead>
-                        <tr><th rowspan="2">Ref</th><th rowspan="2">Nama Akun</th><th colspan="2">NS</th><th colspan="2">AJP</th><th colspan="2">NSD</th><th colspan="2">L/R</th><th colspan="2">NERACA</th></tr>
+                        <tr><th rowspan="2">Ref</th><th rowspan="2">Nama Akun</th><th colspan="2">Neraca Saldo</th><th colspan="2">AJP</th><th colspan="2">NSD</th><th colspan="2">Laba/Rugi</th><th colspan="2">Neraca</th></tr>
                         <tr><th>D</th><th>K</th><th>D</th><th>K</th><th>D</th><th>K</th><th>D</th><th>K</th><th>D</th><th>K</th></tr>
                     </thead>
                     <tbody id="v-lajur"></tbody>
@@ -108,24 +108,19 @@
 
     <div id="p-seting" class="page px-4 mt-5 no-print">
         <div class="bg-white p-5 rounded-xl border shadow-sm mb-5">
-            <h3 class="font-black text-sm uppercase border-b pb-3 mb-4">Branding & Identity</h3>
-            <label class="text-[9px] font-black uppercase text-slate-500">Logo Perusahaan</label>
+            <h3 class="font-black text-sm uppercase border-b pb-3 mb-4">Branding & Data</h3>
+            <label class="text-[9px] font-black uppercase text-slate-500">Upload Logo</label>
             <input type="file" accept="image/*" class="w-full text-xs mb-4" onchange="handleLogo(this)">
             
-            <label class="text-[9px] font-black uppercase text-slate-500">Nama Perusahaan (Pro)</label>
+            <label class="text-[9px] font-black uppercase text-slate-500">Nama PT (Pro)</label>
             <input type="text" id="set-toko-pro" class="w-full p-2 mb-4 border rounded font-bold" oninput="simpanSetPro()">
 
-            <h3 class="font-black text-sm uppercase border-b pb-3 mb-4 mt-4">Security & Backup</h3>
-            <div class="grid grid-cols-2 gap-2 mb-6">
-                <button onclick="exportFullBackup()" class="bg-indigo-600 text-white py-3 rounded-lg text-[10px] font-black shadow-md">
-                    <i class="fas fa-download mr-1"></i> BACKUP SEMUA
-                </button>
+            <div class="grid grid-cols-2 gap-2 mt-4">
+                <button onclick="exportFullBackup()" class="bg-indigo-600 text-white py-3 rounded-lg text-[10px] font-black shadow-md">BACKUP SEMUA</button>
                 <label class="bg-emerald-600 text-white py-3 rounded-lg text-[10px] font-black shadow-md text-center cursor-pointer">
-                    <i class="fas fa-upload mr-1"></i> RESTORE
-                    <input type="file" class="hidden" onchange="importFullBackup(this)">
+                    RESTORE <input type="file" class="hidden" onchange="importFullBackup(this)">
                 </label>
             </div>
-            <button onclick="if(confirm('Hapus Jurnal Pro?')) { localStorage.removeItem('kspro_db_pro'); location.reload(); }" class="w-full bg-rose-600 text-white py-3 rounded-lg text-[10px] font-black uppercase">Reset Database Pro</button>
         </div>
     </div>
 
@@ -142,6 +137,7 @@
             { no: '102', nama: 'Piutang', tipe: 'Aset', sn: 'D' },
             { no: '103', nama: 'Perlengkapan', tipe: 'Aset', sn: 'D' },
             { no: '121', nama: 'Peralatan', tipe: 'Aset', sn: 'D' },
+            { no: '122', nama: 'Akum. Peny. Peralatan', tipe: 'Aset', sn: 'K' },
             { no: '201', nama: 'Utang Dagang', tipe: 'Kewajiban', sn: 'K' },
             { no: '205', nama: 'Utang PPN', tipe: 'Kewajiban', sn: 'K' },
             { no: '301', nama: 'Modal', tipe: 'Ekuitas', sn: 'K' },
@@ -151,7 +147,7 @@
         ];
 
         let dbPro = JSON.parse(localStorage.getItem('kspro_db_pro')) || [];
-        const formatRp = (n) => n ? new Intl.NumberFormat('id-ID').format(n) : '0';
+        const formatRp = (n) => n ? new Intl.NumberFormat('id-ID').format(n) : '';
 
         function handleLogo(input) {
             if (input.files && input.files[0]) {
@@ -164,13 +160,12 @@
         function exportFullBackup() {
             const data = {
                 praktis: JSON.parse(localStorage.getItem('kspro_db')) || [],
-                pro: JSON.parse(localStorage.getItem('kspro_db_pro')) || [],
-                settings: { toko: localStorage.getItem('kspro_toko_pro'), logo: localStorage.getItem('kspro_logo') }
+                pro: JSON.parse(localStorage.getItem('kspro_db_pro')) || []
             };
             const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url; a.download = `Backup_KasPintar_Pro_${new Date().toISOString().split('T')[0]}.json`;
+            a.href = URL.createObjectURL(blob);
+            a.download = `Backup_KasPintar_Full.json`;
             a.click();
         }
 
@@ -181,8 +176,7 @@
                     const data = JSON.parse(e.target.result);
                     if(data.praktis) localStorage.setItem('kspro_db', JSON.stringify(data.praktis));
                     if(data.pro) localStorage.setItem('kspro_db_pro', JSON.stringify(data.pro));
-                    if(data.settings) { localStorage.setItem('kspro_toko_pro', data.settings.toko); localStorage.setItem('kspro_logo', data.settings.logo); }
-                    alert("Data Berhasil di-Restore!"); location.reload();
+                    alert("Restore Berhasil!"); location.reload();
                 };
                 reader.readAsText(input.files[0]);
             }
@@ -195,18 +189,28 @@
             let tgl = document.getElementById('j-tgl').value;
             let ket = document.getElementById('j-ket').value;
             let taxAuto = document.getElementById('j-tax-auto').checked;
-            if(!n || d==k) return alert("Cek input!");
+
+            if(!n || d==k) return alert("Periksa kembali!");
             let id = Date.now();
+            
             if(taxAuto) {
                 let tax = Math.round(n * 0.11);
                 dbPro.push({id, tgl, ref:d, pos:'D', nom:n+tax, ket, isAdj:false});
                 dbPro.push({id:id+1, tgl, ref:k, pos:'K', nom:n, ket, isAdj:false});
-                dbPro.push({id:id+2, tgl, ref:'205', pos:'K', nom:tax, ket:"PPN 11% dari "+ket, isAdj:false});
+                dbPro.push({id:id+2, tgl, ref:'205', pos:'K', nom:tax, ket:"PPN 11%", isAdj:false});
             } else {
                 dbPro.push({id, tgl, ref:d, pos:'D', nom:n, ket, isAdj:false}, {id:id+1, tgl, ref:k, pos:'K', nom:n, ket, isAdj:false});
             }
             localStorage.setItem('kspro_db_pro', JSON.stringify(dbPro));
-            alert("Posting Berhasil!"); render();
+            alert("Terposting!"); render();
+        }
+
+        function hapusJurnal(id) {
+            if(confirm("Hapus sepasang jurnal?")) {
+                dbPro = dbPro.filter(x => x.id !== id && x.id !== id+1 && x.id !== id-1);
+                localStorage.setItem('kspro_db_pro', JSON.stringify(dbPro));
+                render();
+            }
         }
 
         function render() {
@@ -214,8 +218,8 @@
             dbPro.forEach((x, i) => {
                 if(x.pos==='D') {
                     let k = dbPro[i+1];
-                    hJ += `<tr><td>${x.tgl}</td><td class="text-center">${x.ref}</td><td><b>${COA.find(a=>a.no===x.ref).nama}</b><br><i class="text-slate-400">${x.ket}</i></td><td class="text-right">${formatRp(x.nom)}</td><td class="text-right">-</td><td class="no-print"><button onclick="hapusJurnal(${x.id})">❌</button></td></tr>`;
-                    if(k) hJ += `<tr><td></td><td class="text-center">${k.ref}</td><td class="pl-4 italic">${COA.find(a=>a.no===k.ref).nama}</td><td class="text-right">-</td><td class="text-right">${formatRp(k.nom)}</td><td></td></tr>`;
+                    hJ += `<tr><td>${x.tgl}</td><td class="text-center font-bold">${x.ref}</td><td><b>${COA.find(a=>a.no===x.ref).nama}</b><br><i class="text-slate-400">${x.ket}</i></td><td class="text-right text-emerald-600 font-bold">${formatRp(x.nom)}</td><td class="text-right">-</td><td class="no-print text-center"><button onclick="hapusJurnal(${x.id})">❌</button></td></tr>`;
+                    if(k) hJ += `<tr><td></td><td class="text-center">${k.ref}</td><td class="pl-6 italic text-slate-500">${COA.find(a=>a.no===k.ref).nama}</td><td class="text-right">-</td><td class="text-right text-rose-600 font-bold">${formatRp(k.nom)}</td><td></td></tr>`;
                 }
             });
             document.getElementById('v-jurnal').innerHTML = hJ;
@@ -224,9 +228,10 @@
             COA.forEach(akun => {
                 let deb = dbPro.filter(x => x.ref===akun.no && x.pos==='D').reduce((a,b)=>a+b.nom, 0);
                 let kre = dbPro.filter(x => x.ref===akun.no && x.pos==='K').reduce((a,b)=>a+b.nom, 0);
-                let nsD = 0, nsK = 0;
+                let nsD=0, nsK=0;
                 if(akun.sn==='D') { nsD = Math.max(0, deb-kre); nsK = Math.max(0, kre-deb); }
                 else { nsK = Math.max(0, kre-deb); nsD = Math.max(0, deb-kre); }
+
                 if(deb||kre) {
                     hL += `<tr><td class="text-center">${akun.no}</td><td>${akun.nama}</td><td class="text-right">${formatRp(nsD)}</td><td class="text-right">${formatRp(nsK)}</td><td colspan="2">-</td><td class="text-right">${formatRp(nsD)}</td><td class="text-right">${formatRp(nsK)}</td><td colspan="4">-</td></tr>`;
                 }
