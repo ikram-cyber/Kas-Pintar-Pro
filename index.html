@@ -13,12 +13,10 @@
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #1e293b; -webkit-tap-highlight-color: transparent; }
         .page { display: none; animation: fadeIn 0.3s ease; } .page.active { display: block; }
         @keyframes fadeIn { from {opacity:0; transform:translateY(10px)} to {opacity:1; transform:translateY(0)} }
-        
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -10px 25px rgba(0,0,0,0.05); z-index: 50; border-top: 1px solid #e2e8f0; }
         .nav-item { color: #94a3b8; display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 20%; text-transform: uppercase; }
         .nav-item.active { color: #0f4c81; transform: translateY(-3px); }
         .nav-icon { font-size: 22px; margin-bottom: 4px; }
-        
         input, select, button { outline: none; transition: 0.3s; }
         input:focus, select:focus { border-color: #0f4c81; box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.15); }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -30,12 +28,10 @@
             .no-print, .bottom-nav { display: none !important; }
             .page { display: none !important; margin: 0 !important; padding: 0 !important; }
             .page.active { display: block !important; page-break-after: auto; }
-            
             .print-header { border-bottom: 3px double #000; padding-bottom: 15px; margin-bottom: 20px; display: flex !important; justify-content: space-between; align-items: flex-start; }
             .print-title { font-size: 22px; font-weight: 900; color: #000 !important; margin: 0; text-transform: uppercase; letter-spacing: 1px; -webkit-print-color-adjust: exact; }
             .print-subtitle { font-size: 12px; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
             .report-badge { border: 1px solid #000; padding: 3px 8px; font-size: 9px; font-weight: 900; letter-spacing: 1px; margin-top: 5px; display: inline-block; background: #f8fafc; }
-            
             table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 10pt; }
             th, td { border: 1px solid #000; padding: 8px 10px; text-align: left; }
             th { background-color: #f1f5f9 !important; font-weight: 800; -webkit-print-color-adjust: exact; text-transform: uppercase; font-size: 9pt; }
@@ -61,7 +57,7 @@
     <div id="p-home" class="page active px-4 mt-5">
         <div class="bg-gradient-to-br from-blue-900 to-slate-800 p-6 rounded-2xl shadow-lg relative overflow-hidden text-center text-white mb-5 border border-slate-700">
             <div class="absolute -left-6 -bottom-6 text-7xl opacity-10"><i class="fas fa-vault"></i></div>
-            <p class="text-[10px] font-black uppercase tracking-widest opacity-80 mb-1">Total Aktiva Lancar (Kas & Bank)</p>
+            <p class="text-[10px] font-black uppercase tracking-widest opacity-80 mb-1">Aktiva Lancar / Current Assets</p>
             <h1 id="v-saldo" class="text-4xl font-black tracking-tight">Rp 0</h1>
             <p class="text-[10px] text-blue-300 mt-2 font-bold uppercase">Tahun Buku Berjalan</p>
         </div>
@@ -77,19 +73,19 @@
         <h3 class="font-black text-slate-800 text-xs uppercase tracking-wider mb-3 border-b border-slate-200 pb-2"><i class="fas fa-chart-pie mr-1"></i> Executive Summary</h3>
         <div class="grid grid-cols-2 gap-3 mb-5">
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center hover:border-emerald-300 transition">
-                <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Gross Revenue</div>
+                <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Pendapatan (Revenue)</div>
                 <div class="text-lg font-black text-emerald-600 mt-1" id="m-pendapatan">0</div>
             </div>
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center hover:border-rose-300 transition">
-                <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Opex & COGS</div>
-                <div class="text-lg font-black text-rose-600 mt-1" id="m-beban">0</div>
+                <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Beban (Expenses)</div>
+                <div class="text-lg font-black text-red-600 mt-1" id="m-beban">0</div>
             </div>
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center hover:border-blue-300 transition">
-                <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Net Income (Laba)</div>
+                <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Laba Bersih (Net Income)</div>
                 <div class="text-lg font-black mt-1" id="m-laba">0</div>
             </div>
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center hover:border-orange-300 transition">
-                <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Total Liabilities</div>
+                <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Utang (Liabilities)</div>
                 <div class="text-lg font-black text-orange-600 mt-1" id="m-utang">0</div>
             </div>
         </div>
@@ -108,7 +104,7 @@
 
         <div class="bg-white p-5 rounded-xl border-t-4 border-t-blue-600 shadow-lg mb-5">
             <h3 class="font-black text-blue-900 text-sm uppercase tracking-wide mb-4"><i class="fas fa-pen-to-square mr-1"></i> Posting Jurnal Transaksi</h3>
-            <input type="number" id="inp-amt" placeholder="Nominal Uang (Rp)" class="w-full p-3 mb-3 border border-slate-300 rounded-lg text-sm font-bold">
+            <input type="number" id="inp-amt" placeholder="Nominal Uang (Wajib Rupiah)" class="w-full p-3 mb-3 border border-slate-300 rounded-lg text-sm font-bold">
             <input type="text" id="inp-desc" placeholder="Keterangan Transaksi" class="w-full p-3 mb-3 border border-slate-300 rounded-lg text-sm">
             <select id="inp-cat" class="w-full p-3 mb-3 border border-slate-300 rounded-lg text-sm font-bold bg-slate-50">
                 <option value="Operasional">Aktivitas Operasional (Laba/Rugi)</option>
@@ -272,7 +268,6 @@
 
     <script>
         let db = JSON.parse(localStorage.getItem('kspro_db')) || [];
-        // Pastikan semua data lama punya ID unik
         db = db.map(x => { if(!x.id) x.id = Math.floor(Math.random() * 1000000); return x; });
         
         let saldo = 0; 
@@ -283,8 +278,12 @@
         
         document.getElementById('inp-date').value = localISOTime;
         document.getElementById('inp-date').setAttribute('max', localISOTime);
+        
+        // PENGISIAN OTOMATIS FILTER TANGGAL BUKU BESAR
+        document.getElementById('cari-mulai').value = new Date(dateObj.getFullYear(), dateObj.getMonth(), 1).toISOString().split('T')[0];
+        document.getElementById('cari-akhir').value = localISOTime;
+        document.getElementById('cari-akhir').setAttribute('max', localISOTime);
 
-        // KALKULASI SALDO ULANG MURNI DARI DATABASE
         function hitungSaldo() {
             saldo = 0;
             db.forEach(x => { saldo += (x.jen === 'in' ? x.nom : -x.nom); });
@@ -322,6 +321,19 @@
             finally { btn.innerHTML = '<i class="fas fa-sync-alt mr-1"></i> AUTO'; }
         }
 
+        async function autoSyncRateSilent() {
+            try {
+                let res = await fetch('https://open.er-api.com/v6/latest/USD');
+                let data = await res.json();
+                if(data && data.rates && data.rates.IDR) {
+                    let liveRate = Math.round(data.rates.IDR);
+                    document.getElementById('set-rate').value = liveRate;
+                    localStorage.setItem('kspro_rate', liveRate);
+                    perbaruiSemua();
+                }
+            } catch(e) {}
+        }
+
         function catat(j) {
             let n = parseInt(document.getElementById('inp-amt').value);
             let d = document.getElementById('inp-desc').value.trim() || "Entry Otomatis";
@@ -336,7 +348,6 @@
             simpan(); alert("Tersimpan di Buku Besar!");
         }
 
-        // FUNGSI HAPUS DENGAN UI YANG RAPI
         function hapusJurnal(id) {
             if(confirm("Hapus transaksi ini secara permanen? Saldo akan dihitung ulang.")) {
                 db = db.filter(x => x.id !== id);
@@ -347,10 +358,16 @@
         function cariData() {
             let teks = document.getElementById('cari-teks').value.toLowerCase();
             let kat = document.getElementById('cari-kat').value;
+            let tMulai = document.getElementById('cari-mulai').value;
+            let tAkhir = document.getElementById('cari-akhir').value;
+
             let hasil = db.filter(x => {
                 let matchTeks = x.ket.toLowerCase().includes(teks);
                 let matchKat = (kat === 'Semua' || x.kat === kat);
-                return matchTeks && matchKat;
+                let matchTgl = true;
+                if(tMulai) matchTgl = matchTgl && (x.tgl >= tMulai);
+                if(tAkhir) matchTgl = matchTgl && (x.tgl <= tAkhir);
+                return matchTeks && matchKat && matchTgl;
             });
             tampilkanTabelBuku(hasil); return hasil;
         }
@@ -363,7 +380,6 @@
         };
 
         function tampilkanTabelBuku(data) {
-            // TABEL KEMBALI 5 KOLOM (Tombol Hapus Disembunyikan di kolom Keterangan)
             let html = `<table class="w-full text-left border-collapse"><thead class="bg-slate-100 text-slate-500 uppercase text-[10px] font-black border-b-2 border-slate-300"><tr><th class="p-2">Tgl</th><th class="p-2">Akun</th><th class="p-2">Keterangan</th><th class="p-2 text-right">Debit</th><th class="p-2 text-right">Kredit</th></tr></thead><tbody class="divide-y divide-slate-100">`;
             let totalD = 0, totalK = 0;
             if(data.length === 0) html += "<tr><td colspan='5' class='text-center p-5 text-slate-400 font-bold'>Tidak ada data transaksi.</td></tr>";
@@ -371,10 +387,7 @@
             data.slice().sort((a,b)=>a.id-b.id).forEach(x => {
                 let p = x.tgl.split('-'); let tglFormat = p.length === 3 ? `${p[2]}/${p[1]}` : x.tgl;
                 let isDebit = x.jen === 'in';
-                
-                // Menyisipkan tombol Hapus (Warna merah pudar) di ujung Keterangan
                 let hapusBtn = `<button onclick="hapusJurnal(${x.id})" class="ml-2 text-rose-300 hover:text-rose-600 no-print" title="Hapus Data"><i class="fas fa-times-circle"></i></button>`;
-                
                 html += `<tr class="hover:bg-slate-50">
                     <td class="p-2 font-bold">${tglFormat}</td>
                     <td class="p-2"><span class="bg-slate-100 px-1.5 py-0.5 rounded text-[9px] font-black uppercase text-slate-600 border border-slate-200 print:border-none">${x.kat}</span></td>
@@ -397,7 +410,6 @@
             chartInstance = new Chart(ctx, { type: 'bar', data: { labels: ['Pendapatan', 'Beban', 'Laba'], datasets: [{ data: [pendapatan*mult, beban*mult, laba*mult], backgroundColor: ['#059669', '#e11d48', '#1e40af'], borderRadius: 6 }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, display: false }, x: { grid: { display: false } } } } });
         }
 
-        // LOGIKA AI - SUDAH FIX UNTUK SEED FUNDING
         function calculateAIHealth(roe, dar, runwayTxt, op_in, op_out, totalUtang, saldo_akhir) {
             let box = document.getElementById('ai-health-box');
             let ratingTxt = document.getElementById('ai-health-rating');
@@ -490,7 +502,9 @@
         function exportExcel() { let hasil = cariData(); if(hasil.length === 0) return alert("Kosong!"); let csvContent = "Tanggal,Akun,Keterangan,Masuk,Keluar\n"; hasil.forEach(x => { let masuk = x.jen === 'in' ? x.nom : 0; let keluar = x.jen === 'out' ? x.nom : 0; csvContent += `${x.tgl},${x.kat},"${x.ket}",${masuk},${keluar}\n`; }); let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }); let url = URL.createObjectURL(blob); let a = document.createElement("a"); a.href = url; let toko = localStorage.getItem('kspro_toko') || "Export"; a.download = `${toko.replace(/\s+/g, '')}.csv`; document.body.appendChild(a); a.click(); document.body.removeChild(a); }
         function bukaTab(id) { document.querySelectorAll('.page, .nav-item').forEach(e => e.classList.remove('active')); document.getElementById('p-'+id).classList.add('active'); event.currentTarget.classList.add('active'); window.scrollTo(0,0); }
 
+        // BOOT INIT
         perbaruiSemua();
+        autoSyncRateSilent();
     </script>
 </body>
 </html>
