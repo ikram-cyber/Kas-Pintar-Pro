@@ -12,14 +12,18 @@
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; }
         .page { display: none; animation: fadeIn 0.4s ease; } .page.active { display: block; }
         @keyframes fadeIn { from {opacity:0; transform:translateY(10px)} to {opacity:1; transform:translateY(0)} }
+        
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -10px 25px rgba(0,0,0,0.1); z-index: 50; border-top: 1px solid #e2e8f0; }
         .nav-item { color: #94a3b8; display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 20%; text-transform: uppercase; }
         .nav-item.active { color: #6366f1; transform: translateY(-3px); }
-        .table-10k { width: 100%; border-collapse: collapse; min-width: 1000px; font-size: 10px; }
-        .table-10k th, .table-10k td { border: 1px solid #94a3b8; padding: 6px 8px; }
-        .table-10k th { background-color: #f1f5f9; font-weight: 900; text-align: center; }
+        
+        .table-pro { width: 100%; border-collapse: collapse; font-size: 10px; }
+        .table-pro th, .table-pro td { border: 1px solid #94a3b8; padding: 6px 8px; }
+        .table-pro th { background-color: #f1f5f9; font-weight: 900; text-align: center; }
+        
         .bg-debit { background-color: #f0fdf4; }
         .bg-kredit { background-color: #fff1f2; }
+
         @media print {
             @page { size: landscape; margin: 1cm; }
             body { background: white; padding: 0 !important; margin: 0 !important; }
@@ -35,61 +39,76 @@
 </head>
 <body class="pb-24">
 
-    <div class="bg-slate-800 text-white p-5 shadow-lg no-print">
+    <div class="bg-slate-800 text-white p-5 shadow-lg no-print relative z-[60]">
         <div class="flex justify-between items-center">
             <div>
                 <h1 class="text-xl font-black tracking-wide text-emerald-400">MODE AKUNTAN</h1>
                 <p class="text-[9px] font-bold opacity-80 tracking-widest uppercase" id="h-pt">PERUSAHAAN</p>
             </div>
-            <a href="./index.html" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded text-[10px] font-black border border-slate-600">
-                <i class="fas fa-exchange-alt"></i> PRAKTIS
+            <a href="index.html" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded text-[10px] font-black border border-slate-600 shadow-xl transition-all active:scale-95 block">
+                <i class="fas fa-exchange-alt mr-1"></i> PRAKTIS
             </a>
         </div>
     </div>
 
     <div id="p-input" class="page active px-4 mt-5">
         <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm mb-5">
-            <h3 class="font-black text-slate-800 text-sm uppercase mb-4 border-b pb-2">Entry Jurnal Umum</h3>
-            <input type="date" id="j-tgl" class="w-full p-3 mb-3 border rounded-lg text-sm font-bold bg-slate-50">
+            <h3 class="font-black text-slate-800 text-sm uppercase mb-4 border-b pb-2"><i class="fas fa-pen-nib mr-1"></i> Entry Jurnal Umum</h3>
+            <input type="date" id="j-tgl" class="w-full p-3 mb-3 border rounded-lg text-sm font-bold bg-slate-50 outline-none focus:border-indigo-500">
+            
             <div class="grid grid-cols-2 gap-2 mb-3">
                 <div>
-                    <label class="text-[9px] font-black text-emerald-600 uppercase">Debit (+)</label>
-                    <select id="j-debit" class="w-full p-3 border border-emerald-300 rounded-lg text-xs font-bold bg-emerald-50"></select>
+                    <label class="text-[9px] font-black text-emerald-600 uppercase ml-1">Akun Debit (+)</label>
+                    <select id="j-debit" class="w-full p-3 border border-emerald-300 rounded-lg text-xs font-bold bg-emerald-50 outline-none"></select>
                 </div>
                 <div>
-                    <label class="text-[9px] font-black text-rose-600 uppercase">Kredit (-)</label>
-                    <select id="j-kredit" class="w-full p-3 border border-rose-300 rounded-lg text-xs font-bold bg-rose-50"></select>
+                    <label class="text-[9px] font-black text-rose-600 uppercase ml-1">Akun Kredit (-)</label>
+                    <select id="j-kredit" class="w-full p-3 border border-rose-300 rounded-lg text-xs font-bold bg-rose-50 outline-none"></select>
                 </div>
             </div>
-            <input type="number" id="j-nom" placeholder="Nominal (Rp)" class="w-full p-3 mb-3 border rounded-lg text-sm font-black text-center">
-            <input type="text" id="j-ket" placeholder="Keterangan Transaksi" class="w-full p-3 mb-4 border rounded-lg text-sm">
-            <label class="flex items-center space-x-2 text-xs font-bold text-slate-600 mb-4 bg-slate-50 p-2 rounded">
-                <input type="checkbox" id="j-is-adj" class="w-4 h-4">
-                <span>Jurnal Penyesuaian (AJP)</span>
+            
+            <input type="number" id="j-nom" placeholder="Nominal (Rp)" class="w-full p-3 mb-3 border rounded-lg text-sm font-black text-center outline-none focus:border-indigo-500">
+            <input type="text" id="j-ket" placeholder="Keterangan Transaksi" class="w-full p-3 mb-4 border rounded-lg text-sm outline-none focus:border-indigo-500">
+            
+            <label class="flex items-center space-x-2 text-xs font-bold text-slate-600 mb-4 bg-slate-50 p-3 rounded-lg border border-dashed border-slate-300 cursor-pointer">
+                <input type="checkbox" id="j-is-adj" class="w-4 h-4 rounded text-indigo-600">
+                <span>Tandai sebagai Jurnal Penyesuaian (AJP)</span>
             </label>
-            <button onclick="simpanJurnal()" class="w-full bg-indigo-600 text-white font-black py-4 rounded-lg text-xs tracking-widest shadow-md">POSTING JURNAL</button>
+
+            <button onclick="simpanJurnal()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-lg text-xs tracking-widest shadow-lg transition-all active:scale-[0.98]">
+                POSTING KE BUKU BESAR
+            </button>
         </div>
     </div>
 
     <div id="p-jurnal" class="page px-4 mt-5">
         <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
             <div class="print-header hidden">
-                <div><h1 class="text-xl font-black pr-toko">PT NAME</h1><p class="text-xs font-bold">GENERAL JOURNAL REPORT</p></div>
+                <div><h1 class="text-xl font-black pr-toko">PT NAME</h1><p class="text-xs font-bold uppercase tracking-widest">General Journal Report</p></div>
                 <img class="pr-qr w-16 h-16 border p-1" src="">
             </div>
             <div class="flex justify-between items-center mb-4 no-print">
                 <h3 class="font-black text-slate-800 text-sm uppercase">Riwayat Jurnal</h3>
-                <button onclick="window.print()" class="bg-slate-800 text-white px-3 py-1.5 rounded text-[10px] font-bold">PRINT</button>
+                <button onclick="window.print()" class="bg-slate-800 text-white px-3 py-1.5 rounded text-[10px] font-bold shadow-md hover:bg-slate-700"><i class="fas fa-print mr-1"></i> CETAK</button>
             </div>
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-[11px] border-collapse">
-                    <thead class="bg-slate-100"><tr><th class="p-2 border">Tgl</th><th class="p-2 border">Akun & Keterangan</th><th class="p-2 border text-right">Debit</th><th class="p-2 border text-right">Kredit</th><th class="p-2 border text-center no-print">X</th></tr></thead>
+                <table class="table-pro text-[11px]">
+                    <thead>
+                        <tr>
+                            <th class="p-2 border w-16">Tgl</th>
+                            <th class="p-2 border w-12 text-center">Ref</th>
+                            <th class="p-2 border">Akun & Keterangan</th>
+                            <th class="p-2 border text-right w-24">Debit</th>
+                            <th class="p-2 border text-right w-24">Kredit</th>
+                            <th class="p-2 border text-center no-print w-10">X</th>
+                        </tr>
+                    </thead>
                     <tbody id="v-jurnal"></tbody>
                 </table>
             </div>
             <div class="ttd-area hidden">
-                <div class="ttd-box text-center"><p class="text-[10px] mb-10">Dibuat Oleh,</p><p class="font-black border-t border-black pt-1">Accounting Dept</p></div>
-                <div class="ttd-box text-center"><p class="text-[10px] mb-10">Disetujui Oleh,</p><p class="font-black border-t border-black pt-1 pr-bos">CFO</p></div>
+                <div class="ttd-box text-center"><p class="text-[10px] mb-12 uppercase font-bold">Dibuat Oleh,</p><p class="font-black border-t border-black pt-1">Accounting Dept</p></div>
+                <div class="ttd-box text-center"><p class="text-[10px] mb-12 uppercase font-bold">Disetujui Oleh,</p><p class="font-black border-t border-black pt-1 pr-bos">CFO</p></div>
             </div>
         </div>
     </div>
@@ -97,38 +116,57 @@
     <div id="p-worksheet" class="page px-4 mt-5">
         <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm overflow-hidden">
             <div class="print-header hidden">
-                <div><h1 class="text-xl font-black pr-toko">PT NAME</h1><p class="text-xs font-bold">10-COLUMN WORKSHEET (NERACA LAJUR)</p></div>
+                <div><h1 class="text-xl font-black pr-toko">PT NAME</h1><p class="text-xs font-bold uppercase tracking-widest">10-Column Worksheet (Neraca Lajur)</p></div>
                 <img class="pr-qr w-16 h-16 border p-1" src="">
             </div>
             <div class="flex justify-between items-center mb-4 no-print">
                 <h3 class="font-black text-slate-800 text-sm uppercase">Worksheet 10 Kolom</h3>
-                <button onclick="window.print()" class="bg-slate-800 text-white px-3 py-1.5 rounded text-[10px] font-bold">PRINT LANDSCAPE</button>
+                <button onclick="window.print()" class="bg-slate-800 text-white px-3 py-1.5 rounded text-[10px] font-bold shadow-md"><i class="fas fa-file-pdf mr-1"></i> PRINT LANDSCAPE</button>
             </div>
             <div class="overflow-x-auto">
-                <table class="table-10k">
+                <table class="table-pro" style="min-width: 1000px;">
                     <thead>
-                        <tr><th rowspan="2">No</th><th rowspan="2">Nama Akun</th><th colspan="2">Neraca Saldo</th><th colspan="2">AJP</th><th colspan="2">NSD</th><th colspan="2">Laba/Rugi</th><th colspan="2">Neraca</th></tr>
-                        <tr><th>D</th><th>K</th><th>D</th><th>K</th><th>D</th><th>K</th><th>D</th><th>K</th><th>D</th><th>K</th></tr>
+                        <tr>
+                            <th rowspan="2" class="w-10">Ref</th>
+                            <th rowspan="2" class="text-left">Nama Rekening</th>
+                            <th colspan="2">Neraca Saldo</th>
+                            <th colspan="2">AJP</th>
+                            <th colspan="2">NSD</th>
+                            <th colspan="2">Laba/Rugi</th>
+                            <th colspan="2">Neraca</th>
+                        </tr>
+                        <tr>
+                            <th class="w-20">D</th><th class="w-20">K</th>
+                            <th class="w-20">D</th><th class="w-20">K</th>
+                            <th class="w-20">D</th><th class="w-20">K</th>
+                            <th class="w-20">D</th><th class="w-20">K</th>
+                            <th class="w-20">D</th><th class="w-20">K</th>
+                        </tr>
                     </thead>
                     <tbody id="v-lajur"></tbody>
                     <tfoot id="v-lajur-foot" class="bg-slate-50 font-bold"></tfoot>
                 </table>
             </div>
             <div class="ttd-area hidden">
-                <div class="ttd-box text-center"><p class="text-[10px] mb-10">Auditor Internal,</p><p class="font-black border-t border-black pt-1">Verify Sign</p></div>
-                <div class="ttd-box text-center"><p class="text-[10px] mb-10">Disahkan Oleh,</p><p class="font-black border-t border-black pt-1 pr-bos">CFO</p></div>
+                <div class="ttd-box text-center"><p class="text-[10px] mb-12 uppercase font-bold">Auditor Internal,</p><p class="font-black border-t border-black pt-1">Verify Sign</p></div>
+                <div class="ttd-box text-center"><p class="text-[10px] mb-12 uppercase font-bold">Disahkan Oleh,</p><p class="font-black border-t border-black pt-1 pr-bos">CFO / Manager</p></div>
             </div>
         </div>
     </div>
 
     <div id="p-seting" class="page px-4 mt-5 no-print">
         <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm mb-5">
-            <h3 class="font-black text-slate-800 text-sm uppercase mb-4 border-b pb-2">Pengaturan Mode Pro</h3>
-            <label class="text-[10px] font-black text-slate-500 uppercase">Nama Perusahaan</label>
-            <input type="text" id="set-toko-pro" class="w-full p-3 mb-4 border rounded-lg text-sm font-bold" oninput="simpanSetPro()">
-            <label class="text-[10px] font-black text-slate-500 uppercase">Nama CFO / Akuntan</label>
-            <input type="text" id="set-bos-pro" class="w-full p-3 mb-6 border rounded-lg text-sm font-bold" oninput="simpanSetPro()">
-            <button onclick="if(confirm('Hapus Jurnal Pro?')) { localStorage.removeItem('kspro_db_pro'); location.reload(); }" class="w-full bg-rose-600 text-white font-black py-4 rounded-lg text-xs shadow-md">RESET DATABASE PRO</button>
+            <h3 class="font-black text-slate-800 text-sm uppercase mb-4 border-b pb-2"><i class="fas fa-cog mr-1"></i> Pengaturan Pro</h3>
+            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Nama Perusahaan</label>
+            <input type="text" id="set-toko-pro" class="w-full p-3 mb-4 border rounded-lg text-sm font-bold bg-slate-50 focus:border-indigo-500 outline-none" oninput="simpanSetPro()">
+            
+            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Nama Penanggung Jawab (CFO)</label>
+            <input type="text" id="set-bos-pro" class="w-full p-3 mb-6 border rounded-lg text-sm font-bold bg-slate-50 focus:border-indigo-500 outline-none" oninput="simpanSetPro()">
+            
+            <hr class="mb-6">
+            <button onclick="if(confirm('Hapus seluruh database Jurnal Pro?')) { localStorage.removeItem('kspro_db_pro'); location.reload(); }" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-black py-4 rounded-lg text-xs tracking-widest shadow-md transition-all">
+                <i class="fas fa-trash-alt mr-1"></i> RESET DATABASE PRO
+            </button>
         </div>
     </div>
 
@@ -136,7 +174,7 @@
         <button class="nav-item active" onclick="bukaTab('input')"><i class="fas fa-pen-nib"></i>Input</button>
         <button class="nav-item" onclick="bukaTab('jurnal')"><i class="fas fa-list"></i>Jurnal</button>
         <button class="nav-item" onclick="bukaTab('worksheet')"><i class="fas fa-table"></i>Lajur</button>
-        <button class="nav-item" onclick="bukaTab('seting')"><i class="fas fa-cog"></i>Seting</button>
+        <button class="nav-item" onclick="bukaTab('seting')"><i class="fas fa-cogs"></i>Seting</button>
     </nav>
 
     <script>
@@ -183,15 +221,15 @@
             let ket = document.getElementById('j-ket').value;
             let tgl = document.getElementById('j-tgl').value;
             let isAdj = document.getElementById('j-is-adj').checked;
-            if(!n || d==k) return alert("Cek input!");
+            if(!n || d==k) return alert("Nominal atau Akun salah!");
             let id = Date.now();
             dbPro.push({id, tgl, ref:d, pos:'D', nom:n, ket, isAdj}, {id:id+1, tgl, ref:k, pos:'K', nom:n, ket, isAdj});
             localStorage.setItem('kspro_db_pro', JSON.stringify(dbPro));
-            alert("Terposting!"); render();
+            alert("Berhasil Posting!"); render();
         }
 
         function hapusJurnal(id) {
-            if(confirm("Hapus?")) {
+            if(confirm("Hapus sepasang jurnal ini?")) {
                 dbPro = dbPro.filter(x => x.id !== id && x.id !== id+1 && x.id !== id-1);
                 localStorage.setItem('kspro_db_pro', JSON.stringify(dbPro));
                 render();
@@ -203,24 +241,43 @@
             dbPro.forEach((x, i) => {
                 if(x.pos==='D') {
                     let k = dbPro[i+1];
-                    hJ += `<tr><td class="p-2 border">${x.tgl}</td><td class="p-2 border"><b>${x.ref}</b> / ${k.ref}<br><i class="text-slate-400">${x.ket}</i></td><td class="p-2 border text-right">${formatRp(x.nom)}</td><td class="p-2 border text-right">${formatRp(x.nom)}</td><td class="p-2 border text-center no-print"><button onclick="hapusJurnal(${x.id})">❌</button></td></tr>`;
+                    let namaD = COA.find(a => a.no === x.ref).nama;
+                    let namaK = COA.find(a => a.no === k.ref).nama;
+                    
+                    // Baris Debit
+                    hJ += `<tr>
+                        <td class="p-2 border" rowspan="2">${x.tgl.slice(5)}</td>
+                        <td class="p-2 border text-center font-bold">${x.ref}</td>
+                        <td class="p-2 border font-bold">${namaD}</td>
+                        <td class="p-2 border text-right font-black text-emerald-600">${formatRp(x.nom)}</td>
+                        <td class="p-2 border text-right">-</td>
+                        <td class="p-2 border text-center no-print" rowspan="2">
+                            <button onclick="hapusJurnal(${x.id})" class="text-rose-400 hover:text-rose-600"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>`;
+                    // Baris Kredit
+                    hJ += `<tr>
+                        <td class="p-2 border text-center text-slate-500 italic">${k.ref}</td>
+                        <td class="p-2 border pl-6 text-slate-600 italic">${namaK} <br><span class="text-[9px] text-slate-400">${x.ket}</span></td>
+                        <td class="p-2 border text-right">-</td>
+                        <td class="p-2 border text-right font-black text-rose-600">${formatRp(x.nom)}</td>
+                    </tr>`;
                 }
             });
-            document.getElementById('v-jurnal').innerHTML = hJ;
+            document.getElementById('v-jurnal').innerHTML = hJ || '<tr><td colspan="6" class="text-center p-4">Belum ada data jurnal.</td></tr>';
 
             let hL = '', totals = Array(10).fill(0);
             COA.forEach(akun => {
                 let d = dbPro.filter(x => x.ref===akun.no && !x.isAdj && x.pos==='D').reduce((a,b)=>a+b.nom, 0);
                 let k = dbPro.filter(x => x.ref===akun.no && !x.isAdj && x.pos==='K').reduce((a,b)=>a+b.nom, 0);
-                
-                let nsD = 0, nsK = 0;
+                let nsD=0, nsK=0;
                 if(akun.sn==='D') { nsD = d-k > 0 ? d-k : 0; nsK = d-k < 0 ? Math.abs(d-k) : 0; }
                 else { nsK = k-d > 0 ? k-d : 0; nsD = k-d < 0 ? Math.abs(k-d) : 0; }
 
                 let ajpD = dbPro.filter(x => x.ref===akun.no && x.isAdj && x.pos==='D').reduce((a,b)=>a+b.nom, 0);
                 let ajpK = dbPro.filter(x => x.ref===akun.no && x.isAdj && x.pos==='K').reduce((a,b)=>a+b.nom, 0);
 
-                let nsdD = 0, nsdK = 0;
+                let nsdD=0, nsdK=0;
                 let net = (nsD - nsK) + (ajpD - ajpK);
                 if(akun.sn==='D') { nsdD = net > 0 ? net : 0; nsdK = net < 0 ? Math.abs(net) : 0; }
                 else { nsdK = -net > 0 ? -net : 0; nsdD = -net < 0 ? Math.abs(-net) : 0; }
@@ -229,13 +286,21 @@
                 if(akun.tipe==='Pendapatan'||akun.tipe==='Beban') { lrD=nsdD; lrK=nsdK; } else { nD=nsdD; nK=nsdK; }
 
                 if(d||k||ajpD||ajpK) {
-                    hL += `<tr><td class="text-center">${akun.no}</td><td>${akun.nama}</td><td class="bg-debit text-right">${formatRp(nsD)}</td><td class="bg-kredit text-right">${formatRp(nsK)}</td><td class="bg-debit text-right">${formatRp(ajpD)}</td><td class="bg-kredit text-right">${formatRp(ajpK)}</td><td class="bg-debit text-right">${formatRp(nsdD)}</td><td class="bg-kredit text-right">${formatRp(nsdK)}</td><td class="text-right">${formatRp(lrD)}</td><td class="text-right">${formatRp(lrK)}</td><td class="text-right">${formatRp(nD)}</td><td class="text-right">${formatRp(nK)}</td></tr>`;
+                    hL += `<tr>
+                        <td class="text-center font-bold">${akun.no}</td>
+                        <td>${akun.nama}</td>
+                        <td class="bg-debit text-right">${formatRp(nsD)}</td><td class="bg-kredit text-right">${formatRp(nsK)}</td>
+                        <td class="bg-debit text-right">${formatRp(ajpD)}</td><td class="bg-kredit text-right">${formatRp(ajpK)}</td>
+                        <td class="bg-debit text-right font-bold">${formatRp(nsdD)}</td><td class="bg-kredit text-right font-bold">${formatRp(nsdK)}</td>
+                        <td class="text-right">${formatRp(lrD)}</td><td class="text-right">${formatRp(lrK)}</td>
+                        <td class="text-right">${formatRp(nD)}</td><td class="text-right">${formatRp(nK)}</td>
+                    </tr>`;
                     [nsD,nsK,ajpD,ajpK,nsdD,nsdK,lrD,lrK,nD,nK].forEach((v,i) => totals[i]+=v);
                 }
             });
-
-            // HITUNG LABA BERSIH OTOMATIS (Sempurnaan Sesuai Gambar)
-            let laba = totals[7] - totals[6]; // Kredit NSD - Debit NSD untuk Pendapatan/Beban
+            
+            // HITUNG LABA BERSIH
+            let laba = totals[7] - totals[6]; // Kredit NSD - Debit NSD Laba/Rugi
             let labaD = laba > 0 ? laba : 0;
             let labaK = laba < 0 ? Math.abs(laba) : 0;
 
@@ -250,20 +315,23 @@
                     <td class="text-right">${formatRp(totals[8])}</td><td class="text-right">${formatRp(totals[9])}</td>
                 </tr>
                 <tr class="text-indigo-700 bg-indigo-50">
-                    <td colspan="2">LABA (RUGI) BERSIH</td>
+                    <td colspan="2" class="uppercase">Laba (Rugi) Bersih</td>
                     <td colspan="6"></td>
-                    <td class="text-right">${laba > 0 ? formatRp(laba) : ''}</td><td class="text-right">${laba < 0 ? formatRp(Math.abs(laba)) : ''}</td>
-                    <td class="text-right">${laba < 0 ? formatRp(Math.abs(laba)) : ''}</td><td class="text-right">${laba > 0 ? formatRp(laba) : ''}</td>
+                    <td class="text-right font-black">${laba > 0 ? formatRp(laba) : ''}</td><td class="text-right font-black">${laba < 0 ? formatRp(Math.abs(laba)) : ''}</td>
+                    <td class="text-right font-black">${laba < 0 ? formatRp(Math.abs(laba)) : ''}</td><td class="text-right font-black">${laba > 0 ? formatRp(laba) : ''}</td>
                 </tr>
             `;
         }
 
         function bukaTab(id) { document.querySelectorAll('.page, .nav-item').forEach(e => e.classList.remove('active')); document.getElementById('p-'+id).classList.add('active'); event.currentTarget.classList.add('active'); window.scrollTo(0,0); }
+        
         window.onload = () => {
             let opt = ''; COA.forEach(a => opt += `<option value="${a.no}">${a.no} - ${a.nama}</option>`);
             document.getElementById('j-debit').innerHTML = opt; document.getElementById('j-kredit').innerHTML = opt;
             document.getElementById('set-toko-pro').value = localStorage.getItem('kspro_toko_pro') || "";
             document.getElementById('set-bos-pro').value = localStorage.getItem('kspro_bos_pro') || "";
+            let tglToday = new Date().toISOString().split('T')[0];
+            document.getElementById('j-tgl').value = tglToday;
             updateUI(); render();
         };
     </script>
