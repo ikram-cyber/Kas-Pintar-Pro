@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kas Pintar Pro | Hybrid Corporate ERP</title>
+    <title>Kas Pintar Pro | Corporate ERP</title>
     <meta name="theme-color" content="#0f172a">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -48,7 +48,7 @@
         <div class="flex justify-between items-start">
             <div>
                 <h1 class="text-2xl font-black tracking-wide" id="h-pt">KAS PINTAR PRO</h1>
-                <p class="text-[10px] font-bold opacity-80 mt-1 tracking-widest uppercase text-blue-300" id="h-mode-desc">Hybrid ERP • SAK & IFRS</p>
+                <p class="text-[10px] font-bold opacity-80 mt-1 tracking-widest uppercase text-blue-300" id="h-mode-desc">CORPORATE STANDARD</p>
             </div>
             <div id="v-cur-badge" class="bg-emerald-600 px-2 py-1 rounded text-[10px] font-black border border-emerald-400">IDR</div>
         </div>
@@ -130,7 +130,7 @@
                     <h1 class="print-title" id="kop-buku-toko">NAMA PERUSAHAAN</h1>
                     <p class="print-subtitle">BUKU BESAR (GENERAL LEDGER)</p>
                     <p class="text-xs font-bold text-slate-600" id="kop-buku-tgl"></p>
-                    <div class="report-badge">STANDAR AKUNTANSI</div>
+                    <div class="report-badge">CORPORATE FINANCIAL REPORT</div>
                 </div>
                 <div class="w-1/4 text-right">
                     <img id="pr-qr-buku" src="" alt="QR" class="w-16 h-16 ml-auto border border-black p-0.5">
@@ -172,7 +172,7 @@
                     <h1 class="print-title" id="kop-neraca-toko">NAMA PERUSAHAAN</h1>
                     <p class="print-subtitle">LAPORAN POSISI KEUANGAN (BALANCE SHEET)</p>
                     <p class="text-xs font-bold text-slate-600" id="kop-neraca-tgl"></p>
-                    <div class="report-badge">STANDAR AKUNTANSI</div>
+                    <div class="report-badge">CORPORATE FINANCIAL REPORT</div>
                 </div>
                 <div class="w-1/4 text-right">
                     <img id="pr-qr-neraca" src="" alt="QR" class="w-16 h-16 ml-auto border border-black p-0.5">
@@ -205,7 +205,7 @@
                     <h1 class="print-title" id="kop-lr-toko">NAMA PERUSAHAAN</h1>
                     <p class="print-subtitle">LABA RUGI & ARUS KAS (INCOME STATEMENT)</p>
                     <p class="text-xs font-bold text-slate-600" id="kop-lr-tgl"></p>
-                    <div class="report-badge">STANDAR AKUNTANSI</div>
+                    <div class="report-badge">CORPORATE FINANCIAL REPORT</div>
                 </div>
                 <div class="w-1/4 text-right">
                     <img id="pr-qr-lr" src="" alt="QR" class="w-16 h-16 ml-auto border border-black p-0.5">
@@ -232,12 +232,12 @@
 
     <div id="p-seting" class="page px-4 mt-5 no-print">
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 mb-5">
-            <h3 class="font-black text-slate-800 text-sm uppercase tracking-wide border-b border-slate-200 pb-3 mb-4"><i class="fas fa-globe mr-1"></i> Compliance & Standards</h3>
+            <h3 class="font-black text-slate-800 text-sm uppercase tracking-wide border-b border-slate-200 pb-3 mb-4"><i class="fas fa-globe mr-1"></i> Reporting Currency</h3>
             
-            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Standar Pelaporan (Reporting Mode)</label>
+            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Mata Uang Laporan (Currency)</label>
             <select id="set-mode" class="w-full p-3 mb-4 border border-slate-300 rounded text-sm font-bold text-blue-900 bg-blue-50" onchange="simpanSet()">
-                <option value="SAK_IDR">SAK INDONESIA (IDR - Rupiah)</option>
-                <option value="IFRS_USD">IFRS GLOBAL (USD - Dollar)</option>
+                <option value="IDR">IDR - Indonesian Rupiah</option>
+                <option value="USD">USD - US Dollar</option>
             </select>
             
             <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Live Exchange Rate (Kurs 1 USD = IDR)</label>
@@ -364,10 +364,11 @@
             tampilkanTabelBuku(hasil); return hasil;
         }
 
+        // --- HYBRID CURRENCY ENGINE ---
         const formatCurr = (angka) => {
-            let mode = localStorage.getItem('kspro_mode') || 'SAK_IDR';
+            let mode = localStorage.getItem('kspro_mode') || 'IDR';
             let rate = parseFloat(localStorage.getItem('kspro_rate')) || 15500;
-            if(mode.includes('USD')) {
+            if(mode === 'USD') {
                 return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(angka / rate);
             }
             return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
@@ -396,9 +397,9 @@
         }
 
         function renderChart(pendapatan, beban, laba) {
-            let mode = localStorage.getItem('kspro_mode') || 'SAK_IDR';
+            let mode = localStorage.getItem('kspro_mode') || 'IDR';
             let rate = parseFloat(localStorage.getItem('kspro_rate')) || 15500;
-            let mult = mode.includes('USD') ? (1/rate) : 1;
+            let mult = mode === 'USD' ? (1/rate) : 1;
 
             const ctx = document.getElementById('financeChart').getContext('2d');
             if (chartInstance) { chartInstance.destroy(); }
@@ -433,26 +434,25 @@
         }
 
         function perbaruiSemua() {
-            let mode = localStorage.getItem('kspro_mode') || 'SAK_IDR';
-            let curText = mode.includes('USD') ? 'USD' : 'IDR';
-            let isIFRS = mode.includes('IFRS');
+            let mode = localStorage.getItem('kspro_mode') || 'IDR';
+            let curText = mode;
+            let isUSD = mode === 'USD';
             
             document.getElementById('set-mode').value = mode;
             document.getElementById('set-rate').value = localStorage.getItem('kspro_rate') || 15500;
             
+            // Clean interface - No SAK/IFRS branding
             let badgeEl = document.getElementById('v-cur-badge');
             badgeEl.innerText = curText;
-            if(curText === 'USD') {
+            if(isUSD) {
                 badgeEl.className = "bg-blue-600 px-2 py-1 rounded text-[10px] font-black border border-blue-400";
-                document.getElementById('h-mode-desc').innerText = "GLOBAL IFRS STANDARD • USD";
-                document.getElementById('footer-cr').innerText = "© 2026 Ikram Cyber System | IFRS Global Compliant";
+                document.getElementById('h-mode-desc').innerText = "GLOBAL STANDARD • USD";
             } else {
                 badgeEl.className = "bg-emerald-600 px-2 py-1 rounded text-[10px] font-black border border-emerald-400";
-                document.getElementById('h-mode-desc').innerText = "SAK INDONESIA • IDR";
-                document.getElementById('footer-cr').innerText = "© 2026 Ikram Cyber System | Standar SAK Indonesia";
+                document.getElementById('h-mode-desc').innerText = "CORPORATE STANDARD • IDR";
             }
 
-            let auditStamp = isIFRS ? "IFRS GLOBAL STANDARD COMPLIANT" : "STANDAR AKUNTANSI KEUANGAN (SAK) INDONESIA";
+            let auditStamp = isUSD ? "GLOBAL FINANCIAL REPORT" : "CORPORATE FINANCIAL REPORT";
             document.querySelectorAll('.report-badge').forEach(el => el.innerText = auditStamp);
 
             document.getElementById('v-saldo').innerText = formatCurr(saldo);
@@ -505,7 +505,7 @@
 
         // Boot Init
         perbaruiSemua();
-        autoSyncRateSilent(); // Diam-diam narik kurs waktu aplikasi baru dibuka
+        autoSyncRateSilent();
     </script>
 </body>
 </html>
