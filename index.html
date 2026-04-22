@@ -11,7 +11,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #1e293b; -webkit-tap-highlight-color: transparent; }
-        .page { display: none; animation: fadeIn 0.3s ease; } .page.active { display: block; }
+        .page { display: none; animation: fadeIn 0.4s ease; } .page.active { display: block; }
         @keyframes fadeIn { from {opacity:0; transform:translateY(10px)} to {opacity:1; transform:translateY(0)} }
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -10px 25px rgba(0,0,0,0.05); z-index: 50; border-top: 1px solid #e2e8f0; }
         .nav-item { color: #94a3b8; display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 20%; text-transform: uppercase; }
@@ -57,7 +57,6 @@
                     <i class="fas fa-exchange-alt mr-1"></i> PRO
                 </a>
             </div>
-
         </div>
     </div>
 
@@ -147,7 +146,7 @@
                     <select id="cari-kat" class="w-full p-2 mb-2 border border-slate-300 rounded text-xs font-bold" onchange="cariData()">
                         <option value="Semua">Semua Kategori Akun</option>
                         <option value="Operasional">Akun Operasional</option>
-                        <option value="Utang">Akun Utang (Liabilities)</option>
+                        <option value="Utang">Akun Utang (Liabilitas)</option>
                         <option value="Modal">Akun Modal (Ekuitas)</option>
                     </select>
                     <div class="flex gap-2 mb-3 text-xs font-bold text-slate-600">
@@ -236,7 +235,6 @@
     <div id="p-seting" class="page px-4 mt-5 no-print">
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 mb-5">
             <h3 class="font-black text-slate-800 text-sm uppercase tracking-wide border-b border-slate-200 pb-3 mb-4"><i class="fas fa-globe mr-1"></i> Mode Pelaporan</h3>
-            
             <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Mata Uang (Currency)</label>
             <select id="set-mode" class="w-full p-3 mb-4 border border-slate-300 rounded text-sm font-bold text-blue-900 bg-blue-50" onchange="simpanSet()">
                 <option value="IDR">IDR - Rupiah (Standar Domestik)</option>
@@ -254,7 +252,6 @@
             <h3 class="font-black text-slate-800 text-sm uppercase tracking-wide border-b border-slate-200 pb-3 mb-4 mt-6"><i class="fas fa-id-card mr-1"></i> Entitas Bisnis</h3>
             <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Nama Perusahaan</label>
             <input type="text" id="set-toko" placeholder="Contoh: PT. Ikram Cyber Group" class="w-full p-3 mb-4 border border-slate-300 rounded text-sm font-bold" oninput="simpanSet()">
-            
             <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Nama Pimpinan / CFO (TTD)</label>
             <input type="text" id="set-bos" placeholder="Contoh: Ikram, S.Kom." class="w-full p-3 border border-slate-300 rounded text-sm font-bold" oninput="simpanSet()">
             
