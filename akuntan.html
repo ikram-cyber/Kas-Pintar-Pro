@@ -24,9 +24,12 @@
             body { background: white; padding: 0 !important; }
             .no-print, .bottom-nav { display: none !important; }
             .page { display: none !important; } .page.active { display: block !important; }
-            .print-header { display: flex !important; justify-content: space-between; align-items: center; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 20px; }
+            .print-header { display: flex !important; justify-content: space-between; align-items: flex-start; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 20px; }
             table { font-size: 9px !important; width: 100% !important; }
             .table-pro th { background-color: #f1f5f9 !important; color: #000 !important; -webkit-print-color-adjust: exact; }
+            /* Styling TTD saat di-print */
+            .ttd-area { display: flex !important; justify-content: space-between; margin-top: 40px; page-break-inside: avoid; color: #000; text-align: center; }
+            .ttd-box { width: 30%; }
         }
     </style>
 </head>
@@ -96,7 +99,16 @@
     <div id="p-jurnal" class="page px-4 mt-5">
         <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
             <div class="print-header hidden">
-                <div><h1 class="text-xl font-black pr-toko">PT NAME</h1><p class="text-xs font-bold uppercase tracking-widest text-slate-500">Laporan Jurnal Umum</p></div>
+                <div class="w-3/4 text-left">
+                    <img class="pr-logo-pro mb-2" src="" style="max-height:50px; display:none;">
+                    <h1 class="text-xl font-black pr-toko">PT NAME</h1>
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-500">Laporan Jurnal Umum</p>
+                    <p class="text-[9px] font-bold mt-1 pr-date"></p>
+                </div>
+                <div class="w-1/4 text-right">
+                    <img class="pr-qr w-16 h-16 ml-auto border border-black p-0.5" src="">
+                    <div class="text-[6px] font-black uppercase tracking-widest mt-1">Verified Audit</div>
+                </div>
             </div>
             <div class="no-print flex justify-between items-center mb-4">
                 <h3 class="font-black text-slate-800 text-sm uppercase"><i class="fas fa-list mr-1 text-blue-500"></i> Buku Jurnal</h3>
@@ -113,16 +125,25 @@
                     <tbody id="v-jurnal"></tbody>
                 </table>
             </div>
+            <div class="ttd-area hidden">
+                <div class="ttd-box"><p class="font-bold text-[10px] mb-12 uppercase">Dibuat Oleh,</p><p class="font-black text-xs border-t border-black pt-1">Accounting Dept</p></div>
+                <div class="ttd-box"><p class="font-bold text-[10px] mb-12 uppercase">Disetujui Oleh,</p><p class="font-black text-xs border-t border-black pt-1 pr-bos">CFO</p></div>
+            </div>
         </div>
     </div>
 
     <div id="p-worksheet" class="page px-4 mt-5">
         <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm overflow-hidden">
             <div class="print-header hidden">
-                <img class="pr-logo-pro" src="" style="max-height:50px; display:none;">
-                <div class="text-right">
+                <div class="w-3/4 text-left">
+                    <img class="pr-logo-pro mb-2" src="" style="max-height:50px; display:none;">
                     <h1 class="text-xl font-black pr-toko">PT NAME</h1>
-                    <p class="text-[9px] font-bold uppercase tracking-widest text-slate-500">10-Column Worksheet</p>
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-500">10-Column Worksheet</p>
+                    <p class="text-[9px] font-bold mt-1 pr-date"></p>
+                </div>
+                <div class="w-1/4 text-right">
+                    <img class="pr-qr w-16 h-16 ml-auto border border-black p-0.5" src="">
+                    <div class="text-[6px] font-black uppercase tracking-widest mt-1">Verified Audit</div>
                 </div>
             </div>
             <div class="flex justify-between items-center mb-4 no-print">
@@ -142,6 +163,10 @@
                     <tfoot id="v-lajur-foot" class="font-black bg-slate-50"></tfoot>
                 </table>
             </div>
+            <div class="ttd-area hidden">
+                <div class="ttd-box"><p class="font-bold text-[10px] mb-12 uppercase">Diperiksa Oleh,</p><p class="font-black text-xs border-t border-black pt-1">Internal Auditor</p></div>
+                <div class="ttd-box"><p class="font-bold text-[10px] mb-12 uppercase">Disahkan Oleh,</p><p class="font-black text-xs border-t border-black pt-1 pr-bos">CFO</p></div>
+            </div>
         </div>
     </div>
 
@@ -154,6 +179,7 @@
 
             <label class="text-[10px] font-black uppercase text-slate-500 mb-1 block">Nama Perusahaan (Kop Surat)</label>
             <input type="text" id="set-toko-pro" class="w-full p-3 mb-4 border border-slate-300 rounded font-bold outline-none focus:border-indigo-500" oninput="simpanSetPro()">
+
             <label class="text-[10px] font-black uppercase text-slate-500 mb-1 block">Nama Pimpinan / CFO (TTD)</label>
             <input type="text" id="set-bos-pro" class="w-full p-3 mb-6 border border-slate-300 rounded font-bold outline-none focus:border-indigo-500" oninput="simpanSetPro()">
 
@@ -210,7 +236,7 @@
         }
 
         function exportFullBackup() {
-            const data = { praktis: localStorage.getItem('kspro_db'), pro: localStorage.getItem('kspro_db_pro'), t: localStorage.getItem('kspro_toko'), l: localStorage.getItem('kspro_logo') };
+            const data = { praktis: localStorage.getItem('kspro_db'), pro: localStorage.getItem('kspro_db_pro'), t: localStorage.getItem('kspro_toko'), l: localStorage.getItem('kspro_logo'), b: localStorage.getItem('kspro_bos') };
             const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
             const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Backup_KasPintar.json`; a.click();
         }
@@ -224,20 +250,37 @@
                     if(d.pro) localStorage.setItem('kspro_db_pro', d.pro);
                     if(d.t) localStorage.setItem('kspro_toko', d.t);
                     if(d.l) localStorage.setItem('kspro_logo', d.l);
+                    if(d.b) localStorage.setItem('kspro_bos', d.b);
                     alert("Restore Berhasil!"); location.reload();
                 };
                 reader.readAsText(input.files[0]);
             }
         }
 
-        function simpanSetPro() { localStorage.setItem('kspro_toko', document.getElementById('set-toko-pro').value); localStorage.setItem('kspro_bos', document.getElementById('set-bos-pro').value); updateUI(); }
+        function simpanSetPro() { 
+            localStorage.setItem('kspro_toko', document.getElementById('set-toko-pro').value); 
+            localStorage.setItem('kspro_bos', document.getElementById('set-bos-pro').value); 
+            updateUI(); 
+        }
+
         function updateUI() {
             let toko = localStorage.getItem('kspro_toko') || "NAMA PERUSAHAAN";
+            let bos = localStorage.getItem('kspro_bos') || "Direktur Utama";
             document.querySelectorAll('.h-pt-pro, .pr-toko').forEach(el => el.innerText = toko.toUpperCase());
+            document.querySelectorAll('.pr-bos').forEach(el => el.innerText = bos);
+            
             let logo = localStorage.getItem('kspro_logo');
             document.querySelectorAll('.pr-logo-pro').forEach(img => {
                 if(logo) { img.src = logo; img.style.display = 'block'; }
             });
+
+            // TANGGAL CETAK & QR CODE
+            let tglCetak = "Dicetak: " + new Date().toLocaleString('id-ID');
+            document.querySelectorAll('.pr-date').forEach(el => el.innerText = tglCetak);
+            
+            let safeToko = toko.split(" ").join("_");
+            let qrData = "VERIFIED_PRO_" + safeToko + "_" + Date.now();
+            document.querySelectorAll('.pr-qr').forEach(img => img.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + qrData);
         }
 
         function simpanJurnal() {
@@ -247,8 +290,11 @@
             let tgl = document.getElementById('j-tgl').value;
             let ket = document.getElementById('j-ket').value;
             let useTax = document.getElementById('j-tax-auto').checked;
-
+            
+            let today = new Date().toISOString().split('T')[0];
+            if(tgl > today) return alert("Validasi Gagal: Tidak bisa memposting transaksi di masa depan.");
             if(!nom || !tgl || d === k) return alert("Cek data: Nominal, Tanggal, atau Akun sama.");
+            
             let id = Date.now();
 
             if(useTax) {
@@ -346,7 +392,6 @@
                 <tr class="bg-slate-800 text-white"><td colspan="2" class="text-right uppercase tracking-widest text-[9px]">Total Balance</td><td colspan="6"></td><td class="text-right font-black">${formatRp(totals[6]+labaD)}</td><td class="text-right font-black">${formatRp(totals[7]+labaK)}</td><td class="text-right font-black">${formatRp(totals[8]+labaK)}</td><td class="text-right font-black">${formatRp(totals[9]+labaD)}</td></tr>
             `;
 
-            // Update Dash
             document.getElementById('v-laba-pro').innerText = formatRp(laba);
             let roe = ekuitas > 0 ? (laba / ekuitas * 100).toFixed(2) : 0;
             document.getElementById('v-roe-pro').innerText = roe + "%";
@@ -363,8 +408,14 @@
         window.onload = () => {
             let opt = ''; COA.forEach(a => opt += `<option value="${a.no}">${a.no} - ${a.nama}</option>`);
             document.getElementById('j-debit').innerHTML = opt; document.getElementById('j-kredit').innerHTML = opt;
-            let today = new Date().toISOString().split('T')[0]; document.getElementById('j-tgl').value = today; document.getElementById('j-tgl').setAttribute('max', today);
+            
+            // KUNCI TANGGAL MASA DEPAN
+            let today = new Date().toISOString().split('T')[0];
+            document.getElementById('j-tgl').value = today;
+            document.getElementById('j-tgl').setAttribute('max', today);
+            
             document.getElementById('set-toko-pro').value = localStorage.getItem('kspro_toko') || "";
+            document.getElementById('set-bos-pro').value = localStorage.getItem('kspro_bos') || "";
             updateUI(); render();
         };
     </script>
