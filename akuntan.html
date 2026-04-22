@@ -291,7 +291,7 @@
             let ket = document.getElementById('j-ket').value;
             let useTax = document.getElementById('j-tax-auto').checked;
             
-            let today = new Date().toISOString().split('T')[0];
+            let tzOffset = new Date().getTimezoneOffset() * 60000; let today = new Date(Date.now() - tzOffset).toISOString().split('T')[0];
             if(tgl > today) return alert("Validasi Gagal: Tidak bisa memposting transaksi di masa depan.");
             if(!nom || !tgl || d === k) return alert("Cek data: Nominal, Tanggal, atau Akun sama.");
             
@@ -410,7 +410,7 @@
             document.getElementById('j-debit').innerHTML = opt; document.getElementById('j-kredit').innerHTML = opt;
             
             // KUNCI TANGGAL MASA DEPAN
-            let today = new Date().toISOString().split('T')[0];
+            let tzOffset = new Date().getTimezoneOffset() * 60000; let today = new Date(Date.now() - tzOffset).toISOString().split('T')[0];
             document.getElementById('j-tgl').value = today;
             document.getElementById('j-tgl').setAttribute('max', today);
             
