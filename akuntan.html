@@ -387,7 +387,7 @@
                     if(x.pos === 'D') {
                         hJ += `<tr class="border-t border-slate-200 hover:bg-slate-50"><td class="p-2">${idx===0 ? x.tgl.slice(5) : ''}</td><td class="p-2 text-center font-bold text-slate-700">${x.ref}</td><td class="p-2 font-bold text-slate-800">${nama}<br><span class="text-[9px] font-normal text-slate-400">${x.ket}</span></td><td class="p-2 text-right font-black text-emerald-600">${formatRp(x.nom)}</td><td class="p-2 text-right">-</td><td class="p-2 text-center no-print">${idx===0 ? `<button onclick="hapusJurnal(${x.grp})" class="text-rose-400 hover:text-rose-600 bg-rose-50 px-2 py-1 rounded"><i class="fas fa-trash"></i></button>` : ''}</td></tr>`;
                     } else {
-                        hJ += `<tr class="hover:bg-slate-50"><td class="p-2"></td><td class="p-2 text-center text-slate-500">${x.ref}</td><td class="p-2 pl-6 italic text-slate-600">${nama}<br><span class="text-[9px] font-normal not-italic text-slate-400">${x.ket}</span></td><td class="p-2 text-right">-</td><td class="p-2 text-right font-black text-rose-600">${formatRp(x.nom)}</td><td class="p-2"></td></tr>`;
+                        hJ += `<tr class="hover:bg-slate-50"><td class="p-2"></td><td class="p-2 text-center text-slate-500">${x.ref}</td><td class="p-2 pl-6 italic text-slate-600">${nama}<br><span class="text-[9px] font-normal not-italic text-slate-400">${x.ket}</span></td><td class="p-2 text-right">-</td><td class="p-2 text-right font-black text-rose-600">${formatRp(x.nom)}</td><td class="p-2 no-print"></td></tr>`;
                     }
                 });
             });
