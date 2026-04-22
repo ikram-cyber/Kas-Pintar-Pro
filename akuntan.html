@@ -9,25 +9,29 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #0f172a; }
-        .page { display: none; animation: fadeIn 0.3s ease; } .page.active { display: block; }
-        @keyframes fadeIn { from {opacity:0; transform:translateY(10px)} to {opacity:1; transform:translateY(0)} }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -10px 25px rgba(0,0,0,0.1); z-index: 50; border-top: 1px solid #e2e8f0; }
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: #1e293b; -webkit-tap-highlight-color: transparent; }
+        .page { display: none; animation: fadeIn 0.4s ease; } .page.active { display: block; }
+        @keyframes fadeIn { from {opacity:0; transform:translateY(15px)} to {opacity:1; transform:translateY(0)} }
+        
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -10px 30px rgba(0,0,0,0.05); z-index: 50; border-top: 1px solid #e2e8f0; }
         .nav-item { color: #94a3b8; display: flex; flex-direction: column; align-items: center; font-size: 10px; font-weight: 800; cursor: pointer; transition: 0.3s; width: 25%; text-transform: uppercase; }
-        .nav-item.active { color: #4f46e5; transform: translateY(-3px); }
-        .table-pro { width: 100%; border-collapse: collapse; font-size: 10px; background: #fff; }
-        .table-pro th, .table-pro td { border: 1px solid #cbd5e1; padding: 8px; }
-        .table-pro th { background-color: #1e293b; color: #fff; font-weight: 900; text-align: center; }
-        .bg-debit { background-color: #f0fdf4; } .bg-kredit { background-color: #fff1f2; }
+        .nav-item.active { color: #10b981; transform: translateY(-4px); }
+        
+        .table-pro { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 10px; border-radius: 12px; overflow: hidden; border: 1px solid #cbd5e1; }
+        .table-pro th, .table-pro td { border: 1px solid #e2e8f0; padding: 10px; }
+        .table-pro th { background-color: #1e293b; color: #f8fafc; font-weight: 900; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; border-color: #334155; }
+        .table-pro tbody tr:hover { background-color: #f8fafc; }
+        
+        /* Print Layout Modern */
         @media print {
             @page { size: landscape; margin: 1cm; }
             body { background: white; padding: 0 !important; }
             .no-print, .bottom-nav { display: none !important; }
             .page { display: none !important; } .page.active { display: block !important; }
             .print-header { display: flex !important; justify-content: space-between; align-items: flex-start; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 20px; }
-            table { font-size: 9px !important; width: 100% !important; }
-            .table-pro th { background-color: #f1f5f9 !important; color: #000 !important; -webkit-print-color-adjust: exact; }
-            /* Styling TTD saat di-print */
+            table { font-size: 9px !important; width: 100% !important; border-collapse: collapse; }
+            .table-pro th { background-color: #f1f5f9 !important; color: #000 !important; -webkit-print-color-adjust: exact; border: 1px solid #000 !important; }
+            .table-pro td { border: 1px solid #000 !important; }
             .ttd-area { display: flex !important; justify-content: space-between; margin-top: 40px; page-break-inside: avoid; color: #000; text-align: center; }
             .ttd-box { width: 30%; }
         }
@@ -35,69 +39,80 @@
 </head>
 <body class="pb-24">
 
-    <div class="bg-slate-900 text-white p-6 shadow-lg no-print relative z-[60]">
-        <div class="flex justify-between items-center">
+    <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white p-6 rounded-b-3xl shadow-2xl relative overflow-hidden no-print z-[60]">
+        <div class="absolute -right-6 -top-6 text-9xl opacity-10"><i class="fas fa-balance-scale-right"></i></div>
+        <div class="flex justify-between items-start relative z-10">
             <div>
-                <h1 class="text-xl font-black text-emerald-400 tracking-wide"><i class="fas fa-shield-halved mr-1"></i> AUDIT PRO</h1>
-                <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest text-indigo-200 mt-1 h-pt-pro">PERUSAHAAN</p>
+                <h1 class="text-2xl font-black tracking-wide text-emerald-400 drop-shadow-md"><i class="fas fa-shield-halved mr-1"></i> AUDIT PRO</h1>
+                <p class="text-[10px] font-bold opacity-80 uppercase tracking-widest text-emerald-100 mt-1 h-pt-pro">PERUSAHAAN</p>
             </div>
-            <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded text-[10px] font-black border border-slate-700 shadow-md transition-all active:scale-95">
-                <i class="fas fa-exchange-alt mr-1"></i> PRAKTIS
-            </a>
+            <div class="flex flex-col items-end">
+                <div class="bg-emerald-500 text-white px-2 py-1 rounded text-[9px] font-black shadow-sm mb-2 tracking-widest border border-emerald-400">10-COLUMN</div>
+                <a href="index.html" class="bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg text-[10px] font-black shadow-xl transition-all active:scale-95">
+                    <i class="fas fa-exchange-alt mr-1"></i> PRAKTIS
+                </a>
+            </div>
         </div>
     </div>
 
-    <div id="p-input" class="page active px-4 mt-5">
-        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-4 flex items-center justify-between">
-            <div>
-                <div class="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1"><i class="fas fa-robot"></i> AI Auditor</div>
-                <div id="ai-audit-desc" class="text-xs font-bold text-slate-700 leading-tight">Menunggu data...</div>
+    <div id="p-input" class="page active px-4 mt-6">
+        
+        <div class="bg-gradient-to-r from-indigo-900 to-slate-800 p-5 rounded-2xl shadow-lg relative overflow-hidden text-white mb-5 flex items-center justify-between border border-slate-700">
+            <div class="absolute -left-4 -bottom-4 text-7xl opacity-10"><i class="fas fa-robot"></i></div>
+            <div class="relative z-10">
+                <div class="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-1">AI Auditor Insight</div>
+                <div id="ai-audit-desc" class="text-xs font-bold text-slate-200">Menunggu data transaksi...</div>
             </div>
-            <div id="ai-audit-grade" class="text-3xl font-black text-slate-400">N/A</div>
+            <div id="ai-audit-grade" class="text-4xl font-black text-white relative z-10 drop-shadow-lg">N/A</div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mb-5">
-            <div class="bg-slate-800 p-4 rounded-xl shadow-md text-white">
-                <p class="text-[9px] font-black uppercase opacity-70">Laba Bersih</p>
-                <h2 id="v-laba-pro" class="text-lg font-black tracking-tight text-emerald-400">Rp 0</h2>
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center hover:border-emerald-300 transition-colors">
+                <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest"><i class="fas fa-chart-line mr-1 text-emerald-500"></i> Laba Bersih</div>
+                <div class="text-lg font-black text-emerald-600 mt-1" id="v-laba-pro">Rp 0</div>
             </div>
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                <p class="text-[9px] font-black uppercase text-slate-500">ROE (Profitabilitas)</p>
-                <h2 id="v-roe-pro" class="text-lg font-black text-indigo-600">0.00%</h2>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm text-center hover:border-indigo-300 transition-colors">
+                <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest"><i class="fas fa-percent mr-1 text-indigo-500"></i> ROE Ratio</div>
+                <div class="text-lg font-black text-indigo-600 mt-1" id="v-roe-pro">0.00%</div>
             </div>
         </div>
 
-        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm mb-5">
-            <h3 class="font-black text-slate-800 text-xs uppercase mb-4 border-b border-slate-100 pb-2"><i class="fas fa-pen-nib mr-1 text-indigo-500"></i> Entry Jurnal Umum</h3>
-            <input type="date" id="j-tgl" class="w-full p-3 mb-3 border border-slate-300 rounded text-sm font-bold bg-slate-50 outline-none focus:border-indigo-500">
+        <div class="bg-white p-6 rounded-2xl border-t-4 border-t-emerald-500 shadow-xl mb-5">
+            <h3 class="font-black text-slate-800 text-sm uppercase mb-5 tracking-wide"><i class="fas fa-pen-nib mr-2 text-emerald-500"></i> Entry Jurnal Umum</h3>
             
-            <div class="grid grid-cols-2 gap-2 mb-3">
+            <label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Tanggal Transaksi</label>
+            <input type="date" id="j-tgl" class="w-full p-3 mb-4 border border-slate-300 rounded-xl text-sm font-bold bg-slate-50 outline-none focus:ring-2 focus:ring-emerald-500 transition-all">
+            
+            <div class="grid grid-cols-2 gap-3 mb-4">
                 <div>
-                    <label class="text-[9px] font-black text-emerald-600 uppercase ml-1">Debit (+)</label>
-                    <select id="j-debit" class="w-full p-3 border border-emerald-300 rounded text-xs font-bold bg-emerald-50 outline-none focus:border-emerald-500"></select>
+                    <label class="text-[10px] font-black text-emerald-600 uppercase ml-1 block mb-1">Debit (+)</label>
+                    <select id="j-debit" class="w-full p-3 border border-emerald-300 rounded-xl text-xs font-bold bg-emerald-50/50 outline-none focus:ring-2 focus:ring-emerald-500"></select>
                 </div>
                 <div>
-                    <label class="text-[9px] font-black text-rose-600 uppercase ml-1">Kredit (-)</label>
-                    <select id="j-kredit" class="w-full p-3 border border-rose-300 rounded text-xs font-bold bg-rose-50 outline-none focus:border-rose-500"></select>
+                    <label class="text-[10px] font-black text-rose-600 uppercase ml-1 block mb-1">Kredit (-)</label>
+                    <select id="j-kredit" class="w-full p-3 border border-rose-300 rounded-xl text-xs font-bold bg-rose-50/50 outline-none focus:ring-2 focus:ring-rose-500"></select>
                 </div>
             </div>
 
-            <div class="bg-amber-50 p-3 rounded border border-amber-200 mb-3">
+            <div class="bg-gradient-to-r from-amber-50 to-yellow-50 p-3 rounded-xl border border-amber-200 mb-4 shadow-sm">
                 <label class="flex items-center gap-2 text-[10px] font-black uppercase text-amber-800 cursor-pointer">
-                    <input type="checkbox" id="j-tax-auto" class="w-4 h-4 rounded text-indigo-600"> 
+                    <input type="checkbox" id="j-tax-auto" class="w-4 h-4 rounded text-indigo-600 accent-amber-500"> 
                     Hitung PPN 11% Otomatis
                 </label>
             </div>
 
-            <input type="number" id="j-nom" placeholder="Nominal Rp" class="w-full p-3 mb-3 border border-slate-300 rounded font-black text-center text-lg outline-none focus:border-indigo-500">
-            <input type="text" id="j-ket" placeholder="Keterangan Transaksi" class="w-full p-3 mb-4 border border-slate-300 rounded text-sm outline-none focus:border-indigo-500">
+            <label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Nominal & Keterangan</label>
+            <input type="number" id="j-nom" placeholder="Nominal Rp" class="w-full p-4 mb-3 border border-slate-300 rounded-xl font-black text-center text-xl outline-none focus:ring-2 focus:ring-emerald-500 shadow-inner">
+            <input type="text" id="j-ket" placeholder="Keterangan Transaksi..." class="w-full p-3 mb-5 border border-slate-300 rounded-xl text-sm outline-none focus:ring-2 focus:ring-emerald-500">
             
-            <button onclick="simpanJurnal()" class="w-full bg-indigo-600 text-white font-black py-4 rounded text-xs tracking-widest shadow-md hover:bg-indigo-700 transition-all active:scale-95">POSTING JURNAL</button>
+            <button onclick="simpanJurnal()" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black py-4 rounded-xl text-xs tracking-widest shadow-lg shadow-emerald-200 transition-all active:scale-[0.98]">
+                <i class="fas fa-save mr-1"></i> POSTING JURNAL
+            </button>
         </div>
     </div>
 
-    <div id="p-jurnal" class="page px-4 mt-5">
-        <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+    <div id="p-jurnal" class="page px-4 mt-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-lg">
             <div class="print-header hidden">
                 <div class="w-3/4 text-left">
                     <img class="pr-logo-pro mb-2" src="" style="max-height:50px; display:none;">
@@ -110,21 +125,22 @@
                     <div class="text-[6px] font-black uppercase tracking-widest mt-1">Verified Audit</div>
                 </div>
             </div>
-            <div class="no-print flex justify-between items-center mb-4">
-                <h3 class="font-black text-slate-800 text-sm uppercase"><i class="fas fa-list mr-1 text-blue-500"></i> Buku Jurnal</h3>
+            <div class="no-print flex justify-between items-center mb-5">
+                <h3 class="font-black text-slate-800 text-sm uppercase tracking-wide"><i class="fas fa-list-ol mr-2 text-emerald-500"></i> Buku Jurnal</h3>
                 <div class="flex gap-2">
-                    <button onclick="exportCSV('Jurnal')" class="bg-emerald-600 text-white px-3 py-1.5 rounded text-[10px] font-bold shadow-sm"><i class="fas fa-file-csv mr-1"></i> CSV</button>
-                    <button onclick="window.print()" class="bg-slate-800 text-white px-3 py-1.5 rounded text-[10px] font-bold shadow-sm"><i class="fas fa-print"></i></button>
+                    <button onclick="exportCSV('Jurnal')" class="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 px-3 py-1.5 rounded-lg text-[10px] font-black transition-colors"><i class="fas fa-file-csv mr-1"></i> CSV</button>
+                    <button onclick="window.print()" class="bg-slate-100 text-slate-700 hover:bg-slate-200 px-3 py-1.5 rounded-lg text-[10px] font-black transition-colors"><i class="fas fa-print"></i></button>
                 </div>
             </div>
-            <div class="overflow-x-auto">
-                <table class="table-pro text-[11px]">
+            <div class="overflow-x-auto rounded-xl border border-slate-200">
+                <table class="table-pro text-[11px] w-full">
                     <thead>
                         <tr><th class="w-16">Tgl</th><th class="w-12">Ref</th><th class="text-left">Nama Akun & Keterangan</th><th class="text-right w-24">Debit</th><th class="text-right w-24">Kredit</th><th class="no-print w-8">X</th></tr>
                     </thead>
                     <tbody id="v-jurnal"></tbody>
                 </table>
             </div>
+            
             <div class="ttd-area hidden">
                 <div class="ttd-box"><p class="font-bold text-[10px] mb-12 uppercase">Dibuat Oleh,</p><p class="font-black text-xs border-t border-black pt-1">Accounting Dept</p></div>
                 <div class="ttd-box"><p class="font-bold text-[10px] mb-12 uppercase">Disetujui Oleh,</p><p class="font-black text-xs border-t border-black pt-1 pr-bos">CFO</p></div>
@@ -132,8 +148,8 @@
         </div>
     </div>
 
-    <div id="p-worksheet" class="page px-4 mt-5">
-        <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm overflow-hidden">
+    <div id="p-worksheet" class="page px-4 mt-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-lg overflow-hidden">
             <div class="print-header hidden">
                 <div class="w-3/4 text-left">
                     <img class="pr-logo-pro mb-2" src="" style="max-height:50px; display:none;">
@@ -146,14 +162,14 @@
                     <div class="text-[6px] font-black uppercase tracking-widest mt-1">Verified Audit</div>
                 </div>
             </div>
-            <div class="flex justify-between items-center mb-4 no-print">
-                <h3 class="font-black text-slate-800 text-sm uppercase"><i class="fas fa-table mr-1 text-emerald-500"></i> Neraca Lajur</h3>
+            <div class="flex justify-between items-center mb-5 no-print">
+                <h3 class="font-black text-slate-800 text-sm uppercase tracking-wide"><i class="fas fa-table mr-2 text-emerald-500"></i> Neraca Lajur</h3>
                 <div class="flex gap-2">
-                    <button onclick="exportCSV('Lajur')" class="bg-emerald-600 text-white px-3 py-1.5 rounded text-[10px] font-bold shadow-sm"><i class="fas fa-file-csv mr-1"></i> CSV</button>
-                    <button onclick="window.print()" class="bg-slate-800 text-white px-3 py-1.5 rounded text-[10px] font-bold shadow-sm"><i class="fas fa-print"></i> PRINT</button>
+                    <button onclick="exportCSV('Lajur')" class="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 px-3 py-1.5 rounded-lg text-[10px] font-black transition-colors"><i class="fas fa-file-csv mr-1"></i> CSV</button>
+                    <button onclick="window.print()" class="bg-slate-100 text-slate-700 hover:bg-slate-200 px-3 py-1.5 rounded-lg text-[10px] font-black transition-colors"><i class="fas fa-print mr-1"></i> PRINT</button>
                 </div>
             </div>
-            <div class="overflow-x-auto pb-2">
+            <div class="overflow-x-auto pb-2 rounded-xl border border-slate-200">
                 <table class="table-pro" style="min-width:1100px">
                     <thead>
                         <tr><th rowspan="2">Ref</th><th rowspan="2" class="text-left">Nama Rekening</th><th colspan="2">Neraca Saldo</th><th colspan="2">AJP</th><th colspan="2">NS Disesuaikan</th><th colspan="2">Laba / Rugi</th><th colspan="2">Neraca</th></tr>
@@ -163,6 +179,7 @@
                     <tfoot id="v-lajur-foot" class="font-black bg-slate-50"></tfoot>
                 </table>
             </div>
+
             <div class="ttd-area hidden">
                 <div class="ttd-box"><p class="font-bold text-[10px] mb-12 uppercase">Diperiksa Oleh,</p><p class="font-black text-xs border-t border-black pt-1">Internal Auditor</p></div>
                 <div class="ttd-box"><p class="font-bold text-[10px] mb-12 uppercase">Disahkan Oleh,</p><p class="font-black text-xs border-t border-black pt-1 pr-bos">CFO</p></div>
@@ -170,30 +187,30 @@
         </div>
     </div>
 
-    <div id="p-seting" class="page px-4 mt-5 no-print">
-        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm mb-5">
-            <h3 class="font-black text-slate-800 text-sm uppercase border-b border-slate-100 pb-3 mb-4"><i class="fas fa-cogs mr-1 text-rose-500"></i> Konfigurasi Pro</h3>
+    <div id="p-seting" class="page px-4 mt-6 no-print">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-lg mb-5">
+            <h3 class="font-black text-slate-800 text-sm uppercase border-b border-slate-100 pb-3 mb-5"><i class="fas fa-cogs mr-2 text-slate-500"></i> Konfigurasi Pro</h3>
             
-            <label class="text-[10px] font-black uppercase text-slate-500 mb-1 block">Logo Kop Surat Laporan</label>
-            <input type="file" accept="image/*" class="w-full text-xs mb-4 p-2 border border-slate-300 rounded bg-slate-50" onchange="handleLogo(this)">
+            <label class="text-[10px] font-black uppercase text-slate-400 mb-1 block">Logo Kop Surat Laporan</label>
+            <input type="file" accept="image/*" class="w-full text-xs mb-5 p-2 border border-slate-300 rounded-xl bg-slate-50" onchange="handleLogo(this)">
 
-            <label class="text-[10px] font-black uppercase text-slate-500 mb-1 block">Nama Perusahaan (Kop Surat)</label>
-            <input type="text" id="set-toko-pro" class="w-full p-3 mb-4 border border-slate-300 rounded font-bold outline-none focus:border-indigo-500" oninput="simpanSetPro()">
+            <label class="text-[10px] font-black uppercase text-slate-400 mb-1 block">Nama Perusahaan (Kop Surat)</label>
+            <input type="text" id="set-toko-pro" class="w-full p-3 mb-5 border border-slate-300 rounded-xl font-bold text-slate-700 outline-none focus:ring-2 focus:ring-emerald-500 transition-all" oninput="simpanSetPro()">
 
-            <label class="text-[10px] font-black uppercase text-slate-500 mb-1 block">Nama Pimpinan / CFO (TTD)</label>
-            <input type="text" id="set-bos-pro" class="w-full p-3 mb-6 border border-slate-300 rounded font-bold outline-none focus:border-indigo-500" oninput="simpanSetPro()">
+            <label class="text-[10px] font-black uppercase text-slate-400 mb-1 block">Nama Pimpinan / CFO (TTD)</label>
+            <input type="text" id="set-bos-pro" class="w-full p-3 mb-8 border border-slate-300 rounded-xl font-bold text-slate-700 outline-none focus:ring-2 focus:ring-emerald-500 transition-all" oninput="simpanSetPro()">
 
             <div class="grid grid-cols-2 gap-3 mb-6">
-                <button onclick="exportFullBackup()" class="bg-slate-800 text-white py-4 rounded text-[10px] font-black shadow-md active:scale-95 transition-all">
-                    <i class="fas fa-download block text-lg mb-1"></i> BACKUP DATA
+                <button onclick="exportFullBackup()" class="bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 py-4 rounded-xl text-[10px] font-black shadow-sm active:scale-95 transition-all">
+                    <i class="fas fa-cloud-download-alt block text-lg mb-1"></i> BACKUP DATA
                 </button>
-                <label class="bg-emerald-600 text-white py-4 rounded text-[10px] font-black shadow-md text-center cursor-pointer active:scale-95 transition-all">
-                    <i class="fas fa-upload block text-lg mb-1"></i> RESTORE DATA
+                <label class="bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 py-4 rounded-xl text-[10px] font-black shadow-sm text-center cursor-pointer active:scale-95 transition-all">
+                    <i class="fas fa-cloud-upload-alt block text-lg mb-1"></i> RESTORE DATA
                     <input type="file" class="hidden" accept=".json" onchange="importFullBackup(this)">
                 </label>
             </div>
 
-            <button onclick="if(confirm('Hapus seluruh Jurnal Pro permanen?')) { localStorage.removeItem('kspro_db_pro'); location.reload(); }" class="w-full bg-rose-50 text-rose-600 border border-rose-200 py-3 rounded text-xs font-black uppercase tracking-widest">
+            <button onclick="if(confirm('Hapus seluruh Jurnal Pro permanen?')) { localStorage.removeItem('kspro_db_pro'); location.reload(); }" class="w-full bg-white text-rose-500 border border-rose-200 hover:bg-rose-50 py-4 rounded-xl text-xs font-black uppercase tracking-widest transition-all">
                 Kosongkan Database Pro
             </button>
         </div>
@@ -201,9 +218,9 @@
 
     <nav class="bottom-nav no-print">
         <button class="nav-item active" onclick="bukaTab('input')"><i class="fas fa-brain mb-1 text-lg"></i>Audit</button>
-        <button class="nav-item" onclick="bukaTab('jurnal')"><i class="fas fa-list-ol mb-1 text-lg"></i>Jurnal</button>
+        <button class="nav-item" onclick="bukaTab('jurnal')"><i class="fas fa-book mb-1 text-lg"></i>Jurnal</button>
         <button class="nav-item" onclick="bukaTab('worksheet')"><i class="fas fa-table mb-1 text-lg"></i>Lajur</button>
-        <button class="nav-item" onclick="bukaTab('seting')"><i class="fas fa-cog mb-1 text-lg"></i>Seting</button>
+        <button class="nav-item" onclick="bukaTab('seting')"><i class="fas fa-cogs mb-1 text-lg"></i>Seting</button>
     </nav>
 
     <script>
@@ -238,20 +255,22 @@
         function exportFullBackup() {
             const data = { praktis: localStorage.getItem('kspro_db'), pro: localStorage.getItem('kspro_db_pro'), t: localStorage.getItem('kspro_toko'), l: localStorage.getItem('kspro_logo'), b: localStorage.getItem('kspro_bos') };
             const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Backup_KasPintar.json`; a.click();
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Backup_KasPintar_PRO.json`; a.click();
         }
 
         function importFullBackup(input) {
             if(input.files && input.files[0]){
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    let d = JSON.parse(e.target.result);
-                    if(d.praktis) localStorage.setItem('kspro_db', d.praktis);
-                    if(d.pro) localStorage.setItem('kspro_db_pro', d.pro);
-                    if(d.t) localStorage.setItem('kspro_toko', d.t);
-                    if(d.l) localStorage.setItem('kspro_logo', d.l);
-                    if(d.b) localStorage.setItem('kspro_bos', d.b);
-                    alert("Restore Berhasil!"); location.reload();
+                    try {
+                        let d = JSON.parse(e.target.result);
+                        if(d.praktis) localStorage.setItem('kspro_db', d.praktis);
+                        if(d.pro) localStorage.setItem('kspro_db_pro', d.pro);
+                        if(d.t) localStorage.setItem('kspro_toko', d.t);
+                        if(d.l) localStorage.setItem('kspro_logo', d.l);
+                        if(d.b) localStorage.setItem('kspro_bos', d.b);
+                        alert("Restore Berhasil!"); location.reload();
+                    } catch(err) { alert("File backup tidak valid!"); }
                 };
                 reader.readAsText(input.files[0]);
             }
@@ -274,7 +293,6 @@
                 if(logo) { img.src = logo; img.style.display = 'block'; }
             });
 
-            // TANGGAL CETAK & QR CODE
             let tglCetak = "Dicetak: " + new Date().toLocaleString('id-ID');
             document.querySelectorAll('.pr-date').forEach(el => el.innerText = tglCetak);
             
@@ -291,7 +309,9 @@
             let ket = document.getElementById('j-ket').value;
             let useTax = document.getElementById('j-tax-auto').checked;
             
-            let tzOffset = new Date().getTimezoneOffset() * 60000; let today = new Date(Date.now() - tzOffset).toISOString().split('T')[0];
+            let tzOffset = new Date().getTimezoneOffset() * 60000;
+            let today = new Date(Date.now() - tzOffset).toISOString().split('T')[0];
+            
             if(tgl > today) return alert("Validasi Gagal: Tidak bisa memposting transaksi di masa depan.");
             if(!nom || !tgl || d === k) return alert("Cek data: Nominal, Tanggal, atau Akun sama.");
             
@@ -308,7 +328,7 @@
             }
 
             localStorage.setItem('kspro_db_pro', JSON.stringify(dbPro));
-            alert("Terposting!"); document.getElementById('j-nom').value = ''; document.getElementById('j-ket').value = '';
+            alert("Jurnal Terposting!"); document.getElementById('j-nom').value = ''; document.getElementById('j-ket').value = '';
             render();
         }
 
@@ -349,16 +369,16 @@
 
         function render() {
             let hJ = ''; let groups = [...new Set(dbPro.map(item => item.grp))];
-            if(groups.length === 0) hJ = '<tr><td colspan="6" class="text-center p-6 text-slate-400">Kosong</td></tr>';
+            if(groups.length === 0) hJ = '<tr><td colspan="6" class="text-center p-8 text-slate-400 font-bold">Belum ada transaksi tercatat.</td></tr>';
 
             groups.forEach(grp => {
                 let items = dbPro.filter(x => x.grp === grp);
                 items.forEach((x, idx) => {
                     let nama = COA.find(a=>a.no===x.ref).nama;
                     if(x.pos === 'D') {
-                        hJ += `<tr class="border-t border-slate-200"><td class="p-2">${idx===0 ? x.tgl.slice(5) : ''}</td><td class="p-2 text-center font-bold text-slate-700">${x.ref}</td><td class="p-2 font-bold">${nama}<br><span class="text-[9px] font-normal text-slate-500">${x.ket}</span></td><td class="p-2 text-right font-black text-emerald-600">${formatRp(x.nom)}</td><td class="p-2 text-right">-</td><td class="p-2 text-center no-print">${idx===0 ? `<button onclick="hapusJurnal(${x.grp})" class="text-rose-400"><i class="fas fa-trash"></i></button>` : ''}</td></tr>`;
+                        hJ += `<tr class="border-t border-slate-200 hover:bg-slate-50"><td class="p-2">${idx===0 ? x.tgl.slice(5) : ''}</td><td class="p-2 text-center font-bold text-slate-700">${x.ref}</td><td class="p-2 font-bold text-slate-800">${nama}<br><span class="text-[9px] font-normal text-slate-400">${x.ket}</span></td><td class="p-2 text-right font-black text-emerald-600">${formatRp(x.nom)}</td><td class="p-2 text-right">-</td><td class="p-2 text-center no-print">${idx===0 ? `<button onclick="hapusJurnal(${x.grp})" class="text-rose-400 hover:text-rose-600 bg-rose-50 px-2 py-1 rounded"><i class="fas fa-trash"></i></button>` : ''}</td></tr>`;
                     } else {
-                        hJ += `<tr><td class="p-2"></td><td class="p-2 text-center text-slate-500">${x.ref}</td><td class="p-2 pl-6 italic text-slate-600">${nama}<br><span class="text-[9px] font-normal not-italic text-slate-400">${x.ket}</span></td><td class="p-2 text-right">-</td><td class="p-2 text-right font-black text-rose-600">${formatRp(x.nom)}</td><td class="p-2"></td></tr>`;
+                        hJ += `<tr class="hover:bg-slate-50"><td class="p-2"></td><td class="p-2 text-center text-slate-500">${x.ref}</td><td class="p-2 pl-6 italic text-slate-600">${nama}<br><span class="text-[9px] font-normal not-italic text-slate-400">${x.ket}</span></td><td class="p-2 text-right">-</td><td class="p-2 text-right font-black text-rose-600">${formatRp(x.nom)}</td><td class="p-2"></td></tr>`;
                     }
                 });
             });
@@ -388,7 +408,7 @@
             document.getElementById('v-lajur').innerHTML = hL;
             document.getElementById('v-lajur-foot').innerHTML = `
                 <tr class="bg-slate-100 text-slate-500"><td colspan="2" class="text-right uppercase tracking-widest text-[9px]">Total Sementara</td><td class="text-right">${formatRp(totals[0])}</td><td class="text-right">${formatRp(totals[1])}</td><td class="text-right">-</td><td class="text-right">-</td><td class="text-right">${formatRp(totals[4])}</td><td class="text-right">${formatRp(totals[5])}</td><td class="text-right">${formatRp(totals[6])}</td><td class="text-right">${formatRp(totals[7])}</td><td class="text-right">${formatRp(totals[8])}</td><td class="text-right">${formatRp(totals[9])}</td></tr>
-                <tr class="bg-indigo-50 text-indigo-800"><td colspan="2" class="text-right uppercase tracking-widest text-[9px]">Laba (Rugi) Bersih</td><td colspan="6"></td><td class="text-right font-black">${formatRp(labaD)}</td><td class="text-right font-black">${formatRp(labaK)}</td><td class="text-right font-black">${formatRp(labaK)}</td><td class="text-right font-black">${formatRp(labaD)}</td></tr>
+                <tr class="bg-emerald-50 text-emerald-800"><td colspan="2" class="text-right uppercase tracking-widest text-[9px]">Laba (Rugi) Bersih</td><td colspan="6"></td><td class="text-right font-black">${formatRp(labaD)}</td><td class="text-right font-black">${formatRp(labaK)}</td><td class="text-right font-black">${formatRp(labaK)}</td><td class="text-right font-black">${formatRp(labaD)}</td></tr>
                 <tr class="bg-slate-800 text-white"><td colspan="2" class="text-right uppercase tracking-widest text-[9px]">Total Balance</td><td colspan="6"></td><td class="text-right font-black">${formatRp(totals[6]+labaD)}</td><td class="text-right font-black">${formatRp(totals[7]+labaK)}</td><td class="text-right font-black">${formatRp(totals[8]+labaK)}</td><td class="text-right font-black">${formatRp(totals[9]+labaD)}</td></tr>
             `;
 
@@ -397,10 +417,10 @@
             document.getElementById('v-roe-pro').innerText = roe + "%";
             
             let auditTxt = document.getElementById('ai-audit-desc'); let auditGrd = document.getElementById('ai-audit-grade');
-            if(laba > 0 && roe > 10) { auditGrd.innerText = "A+"; auditTxt.innerText = "Sangat Sehat. ROE tinggi."; auditGrd.className = "text-3xl font-black text-emerald-500"; }
-            else if(laba > 0) { auditGrd.innerText = "B"; auditTxt.innerText = "Stabil. Coba tekan beban operasional."; auditGrd.className = "text-3xl font-black text-blue-500"; }
-            else if(laba < 0) { auditGrd.innerText = "D"; auditTxt.innerText = "Warning! Perusahaan mencetak rugi."; auditGrd.className = "text-3xl font-black text-rose-500"; }
-            else { auditGrd.innerText = "N/A"; auditTxt.innerText = "Menunggu transaksi..."; auditGrd.className = "text-3xl font-black text-slate-400"; }
+            if(laba > 0 && roe > 10) { auditGrd.innerText = "A+"; auditTxt.innerText = "Sangat Sehat. ROE tinggi, pertumbuhan baik."; auditGrd.className = "text-4xl font-black text-emerald-400 drop-shadow-lg"; }
+            else if(laba > 0) { auditGrd.innerText = "B"; auditTxt.innerText = "Stabil. Perlu efisiensi beban operasional."; auditGrd.className = "text-4xl font-black text-blue-300 drop-shadow-lg"; }
+            else if(laba < 0) { auditGrd.innerText = "D"; auditTxt.innerText = "Peringatan! Perusahaan mencetak rugi."; auditGrd.className = "text-4xl font-black text-rose-400 drop-shadow-lg"; }
+            else { auditGrd.innerText = "N/A"; auditTxt.innerText = "Menunggu data transaksi..."; auditGrd.className = "text-4xl font-black text-slate-400 drop-shadow-lg"; }
         }
 
         function bukaTab(id) { document.querySelectorAll('.page, .nav-item').forEach(e => e.classList.remove('active')); document.getElementById('p-'+id).classList.add('active'); event.currentTarget.classList.add('active'); window.scrollTo(0,0); }
@@ -409,8 +429,8 @@
             let opt = ''; COA.forEach(a => opt += `<option value="${a.no}">${a.no} - ${a.nama}</option>`);
             document.getElementById('j-debit').innerHTML = opt; document.getElementById('j-kredit').innerHTML = opt;
             
-            // KUNCI TANGGAL MASA DEPAN
-            let tzOffset = new Date().getTimezoneOffset() * 60000; let today = new Date(Date.now() - tzOffset).toISOString().split('T')[0];
+            let tzOffset = new Date().getTimezoneOffset() * 60000;
+            let today = new Date(Date.now() - tzOffset).toISOString().split('T')[0];
             document.getElementById('j-tgl').value = today;
             document.getElementById('j-tgl').setAttribute('max', today);
             
