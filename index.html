@@ -50,7 +50,14 @@
                 <h1 class="text-2xl font-black tracking-wide" id="h-pt">KAS PINTAR PRO</h1>
                 <p class="text-[10px] font-bold opacity-80 mt-1 tracking-widest uppercase text-blue-300" id="h-mode-desc">CORPORATE STANDARD</p>
             </div>
-            <div id="v-cur-badge" class="bg-emerald-600 px-2 py-1 rounded text-[10px] font-black border border-emerald-400">IDR</div>
+            
+            <div class="flex flex-col items-end">
+                <div id="v-cur-badge" class="bg-emerald-600 px-2 py-1 rounded text-[10px] font-black border border-emerald-400">IDR</div>
+                <a href="akuntan.html" class="mt-2 bg-slate-800 hover:bg-slate-700 text-white px-2 py-1 rounded text-[9px] font-black border border-slate-600 shadow-md transition-colors">
+                    <i class="fas fa-exchange-alt mr-1"></i> PRO
+                </a>
+            </div>
+
         </div>
     </div>
 
@@ -140,7 +147,7 @@
                     <select id="cari-kat" class="w-full p-2 mb-2 border border-slate-300 rounded text-xs font-bold" onchange="cariData()">
                         <option value="Semua">Semua Kategori Akun</option>
                         <option value="Operasional">Akun Operasional</option>
-                        <option value="Utang">Akun Utang (Liabilitas)</option>
+                        <option value="Utang">Akun Utang (Liabilities)</option>
                         <option value="Modal">Akun Modal (Ekuitas)</option>
                     </select>
                     <div class="flex gap-2 mb-3 text-xs font-bold text-slate-600">
