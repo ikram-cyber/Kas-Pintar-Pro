@@ -50,7 +50,7 @@
             .grid-print { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
             .card-print { border: 1px solid #000; padding: 15px; }
             
-            .ttd-area { display: flex; justify-content: space-between; margin-top: 60px; text-align: center; page-break-inside: avoid; }
+            .ttd-area { display: flex !important; justify-content: space-between; margin-top: 60px; text-align: center; page-break-inside: avoid; }
             .ttd-box { width: 40%; }
         }
     </style>
@@ -80,7 +80,6 @@
             <div style="margin-top: auto; padding-bottom: 1rem;">
                 <p style="font-weight: bold; font-size: 10pt; color: #000;">CONFIDENTIAL & VERIFIED DOCUMENT</p>
                 <p style="font-size: 8pt; color: #475569;" id="print-date">Generated on: </p>
-                <p style="font-size: 8pt; font-weight: bold; color: #0f172a; margin-top: 15px;">&copy; 2026 Hak Cipta Dilindungi - Ikram Cyber System Enterprise</p>
             </div>
         </div>
     </div>
@@ -106,7 +105,7 @@
             <div class="toc-item"><span>BAB II - Executive Summary & Indikator Kinerja</span><span>2</span></div>
             <div class="toc-item"><span>BAB III - Laporan Keuangan Komprehensif</span><span>3</span></div>
             <div class="toc-item"><span>BAB IV - Catatan Atas Laporan Keuangan (CALK)</span><span>4</span></div>
-            <div class="toc-item"><span>LAMPIRAN - Audit Trail & Buku Jurnal Tahunan</span><span>5</span></div>
+            <div class="toc-item"><span>LAMPIRAN - Audit Trail & Buku Besar Tahunan</span><span>5</span></div>
         </div>
 
         <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 mb-8 chapter">
@@ -174,7 +173,7 @@
             </div>
         </div>
 
-        <div class="text-center pt-8 pb-10 text-slate-400 text-[10px] font-black tracking-widest uppercase w-full no-print">&copy; 2026 HAK CIPTA DILINDUNGI - IKRAM CYBER SYSTEM ENTERPRISE</div>
+        <div class="text-center pt-8 pb-10 text-slate-400 text-[10px] font-black tracking-widest uppercase w-full no-print">&copy; 2026 Ikram Cyber System</div>
 
     </div>
 
@@ -210,7 +209,7 @@
                 qrImg.style.display = 'block';
             }
 
-            // DATA PROCESSING (Memprioritaskan Mode Audit/Pro, fallback ke Standar)
+            // DATA PROCESSING
             let dbPro = JSON.parse(localStorage.getItem('kspro_db_pro'));
             let dbStd = JSON.parse(localStorage.getItem('kspro_db'));
             
@@ -221,7 +220,7 @@
             let lampiranHTML = "";
             
             if (dbPro && dbPro.length > 0) {
-                // LOGIKA PRO (10 KOLOM) - DENGAN 14 AKUN LENGKAP
+                // LOGIKA PRO (14 AKUN LENGKAP)
                 const COA = [
                     { no: '101', nama: 'Kas / Bank', tipe: 'Aset', sn: 'D' },
                     { no: '102', nama: 'Piutang Dagang', tipe: 'Aset', sn: 'D' },
@@ -239,7 +238,6 @@
                     { no: '504', nama: 'Beban Penyusutan', tipe: 'Beban', sn: 'D' }
                 ];
                 
-                // KALKULASI DASAR
                 COA.forEach(a => {
                     let d = dbPro.filter(x=>x.ref===a.no && x.pos==='D').reduce((p,c)=>p+c.nom,0);
                     let k = dbPro.filter(x=>x.ref===a.no && x.pos==='K').reduce((p,c)=>p+c.nom,0);
@@ -261,41 +259,33 @@
                 laba = opIn - opOut;
                 ekuitas += laba; 
 
-                // BUILD HTML: LABA RUGI (TERPISAH)
+                // BUILD HTML: LABA RUGI
                 tableHTML += `
                 <div class="mb-8">
                     <h3 class="font-black text-center bg-slate-100 border-y-2 border-black py-2 mb-3 text-xs uppercase tracking-widest">A. Laporan Laba Rugi Komprehensif</h3>
                     <table class="table-pro w-full text-sm">
                         <tbody>
-                            <tr><td colspan="2" class="font-bold bg-slate-50">PENDAPATAN</td></tr>
+                            <tr><td colspan="2" class="font-bold bg-slate-50 uppercase">Pendapatan</td></tr>
                             <tr><td class="pl-6">Pendapatan Jasa / Sales</td><td class="text-right font-bold text-emerald-700">${formatRp(opIn)}</td></tr>
-                            <tr><td colspan="2" class="font-bold bg-slate-50 mt-2">BEBAN-BEBAN</td></tr>
+                            <tr><td colspan="2" class="font-bold bg-slate-50 uppercase">Beban-Beban</td></tr>
                 `;
                 
-                let htmlBeban = "";
                 COA.filter(a => a.tipe === 'Beban').forEach(a => {
                     let d = dbPro.filter(x=>x.ref===a.no && x.pos==='D').reduce((p,c)=>p+c.nom,0);
                     let k = dbPro.filter(x=>x.ref===a.no && x.pos==='K').reduce((p,c)=>p+c.nom,0);
                     let nsd = d - k;
-                    if(nsd > 0) htmlBeban += `<tr><td class="pl-6">${a.nama}</td><td class="text-right text-rose-700">(${formatRp(nsd)})</td></tr>`;
+                    if(nsd > 0) tableHTML += `<tr><td class="pl-6">${a.nama}</td><td class="text-right text-rose-700">(${formatRp(nsd)})</td></tr>`;
                 });
-                if(htmlBeban === "") htmlBeban = `<tr><td class="pl-6 italic text-slate-400">Tidak ada beban</td><td class="text-right">-</td></tr>`;
-                tableHTML += htmlBeban;
                 
-                tableHTML += `
-                            <tr class="border-t-2 border-black font-black bg-slate-100 uppercase"><td>Laba (Rugi) Bersih</td><td class="text-right">${formatRp(laba)}</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                `;
+                tableHTML += `<tr class="border-t-2 border-black font-black bg-slate-100 uppercase"><td>Laba (Rugi) Bersih</td><td class="text-right">${formatRp(laba)}</td></tr></tbody></table></div>`;
 
-                // BUILD HTML: NERACA / POSISI KEUANGAN (TERPISAH)
+                // BUILD HTML: NERACA
                 tableHTML += `
                 <div class="mb-4">
-                    <h3 class="font-black text-center bg-slate-100 border-y-2 border-black py-2 mb-3 text-xs uppercase tracking-widest">B. Laporan Posisi Keuangan (Neraca)</h3>
+                    <h3 class="font-black text-center bg-slate-100 border-y-2 border-black py-2 mb-3 text-xs uppercase tracking-widest">B. Laporan Posisi KEUANGAN (NERACA)</h3>
                     <table class="table-pro w-full text-sm">
                         <tbody>
-                            <tr><td colspan="2" class="font-bold bg-slate-50 text-center tracking-widest">AKTIVA (ASET)</td></tr>
+                            <tr><td colspan="2" class="font-bold bg-slate-50 text-center uppercase tracking-widest">Aktiva (Aset)</td></tr>
                 `;
                 
                 COA.filter(a => a.tipe === 'Aset').forEach(a => {
@@ -305,23 +295,14 @@
                     if(nsd > 0) tableHTML += `<tr><td class="pl-6">${a.nama}</td><td class="text-right">${a.sn==='K'?'('+formatRp(nsd)+')':formatRp(nsd)}</td></tr>`;
                 });
                 
-                tableHTML += `
-                            <tr class="border-t-2 border-black font-black bg-slate-100 uppercase"><td>Total Aktiva</td><td class="text-right">${formatRp(totalAset)}</td></tr>
-                            
-                            <tr><td colspan="2" class="font-bold bg-slate-50 text-center tracking-widest mt-4">PASIVA (LIABILITAS & EKUITAS)</td></tr>
-                            <tr><td colspan="2" class="font-bold italic text-slate-600">Kewajiban / Utang</td></tr>
-                `;
+                tableHTML += `<tr class="border-t-2 border-black font-black bg-slate-100 uppercase"><td>Total Aktiva</td><td class="text-right">${formatRp(totalAset)}</td></tr><tr><td colspan="2" class="font-bold bg-slate-50 text-center uppercase tracking-widest mt-4">Pasiva (Liabilitas & Ekuitas)</td></tr>`;
                 
                 COA.filter(a => a.tipe === 'Kewajiban').forEach(a => {
                     let d = dbPro.filter(x=>x.ref===a.no && x.pos==='D').reduce((p,c)=>p+c.nom,0);
                     let k = dbPro.filter(x=>x.ref===a.no && x.pos==='K').reduce((p,c)=>p+c.nom,0);
                     let nsd = k - d;
-                    if(nsd > 0) tableHTML += `<tr><td class="pl-6">${a.nama}</td><td class="text-right">${formatRp(nsd)}</td></tr>`;
+                    if(nsd > 0) tableHTML += `<tr><td class="pl-6 font-bold text-rose-700">${a.nama} (Utang)</td><td class="text-right">${formatRp(nsd)}</td></tr>`;
                 });
-                
-                tableHTML += `
-                            <tr><td colspan="2" class="font-bold italic text-slate-600">Ekuitas / Modal</td></tr>
-                `;
                 
                 COA.filter(a => a.tipe === 'Ekuitas').forEach(a => {
                     let d = dbPro.filter(x=>x.ref===a.no && x.pos==='D').reduce((p,c)=>p+c.nom,0);
@@ -330,143 +311,50 @@
                     if(nsd > 0) tableHTML += `<tr><td class="pl-6">${a.nama}</td><td class="text-right">${a.sn==='D'?'('+formatRp(nsd)+')':formatRp(nsd)}</td></tr>`;
                 });
                 
-                tableHTML += `
-                            <tr><td class="pl-6">Laba (Rugi) Periode Berjalan</td><td class="text-right">${formatRp(laba)}</td></tr>
-                            <tr class="border-t-2 border-black font-black bg-slate-100 uppercase"><td>Total Pasiva</td><td class="text-right">${formatRp(totalUtang + ekuitas)}</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                `;
+                tableHTML += `<tr><td class="pl-6 font-bold">Laba Berjalan</td><td class="text-right">${formatRp(laba)}</td></tr><tr class="border-t-2 border-black font-black bg-slate-100 uppercase"><td>Total Pasiva</td><td class="text-right">${formatRp(totalUtang + ekuitas)}</td></tr></tbody></table></div>`;
 
-                // BUILD LAMPIRAN PRO DENGAN GRAND TOTAL
+                // LAMPIRAN JURNAL
                 let totalDebitJurnal = 0, totalKreditJurnal = 0;
                 lampiranHTML = `<table class="table-pro w-full"><thead><tr><th>Tgl</th><th>Ref</th><th>Keterangan</th><th class="text-right">Debit</th><th class="text-right">Kredit</th></tr></thead><tbody>`;
                 dbPro.sort((a,b)=>a.id-b.id).forEach(x => {
-                    if(x.pos === 'D') totalDebitJurnal += x.nom;
-                    if(x.pos === 'K') totalKreditJurnal += x.nom;
-                    lampiranHTML += `<tr><td>${x.tgl}</td><td class="text-center">${x.ref}</td><td>${x.ket} ${x.isAjp?'<b>[AJP]</b>':''}</td><td class="text-right">${x.pos==='D'?formatRp(x.nom):'-'}</td><td class="text-right">${x.pos==='K'?formatRp(x.nom):'-'}</td></tr>`;
+                    if(x.pos === 'D') totalDebitJurnal += x.nom; else totalKreditJurnal += x.nom;
+                    lampiranHTML += `<tr><td>${x.tgl}</td><td class="text-center font-bold">${x.ref}</td><td>${x.ket} ${x.isAjp?'<b>[AJP]</b>':''}</td><td class="text-right">${x.pos==='D'?formatRp(x.nom):'-'}</td><td class="text-right">${x.pos==='K'?formatRp(x.nom):'-'}</td></tr>`;
                 });
-                
-                // TAMBAH ROW TOTAL BALANCE
-                if(totalDebitJurnal > 0 || totalKreditJurnal > 0) {
-                    lampiranHTML += `</tbody><tfoot class="bg-slate-100 font-black text-sm"><tr class="border-t-2 border-black"><td colspan="3" class="text-right uppercase py-3">Total Keseluruhan (Balance)</td><td class="text-right text-emerald-700 py-3">${formatRp(totalDebitJurnal)}</td><td class="text-right text-rose-700 py-3">${formatRp(totalKreditJurnal)}</td></tr></tfoot></table>`;
-                } else {
-                    lampiranHTML += `</tbody></table>`;
-                }
+                lampiranHTML += `</tbody><tfoot class="bg-slate-100 font-black text-sm"><tr class="border-t-2 border-black"><td colspan="3" class="text-right uppercase py-3">Total Balance Mutasi</td><td class="text-right text-emerald-700 py-3">${formatRp(totalDebitJurnal)}</td><td class="text-right text-rose-700 py-3">${formatRp(totalKreditJurnal)}</td></tr></tfoot></table>`;
 
-            } else if (dbStd && dbStd.length > 0) {
-                // LOGIKA STANDAR (KAS PINTAR BIASA)
+            } else if (dbStd) {
+                // LOGIKA STANDAR (FALLBACK)
                 dbStd.forEach(x => { 
                     if(x.kat==='Operasional') x.jen==='in' ? opIn+=x.nom : opOut+=x.nom; 
                     if(x.kat==='Utang') x.jen==='in' ? utIn+=x.nom : utOut+=x.nom; 
                     if(x.kat==='Modal') x.jen==='in' ? moIn+=x.nom : moOut+=x.nom; 
                 });
-                totalUtang = utIn - utOut;
-                ekuitas = moIn - moOut;
-                laba = opIn - opOut;
-                ekuitas += laba;
-                totalAset = ekuitas + totalUtang;
-                nsdKas = totalAset; // Karena di standar cuma ada kas
-
-                tableHTML = `
-                <div class="mb-6">
-                    <h3 class="font-black text-center bg-slate-100 border-y-2 border-black py-2 mb-3 text-xs uppercase tracking-widest">A. Laporan Laba Rugi</h3>
-                    <table class="table-pro w-full text-sm">
-                        <tbody>
-                            <tr><td>Pendapatan Operasional</td><td class="text-right font-bold text-emerald-600">${formatRp(opIn)}</td></tr>
-                            <tr><td>Beban Operasional</td><td class="text-right font-bold text-rose-600">(${formatRp(opOut)})</td></tr>
-                            <tr class="bg-slate-100 font-black border-t-2 border-black"><td>LABA BERSIH</td><td class="text-right">${formatRp(laba)}</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div>
-                    <h3 class="font-black text-center bg-slate-100 border-y-2 border-black py-2 mb-3 text-xs uppercase tracking-widest">B. Laporan Posisi Keuangan (Neraca)</h3>
-                    <table class="table-pro w-full text-sm">
-                        <tbody>
-                            <tr><td>Total Aktiva (Kas/Bank)</td><td class="text-right font-bold text-emerald-600">${formatRp(totalAset)}</td></tr>
-                            <tr><td>Total Liabilitas (Utang)</td><td class="text-right font-bold text-rose-600">${formatRp(totalUtang)}</td></tr>
-                            <tr><td>Total Ekuitas (Modal + Laba)</td><td class="text-right font-bold">${formatRp(ekuitas)}</td></tr>
-                        </tbody>
-                    </table>
-                </div>`;
-
-                // BUILD LAMPIRAN STANDAR DENGAN GRAND TOTAL
-                let totalMasuk = 0, totalKeluar = 0;
-                lampiranHTML = `<table class="table-pro w-full"><thead><tr><th>Tgl</th><th>Kategori</th><th>Keterangan</th><th class="text-right">Masuk (D)</th><th class="text-right">Keluar (K)</th></tr></thead><tbody>`;
-                dbStd.sort((a,b)=>a.id-b.id).forEach(x => {
-                    let isD = x.jen === 'in';
-                    if(isD) totalMasuk += x.nom; else totalKeluar += x.nom;
-                    lampiranHTML += `<tr><td>${x.tgl}</td><td>${x.kat}</td><td>${x.ket}</td><td class="text-right">${isD?formatRp(x.nom):'-'}</td><td class="text-right">${!isD?formatRp(x.nom):'-'}</td></tr>`;
-                });
-                
-                if (totalMasuk > 0 || totalKeluar > 0) {
-                    lampiranHTML += `</tbody><tfoot class="bg-slate-100 font-black text-sm"><tr class="border-t-2 border-black"><td colspan="3" class="text-right uppercase py-3">Total Mutasi Keseluruhan</td><td class="text-right text-emerald-700 py-3">${formatRp(totalMasuk)}</td><td class="text-right text-rose-700 py-3">${formatRp(totalKeluar)}</td></tr></tfoot></table>`;
-                } else {
-                    lampiranHTML += `</tbody></table>`;
-                }
-
-            } else {
-                tableHTML = "<p class='formal-text'>Belum ada data transaksi yang tercatat di sistem.</p>";
-                lampiranHTML = "<p class='formal-text'>Data Kosong.</p>";
+                laba = opIn - opOut; ekuitas = (moIn-moOut)+laba; totalUtang = utIn-utOut; totalAset = ekuitas + totalUtang;
+                tableHTML = `<p class='formal-text italic'>Laporan disarikan dari data standar.</p>`;
+                lampiranHTML = `<p class='formal-text'>Gunakan modul Audit untuk rincian jurnal lengkap.</p>`;
             }
 
-            // Update UI Dash
+            // Update UI
             document.getElementById('rat-aset').innerText = formatRp(totalAset);
             document.getElementById('rat-laba').innerText = formatRp(laba);
             document.getElementById('rat-ekuitas').innerText = formatRp(ekuitas);
             let dar = totalAset > 0 ? (totalUtang / totalAset * 100).toFixed(2) : 0;
             document.getElementById('rat-dar').innerText = dar + "%";
-
             document.getElementById('bab-laporan-keuangan').innerHTML = tableHTML;
             document.getElementById('bab-lampiran').innerHTML = lampiranHTML;
 
-            // GENERATE BAB I: SAMBUTAN
-            document.getElementById('bab-sambutan').innerHTML = `
-                <p class="formal-text">Puji syukur senantiasa kita panjatkan ke hadirat Tuhan Yang Maha Esa atas segala rahmat dan bimbingan-Nya, sehingga <strong>${toko.toUpperCase()}</strong> dapat menyelesaikan tahun buku ${currentYear} dengan baik.</p>
-                <p class="formal-text">Tahun ini merupakan tahun yang penuh dinamika. Namun, berkat kerja keras seluruh tim dan dukungan dari para pemegang saham, serta komitmen kami terhadap tata kelola perusahaan yang baik (Good Corporate Governance), perusahaan mampu mempertahankan stabilitas operasional.</p>
-                <p class="formal-text">Laporan Tahunan ini disajikan sebagai bentuk transparansi dan pertanggungjawaban Direksi atas pengelolaan keuangan perusahaan sepanjang tahun. Kami melaporkan bahwa seluruh angka yang tercantum telah dibukukan menggunakan standar akuntansi yang berterima umum.</p>
-                <p class="formal-text">Akhir kata, kami mengucapkan terima kasih yang sebesar-besarnya kepada Dewan Komisaris, jajaran manajemen, karyawan, serta seluruh mitra kerja atas kepercayaan yang terus diberikan kepada kami.</p>
-            `;
+            // Sambutan & CALK
+            document.getElementById('bab-sambutan').innerHTML = `<p class="formal-text">Puji syukur kita panjatkan ke hadirat Tuhan Yang Maha Esa atas terselesaikannya Laporan Tahunan <strong>${toko.toUpperCase()}</strong> periode ${currentYear}. Laporan ini disusun secara profesional mencakup seluruh aktivitas ekonomi entitas.</p><p class="formal-text">Manajemen berkomitmen penuh untuk menjaga transparansi data dan akuntabilitas keuangan guna meningkatkan kepercayaan para pemangku kepentingan (stakeholders).</p>`;
+            document.getElementById('bab-calk').innerHTML = `<p class="formal-text font-black uppercase">1. Analisis Kinerja</p><p class="formal-text">Perusahaan mencatatkan Aset sebesar <b>${formatRp(totalAset)}</b>. Hasil operasional tahun ini membukukan ${laba>=0?'Keuntungan':'Defisit'} sebesar <b>${formatRp(Math.abs(laba))}</b>.</p><br><p class="formal-text font-black uppercase">2. Manajemen Utang</p><p class="formal-text">Rasio Debt to Asset (DAR) berada pada angka <b>${dar}%</b>, yang menunjukkan tingkat leverage finansial perusahaan masih berada dalam kategori ${dar<50?'aman':'waspada'}.</p>`;
 
-            // GENERATE BAB IV: CALK (CATATAN ATAS LAPORAN KEUANGAN)
-            let calkText = `
-                <p class="formal-text">Catatan atas Laporan Keuangan ini memberikan rincian dan penjelasan lebih lanjut atas pos-pos material yang tersaji dalam Neraca dan Laporan Laba Rugi <strong>${toko.toUpperCase()}</strong> untuk periode yang berakhir pada tahun ${currentYear}.</p>
-                <br>
-                <p class="formal-text font-black uppercase">1. Kebijakan Akuntansi</p>
-                <p class="formal-text">Laporan keuangan disusun berdasarkan basis akrual (accrual basis) dan prinsip kelangsungan usaha (going concern). Mata uang pelaporan yang digunakan adalah Rupiah (IDR).</p>
-                <br>
-                <p class="formal-text font-black uppercase">2. Rincian Aset dan Likuiditas</p>
-                <p class="formal-text">Total aset perusahaan tercatat sebesar <b>${formatRp(totalAset)}</b>. Likuiditas perusahaan didukung oleh Kas dan Setara Kas senilai <b>${formatRp(nsdKas)}</b>. ${nsdPiutang > 0 ? 'Terdapat pula tagihan Piutang Usaha sebesar <b>'+formatRp(nsdPiutang)+'</b> yang diharapkan dapat direalisasikan.' : ''} ${nsdAsetTetap > 0 ? 'Aset Tetap perusahaan yang dicatat berdasarkan harga perolehan adalah sebesar <b>'+formatRp(nsdAsetTetap)+'</b>.' : ''}</p>
-                <br>
-                <p class="formal-text font-black uppercase">3. Rincian Liabilitas dan Ekuitas</p>
-                <p class="formal-text">Kewajiban total (Liabilitas) perusahaan adalah <b>${formatRp(totalUtang)}</b>. ${nsdUtangDagang > 0 ? 'Terdiri dari Utang Dagang operasional sebesar <b>'+formatRp(nsdUtangDagang)+'</b>.' : ''} ${nsdUtangPajak > 0 ? 'Perusahaan juga memiliki kewajiban perpajakan (PPN) yang belum disetor sebesar <b>'+formatRp(nsdUtangPajak)+'</b>.' : ''} Total Ekuitas atau kekayaan bersih pemegang saham menembus angka <b>${formatRp(ekuitas)}</b>, yang mencerminkan rasio kemandirian dana yang ${dar < 50 ? 'sangat sehat' : 'perlu diawasi'}.</p>
-                <br>
-                <p class="formal-text font-black uppercase">4. Kinerja Operasional (Laba/Rugi)</p>
-                <p class="formal-text">Sepanjang tahun buku berjalan, perusahaan membukukan Pendapatan Bruto sebesar <b>${formatRp(opIn)}</b>. Setelah dikurangi total Beban Operasional sebesar <b>${formatRp(opOut)}</b>, perusahaan mencatatkan ${laba >= 0 ? 'Laba Bersih' : 'Rugi Bersih'} sebesar <b>${formatRp(Math.abs(laba))}</b>.</p>
-            `;
-            document.getElementById('bab-calk').innerHTML = calkText;
-
-            // Generate AI Narrative for Dashboard
-            let aiText = "";
-            if(totalAset === 0) { aiText = "Sistem belum memiliki data akuntansi yang cukup."; } 
-            else {
-                let margin = opIn > 0 ? ((laba/opIn)*100).toFixed(2) : 0;
-                aiText = `Tahun buku ${currentYear} mencerminkan profil finansial yang valid bagi ${toko}. Perusahaan mencatatkan total aset sebesar ${formatRp(totalAset)}, didukung ekuitas bersih ${formatRp(ekuitas)}. `;
-                if(laba > 0) aiText += `Operasional menghasilkan laba bersih ${formatRp(laba)} (Margin: ${margin}%). `;
-                else aiText += `Perusahaan mengalami defisit operasional sebesar ${formatRp(Math.abs(laba))}. `;
-                if(dar < 40) aiText += `Rasio utang (DAR) berada di level sangat sehat (${dar}%), menunjukkan kemandirian finansial yang kuat.`;
-                else aiText += `Rasio utang tercatat pada ${dar}%, manajemen disarankan mengawasi liabilitas.`;
-            }
+            // AI Narrative
+            let aiText = `Tahun buku ${currentYear} mencerminkan stabilitas bagi ${toko}. Dengan Total Aset ${formatRp(totalAset)} dan Laba Bersih ${formatRp(laba)}, perusahaan menunjukkan pertumbuhan fundamental yang terukur.`;
             document.getElementById('ai-summary').innerText = aiText;
 
-            // Render Dashboard Chart
+            // Chart
             const ctx = document.getElementById('ratChart').getContext('2d'); 
             if (chartInstance) chartInstance.destroy(); 
-            chartInstance = new Chart(ctx, { 
-                type: 'bar', 
-                data: { labels: ['Pendapatan', 'Beban', 'Laba Bersih'], datasets: [{ data: [opIn, opOut, laba], backgroundColor: ['#059669', '#e11d48', laba >= 0 ? '#1e40af' : '#9f1239'], borderRadius: 8 }] }, 
-                options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false } } } } 
-            }); 
+            chartInstance = new Chart(ctx, { type: 'bar', data: { labels: ['Pendapatan', 'Beban', 'Laba'], datasets: [{ data: [opIn, opOut, laba], backgroundColor: ['#059669', '#e11d48', laba>=0?'#1e40af':'#9f1239'], borderRadius: 8 }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false } } } } }); 
         }
 
         window.onload = renderRAT;
