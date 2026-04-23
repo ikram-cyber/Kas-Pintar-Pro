@@ -27,7 +27,10 @@
             body { background: white; padding: 0 !important; }
             .no-print, .bottom-nav { display: none !important; }
             .page { display: none !important; } .page.active { display: block !important; }
-            .print-header { display: flex !important; justify-content: space-between; align-items: flex-start; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 20px; }
+            
+            /* KOP SURAT ALIGNMENT FIX */
+            .print-header { display: flex !important; justify-content: space-between; align-items: center; border-bottom: 3px double #000; padding-bottom: 15px; margin-bottom: 20px; }
+            
             table { font-size: 8px !important; width: 100% !important; min-width: 0 !important; border-collapse: collapse; }
             .table-pro th, .table-pro td { padding: 4px 3px !important; }
             .table-pro th { background-color: #f1f5f9 !important; color: #000 !important; -webkit-print-color-adjust: exact; border: 1px solid #000 !important; }
@@ -123,15 +126,17 @@
     <div id="p-jurnal" class="page px-4 mt-6">
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-lg">
             <div class="print-header hidden">
-                <div class="w-3/4 text-left">
-                    <img class="pr-logo-pro mb-2" src="" style="max-height:50px; display:none;">
-                    <h1 class="text-xl font-black pr-toko">PT NAME</h1>
-                    <p class="text-xs font-bold uppercase tracking-widest text-slate-500">Laporan Jurnal Umum</p>
-                    <p class="text-[9px] font-bold mt-1 pr-date"></p>
+                <div class="w-1/4 flex justify-start">
+                    <img class="pr-logo-pro" src="" style="max-height:60px; object-fit: contain; display:none;">
                 </div>
-                <div class="w-1/4 text-right">
-                    <img class="pr-qr w-16 h-16 ml-auto border border-black p-0.5" src="">
-                    <div class="text-[6px] font-black uppercase tracking-widest mt-1">Verified Audit</div>
+                <div class="w-1/2 text-center">
+                    <h1 class="text-xl font-black uppercase tracking-widest pr-toko m-0">PT NAME</h1>
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-700 mt-1">Laporan Jurnal Umum</p>
+                    <p class="text-[9px] font-bold mt-1 text-slate-500 pr-date"></p>
+                </div>
+                <div class="w-1/4 flex flex-col items-end justify-center">
+                    <img class="pr-qr w-14 h-14 border border-black p-0.5" src="">
+                    <div class="text-[6px] font-black uppercase tracking-widest mt-1 text-center" style="width: 56px;">Verified Audit</div>
                 </div>
             </div>
             <div class="no-print flex justify-between items-center mb-5">
@@ -160,15 +165,17 @@
     <div id="p-worksheet" class="page px-4 mt-6">
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-lg overflow-hidden">
             <div class="print-header hidden">
-                <div class="w-3/4 text-left">
-                    <img class="pr-logo-pro mb-2" src="" style="max-height:50px; display:none;">
-                    <h1 class="text-xl font-black pr-toko">PT NAME</h1>
-                    <p class="text-xs font-bold uppercase tracking-widest text-slate-500">10-Column Worksheet</p>
-                    <p class="text-[9px] font-bold mt-1 pr-date"></p>
+                <div class="w-1/4 flex justify-start">
+                    <img class="pr-logo-pro" src="" style="max-height:60px; object-fit: contain; display:none;">
                 </div>
-                <div class="w-1/4 text-right">
-                    <img class="pr-qr w-16 h-16 ml-auto border border-black p-0.5" src="">
-                    <div class="text-[6px] font-black uppercase tracking-widest mt-1">Verified Audit</div>
+                <div class="w-1/2 text-center">
+                    <h1 class="text-xl font-black uppercase tracking-widest pr-toko m-0">PT NAME</h1>
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-700 mt-1">10-Column Worksheet</p>
+                    <p class="text-[9px] font-bold mt-1 text-slate-500 pr-date"></p>
+                </div>
+                <div class="w-1/4 flex flex-col items-end justify-center">
+                    <img class="pr-qr w-14 h-14 border border-black p-0.5" src="">
+                    <div class="text-[6px] font-black uppercase tracking-widest mt-1 text-center" style="width: 56px;">Verified Audit</div>
                 </div>
             </div>
             <div class="flex justify-between items-center mb-5 no-print">
@@ -330,8 +337,6 @@
 
             if(useTax) {
                 let ppn = Math.round(nom * 0.11);
-                // Jika jurnal adalah pendapatan (Kredit ke akun 401), maka PPN Keluaran
-                // Total diterima = nom + PPN.
                 dbPro.push({id, grp: id, tgl, ref:d, pos:'D', nom:nom+ppn, ket});
                 dbPro.push({id:id+1, grp: id, tgl, ref:k, pos:'K', nom:nom, ket});
                 dbPro.push({id:id+2, grp: id, tgl, ref:'205', pos:'K', nom:ppn, ket:"PPN 11%"});
@@ -433,7 +438,7 @@
                 <tr class="bg-slate-800 text-white"><td colspan="2" class="text-right uppercase tracking-widest text-[9px]">Total Balance</td><td colspan="6"></td><td class="text-right font-black">${formatRp(totals[6]+labaD)}</td><td class="text-right font-black">${formatRp(totals[7]+labaK)}</td><td class="text-right font-black">${formatRp(totals[8]+labaK)}</td><td class="text-right font-black">${formatRp(totals[9]+labaD)}</td></tr>
             `;
 
-            // EXECUTIVE DASHBOARD LOGIC (Pimpinan & Pajak Melongo)
+            // EXECUTIVE DASHBOARD LOGIC
             document.getElementById('v-laba-pro').innerText = formatRp(laba);
             document.getElementById('v-ppn-pro').innerText = formatRp(hutangPPN);
 
