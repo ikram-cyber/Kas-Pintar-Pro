@@ -87,7 +87,7 @@
         </div>
 
         <div class="bg-white p-6 rounded-2xl border-t-4 border-t-emerald-500 shadow-xl mb-5">
-            <h3 class="font-black text-slate-800 text-sm uppercase mb-5 tracking-wide"><i class="fas fa-pen-nib mr-2 text-emerald-500"></i> Entry Jurnal Umum</h3>
+            <h3 class="font-black text-slate-800 text-sm uppercase mb-5 tracking-wide"><i class="fas fa-pen-nib mr-2 text-emerald-500"></i> Entry Jurnal Umum & Penyesuaian</h3>
             
             <label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Tanggal Transaksi</label>
             <input type="date" id="j-tgl" class="w-full p-3 mb-4 border border-slate-300 rounded-xl text-sm font-bold bg-slate-50 outline-none focus:ring-2 focus:ring-emerald-500 transition-all">
@@ -103,10 +103,17 @@
                 </div>
             </div>
 
-            <div class="bg-gradient-to-r from-amber-50 to-yellow-50 p-3 rounded-xl border border-amber-200 mb-4 shadow-sm">
+            <div class="bg-gradient-to-r from-amber-50 to-yellow-50 p-3 rounded-xl border border-amber-200 mb-3 shadow-sm">
                 <label class="flex items-center gap-2 text-[10px] font-black uppercase text-amber-800 cursor-pointer">
                     <input type="checkbox" id="j-tax-auto" class="w-4 h-4 rounded text-indigo-600 accent-amber-500"> 
                     Catat PPN 11% Keluaran/Masukan
+                </label>
+            </div>
+            
+            <div class="bg-gradient-to-r from-indigo-50 to-blue-50 p-3 rounded-xl border border-indigo-200 mb-4 shadow-sm">
+                <label class="flex items-center gap-2 text-[10px] font-black uppercase text-indigo-800 cursor-pointer">
+                    <input type="checkbox" id="j-is-ajp" class="w-4 h-4 rounded text-indigo-600 accent-indigo-500"> 
+                    Tandai sebagai Jurnal Penyesuaian (AJP)
                 </label>
             </div>
 
@@ -326,7 +333,6 @@
             let qrData = "VERIFIED_AUDIT_" + safeToko + "_" + Date.now();
             document.querySelectorAll('.pr-qr').forEach(img => img.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + qrData);
 
-            // LOGIC LOGO & TOMBOL HAPUS
             let logoSrc = localStorage.getItem('kspro_logo'); 
             let prevContainer = document.getElementById('logo-preview-container');
             let prevImg = document.getElementById('logo-preview-img');
@@ -356,6 +362,7 @@
             let tgl = document.getElementById('j-tgl').value;
             let ket = document.getElementById('j-ket').value;
             let useTax = document.getElementById('j-tax-auto').checked;
+            let isAjp = document.getElementById('j-is-ajp').checked;
             
             let tzOffset = new Date().getTimezoneOffset() * 60000;
             let today = new Date(Date.now() - tzOffset).toISOString().split('T')[0];
@@ -367,14 +374,12 @@
 
             if(useTax) {
                 let ppn = Math.round(nom * 0.11);
-                // Jika jurnal adalah pendapatan (Kredit ke akun 401), maka PPN Keluaran
-                // Total diterima = nom + PPN.
-                dbPro.push({id, grp: id, tgl, ref:d, pos:'D', nom:nom+ppn, ket});
-                dbPro.push({id:id+1, grp: id, tgl, ref:k, pos:'K', nom:nom, ket});
-                dbPro.push({id:id+2, grp: id, tgl, ref:'205', pos:'K', nom:ppn, ket:"PPN 11%"});
+                dbPro.push({id, grp: id, tgl, ref:d, pos:'D', nom:nom+ppn, ket, isAjp});
+                dbPro.push({id:id+1, grp: id, tgl, ref:k, pos:'K', nom:nom, ket, isAjp});
+                dbPro.push({id:id+2, grp: id, tgl, ref:'205', pos:'K', nom:ppn, ket:"PPN 11%", isAjp});
             } else {
-                dbPro.push({id, grp: id, tgl, ref:d, pos:'D', nom:nom, ket});
-                dbPro.push({id:id+1, grp: id, tgl, ref:k, pos:'K', nom:nom, ket});
+                dbPro.push({id, grp: id, tgl, ref:d, pos:'D', nom:nom, ket, isAjp});
+                dbPro.push({id:id+1, grp: id, tgl, ref:k, pos:'K', nom:nom, ket, isAjp});
             }
 
             localStorage.setItem('kspro_db_pro', JSON.stringify(dbPro));
@@ -393,23 +398,38 @@
         function exportCSV(type) {
             let csv = "";
             if(type === 'Jurnal') {
-                csv = "Tanggal,No_Ref,Nama_Akun,Keterangan,Debit,Kredit\n";
+                csv = "Tanggal,No_Ref,Nama_Akun,Keterangan,Tipe,Debit,Kredit\n";
                 dbPro.forEach(x => {
                     let akun = COA.find(a=>a.no===x.ref).nama;
                     let deb = x.pos==='D' ? x.nom : 0; let kre = x.pos==='K' ? x.nom : 0;
-                    csv += `${x.tgl},${x.ref},"${akun}","${x.ket}",${deb},${kre}\n`;
+                    let tipe = x.isAjp ? 'AJP' : 'Umum';
+                    csv += `${x.tgl},${x.ref},"${akun}","${x.ket}",${tipe},${deb},${kre}\n`;
                 });
             } else {
                 csv = "Ref,Nama_Akun,NS_D,NS_K,AJP_D,AJP_K,NSD_D,NSD_K,LR_D,LR_K,NR_D,NR_K\n";
                 COA.forEach(akun => {
-                    let deb = dbPro.filter(x => x.ref===akun.no && x.pos==='D').reduce((a,b)=>a+b.nom, 0);
-                    let kre = dbPro.filter(x => x.ref===akun.no && x.pos==='K').reduce((a,b)=>a+b.nom, 0);
+                    // Neraca Saldo (Non-AJP)
+                    let regD = dbPro.filter(x => x.ref===akun.no && x.pos==='D' && !x.isAjp).reduce((a,b)=>a+b.nom, 0);
+                    let regK = dbPro.filter(x => x.ref===akun.no && x.pos==='K' && !x.isAjp).reduce((a,b)=>a+b.nom, 0);
                     let nsD = 0, nsK = 0;
-                    if(akun.sn === 'D') { let bal = deb - kre; nsD = bal > 0 ? bal : 0; nsK = bal < 0 ? Math.abs(bal) : 0; } 
-                    else { let bal = kre - deb; nsK = bal > 0 ? bal : 0; nsD = bal < 0 ? Math.abs(bal) : 0; }
+                    if(akun.sn === 'D') { let bal = regD - regK; nsD = bal > 0 ? bal : 0; nsK = bal < 0 ? Math.abs(bal) : 0; } 
+                    else { let bal = regK - regD; nsK = bal > 0 ? bal : 0; nsD = bal < 0 ? Math.abs(bal) : 0; }
+                    
+                    // AJP
+                    let ajpD = dbPro.filter(x => x.ref===akun.no && x.pos==='D' && x.isAjp).reduce((a,b)=>a+b.nom, 0);
+                    let ajpK = dbPro.filter(x => x.ref===akun.no && x.pos==='K' && x.isAjp).reduce((a,b)=>a+b.nom, 0);
+
+                    // Neraca Saldo Disesuaikan (NSD)
+                    let totalD = nsD + ajpD; let totalK = nsK + ajpK;
+                    let nsdD = 0, nsdK = 0;
+                    if(akun.sn === 'D') { let bal = totalD - totalK; nsdD = bal > 0 ? bal : 0; nsdK = bal < 0 ? Math.abs(bal) : 0; } 
+                    else { let bal = totalK - totalD; nsdK = bal > 0 ? bal : 0; nsdD = bal < 0 ? Math.abs(bal) : 0; }
+
+                    // Laba Rugi & Neraca
                     let lrD=0, lrK=0, nrD=0, nrK=0;
-                    if(akun.tipe==='Pendapatan' || akun.tipe==='Beban') { lrD=nsD; lrK=nsK; } else { nrD=nsD; nrK=nsK; }
-                    csv += `${akun.no},"${akun.nama}",${nsD},${nsK},0,0,${nsD},${nsK},${lrD},${lrK},${nrD},${nrK}\n`;
+                    if(akun.tipe==='Pendapatan' || akun.tipe==='Beban') { lrD=nsdD; lrK=nsdK; } else { nrD=nsdD; nrK=nsdK; }
+                    
+                    csv += `${akun.no},"${akun.nama}",${nsD},${nsK},${ajpD},${ajpK},${nsdD},${nsdK},${lrD},${lrK},${nrD},${nrK}\n`;
                 });
             }
             let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -425,38 +445,49 @@
                 let items = dbPro.filter(x => x.grp === grp);
                 items.forEach((x, idx) => {
                     let nama = COA.find(a=>a.no===x.ref).nama;
+                    let ajpBadge = x.isAjp ? `<span class="ml-1 bg-indigo-100 text-indigo-700 px-1 py-0.5 rounded text-[8px] border border-indigo-200 print:border-none">AJP</span>` : '';
+                    
                     if(x.pos === 'D') {
-                        // BARIS DEBIT - Tambahkan no-print di kolom paling kanan
-                        hJ += `<tr class="border-t border-slate-200 hover:bg-slate-50"><td class="p-2">${idx===0 ? x.tgl.slice(5) : ''}</td><td class="p-2 text-center font-bold text-slate-700">${x.ref}</td><td class="p-2 font-bold text-slate-800">${nama}<br><span class="text-[9px] font-normal text-slate-400">${x.ket}</span></td><td class="p-2 text-right font-black text-emerald-600">${formatRp(x.nom)}</td><td class="p-2 text-right">-</td><td class="p-2 text-center no-print">${idx===0 ? `<button onclick="hapusJurnal(${x.grp})" class="text-rose-400 hover:text-rose-600 bg-rose-50 px-2 py-1 rounded"><i class="fas fa-trash"></i></button>` : ''}</td></tr>`;
+                        hJ += `<tr class="border-t border-slate-200 hover:bg-slate-50"><td class="p-2">${idx===0 ? x.tgl.slice(5) : ''}</td><td class="p-2 text-center font-bold text-slate-700">${x.ref}</td><td class="p-2 font-bold text-slate-800">${nama} ${ajpBadge}<br><span class="text-[9px] font-normal text-slate-400">${x.ket}</span></td><td class="p-2 text-right font-black text-emerald-600">${formatRp(x.nom)}</td><td class="p-2 text-right">-</td><td class="p-2 text-center no-print">${idx===0 ? `<button onclick="hapusJurnal(${x.grp})" class="text-rose-400 hover:text-rose-600 bg-rose-50 px-2 py-1 rounded"><i class="fas fa-trash"></i></button>` : ''}</td></tr>`;
                     } else {
-                        // BARIS KREDIT - Tambahkan no-print di kolom kosong paling kanan agar tidak muncul saat cetak
-                        hJ += `<tr class="hover:bg-slate-50"><td class="p-2"></td><td class="p-2 text-center text-slate-500">${x.ref}</td><td class="p-2 pl-6 italic text-slate-600">${nama}<br><span class="text-[9px] font-normal not-italic text-slate-400">${x.ket}</span></td><td class="p-2 text-right">-</td><td class="p-2 text-right font-black text-rose-600">${formatRp(x.nom)}</td><td class="p-2 no-print"></td></tr>`;
+                        hJ += `<tr class="hover:bg-slate-50"><td class="p-2"></td><td class="p-2 text-center text-slate-500">${x.ref}</td><td class="p-2 pl-6 italic text-slate-600">${nama} ${ajpBadge}<br><span class="text-[9px] font-normal not-italic text-slate-400">${x.ket}</span></td><td class="p-2 text-right">-</td><td class="p-2 text-right font-black text-rose-600">${formatRp(x.nom)}</td><td class="p-2 no-print"></td></tr>`;
                     }
                 });
             });
             document.getElementById('v-jurnal').innerHTML = hJ;
 
-            let hL = '', totals = Array(10).fill(0);
+            let hL = '', totals = Array(12).fill(0);
             let ekuitas = 0, pendapatan = 0, hutangPPN = 0;
             
             COA.forEach(akun => {
-                let deb = dbPro.filter(x => x.ref===akun.no && x.pos==='D').reduce((a,b)=>a+b.nom, 0);
-                let kre = dbPro.filter(x => x.ref===akun.no && x.pos==='K').reduce((a,b)=>a+b.nom, 0);
+                // 1. NERACA SALDO (NS)
+                let regD = dbPro.filter(x => x.ref===akun.no && x.pos==='D' && !x.isAjp).reduce((a,b)=>a+b.nom, 0);
+                let regK = dbPro.filter(x => x.ref===akun.no && x.pos==='K' && !x.isAjp).reduce((a,b)=>a+b.nom, 0);
                 let nsD = 0, nsK = 0;
-                
-                if(akun.sn === 'D') { let bal = deb - kre; nsD = bal > 0 ? bal : 0; nsK = bal < 0 ? Math.abs(bal) : 0; } 
-                else { let bal = kre - deb; nsK = bal > 0 ? bal : 0; nsD = bal < 0 ? Math.abs(bal) : 0; }
-                
-                let lrD=0, lrK=0, nrD=0, nrK=0;
-                if(akun.tipe==='Pendapatan' || akun.tipe==='Beban') { lrD=nsD; lrK=nsK; } else { nrD=nsD; nrK=nsK; }
-                
-                if(akun.tipe==='Ekuitas') ekuitas += nsK;
-                if(akun.tipe==='Pendapatan') pendapatan += nsK;
-                if(akun.no==='205') hutangPPN = nsK - nsD; 
+                if(akun.sn === 'D') { let bal = regD - regK; nsD = bal > 0 ? bal : 0; nsK = bal < 0 ? Math.abs(bal) : 0; } 
+                else { let bal = regK - regD; nsK = bal > 0 ? bal : 0; nsD = bal < 0 ? Math.abs(bal) : 0; }
 
-                if(deb || kre) {
-                    hL += `<tr><td class="text-center font-bold">${akun.no}</td><td class="font-bold">${akun.nama}</td><td class="bg-debit text-right">${formatRp(nsD)}</td><td class="bg-kredit text-right">${formatRp(nsK)}</td><td class="bg-debit text-right">-</td><td class="bg-kredit text-right">-</td><td class="bg-debit text-right font-bold">${formatRp(nsD)}</td><td class="bg-kredit text-right font-bold">${formatRp(nsK)}</td><td class="bg-debit text-right">${formatRp(lrD)}</td><td class="bg-kredit text-right">${formatRp(lrK)}</td><td class="bg-debit text-right">${formatRp(nrD)}</td><td class="bg-kredit text-right">${formatRp(nrK)}</td></tr>`;
-                    [nsD,nsK,0,0,nsD,nsK,lrD,lrK,nrD,nrK].forEach((v,i) => totals[i]+=v);
+                // 2. AJP
+                let ajpD = dbPro.filter(x => x.ref===akun.no && x.pos==='D' && x.isAjp).reduce((a,b)=>a+b.nom, 0);
+                let ajpK = dbPro.filter(x => x.ref===akun.no && x.pos==='K' && x.isAjp).reduce((a,b)=>a+b.nom, 0);
+
+                // 3. NSD (Neraca Saldo Disesuaikan)
+                let totalD = nsD + ajpD; let totalK = nsK + ajpK;
+                let nsdD = 0, nsdK = 0;
+                if(akun.sn === 'D') { let bal = totalD - totalK; nsdD = bal > 0 ? bal : 0; nsdK = bal < 0 ? Math.abs(bal) : 0; } 
+                else { let bal = totalK - totalD; nsdK = bal > 0 ? bal : 0; nsdD = bal < 0 ? Math.abs(bal) : 0; }
+                
+                // 4. LABA RUGI & NERACA
+                let lrD=0, lrK=0, nrD=0, nrK=0;
+                if(akun.tipe==='Pendapatan' || akun.tipe==='Beban') { lrD=nsdD; lrK=nsdK; } else { nrD=nsdD; nrK=nsdK; }
+                
+                if(akun.tipe==='Ekuitas') ekuitas += nsdK;
+                if(akun.tipe==='Pendapatan') pendapatan += nsdK;
+                if(akun.no==='205') hutangPPN = nsdK - nsdD; 
+
+                if(regD || regK || ajpD || ajpK) {
+                    hL += `<tr><td class="text-center font-bold">${akun.no}</td><td class="font-bold">${akun.nama}</td><td class="bg-debit text-right">${formatRp(nsD)}</td><td class="bg-kredit text-right">${formatRp(nsK)}</td><td class="bg-debit text-right">${formatRp(ajpD)}</td><td class="bg-kredit text-right">${formatRp(ajpK)}</td><td class="bg-debit text-right font-bold">${formatRp(nsdD)}</td><td class="bg-kredit text-right font-bold">${formatRp(nsdK)}</td><td class="bg-debit text-right">${formatRp(lrD)}</td><td class="bg-kredit text-right">${formatRp(lrK)}</td><td class="bg-debit text-right">${formatRp(nrD)}</td><td class="bg-kredit text-right">${formatRp(nrK)}</td></tr>`;
+                    [nsD,nsK,ajpD,ajpK,nsdD,nsdK,lrD,lrK,nrD,nrK].forEach((v,i) => totals[i]+=v);
                 }
             });
 
@@ -465,7 +496,7 @@
 
             document.getElementById('v-lajur').innerHTML = hL;
             document.getElementById('v-lajur-foot').innerHTML = `
-                <tr class="bg-slate-100 text-slate-500"><td colspan="2" class="text-right uppercase tracking-widest text-[9px]">Total Sementara</td><td class="text-right">${formatRp(totals[0])}</td><td class="text-right">${formatRp(totals[1])}</td><td class="text-right">-</td><td class="text-right">-</td><td class="text-right">${formatRp(totals[4])}</td><td class="text-right">${formatRp(totals[5])}</td><td class="text-right">${formatRp(totals[6])}</td><td class="text-right">${formatRp(totals[7])}</td><td class="text-right">${formatRp(totals[8])}</td><td class="text-right">${formatRp(totals[9])}</td></tr>
+                <tr class="bg-slate-100 text-slate-500"><td colspan="2" class="text-right uppercase tracking-widest text-[9px]">Total Sementara</td><td class="text-right">${formatRp(totals[0])}</td><td class="text-right">${formatRp(totals[1])}</td><td class="text-right">${formatRp(totals[2])}</td><td class="text-right">${formatRp(totals[3])}</td><td class="text-right">${formatRp(totals[4])}</td><td class="text-right">${formatRp(totals[5])}</td><td class="text-right">${formatRp(totals[6])}</td><td class="text-right">${formatRp(totals[7])}</td><td class="text-right">${formatRp(totals[8])}</td><td class="text-right">${formatRp(totals[9])}</td></tr>
                 <tr class="bg-emerald-50 text-emerald-800"><td colspan="2" class="text-right uppercase tracking-widest text-[9px]">Laba (Rugi) Bersih</td><td colspan="6"></td><td class="text-right font-black">${formatRp(labaD)}</td><td class="text-right font-black">${formatRp(labaK)}</td><td class="text-right font-black">${formatRp(labaK)}</td><td class="text-right font-black">${formatRp(labaD)}</td></tr>
                 <tr class="bg-slate-800 text-white"><td colspan="2" class="text-right uppercase tracking-widest text-[9px]">Total Balance</td><td colspan="6"></td><td class="text-right font-black">${formatRp(totals[6]+labaD)}</td><td class="text-right font-black">${formatRp(totals[7]+labaK)}</td><td class="text-right font-black">${formatRp(totals[8]+labaK)}</td><td class="text-right font-black">${formatRp(totals[9]+labaD)}</td></tr>
             `;
