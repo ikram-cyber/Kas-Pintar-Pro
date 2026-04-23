@@ -26,21 +26,22 @@
             @page { size: landscape; margin: 1cm; }
             body { background: white; padding: 0 !important; position: relative; overflow: visible; }
             .no-print, .bottom-nav { display: none !important; }
-            .page { display: none !important; } .page.active { display: block !important; }
-            .print-header { display: flex !important; justify-content: space-between; align-items: center; border-bottom: 3px double #000; padding-bottom: 15px; margin-bottom: 20px; }
+            /* FIXED: Force remove margins/padding on page wrappers during print to prevent weird gaps */
+            .page { display: none !important; margin: 0 !important; padding: 0 !important; } 
+            .page.active { display: block !important; }
+            .print-header { display: flex !important; justify-content: space-between; align-items: center; border-bottom: 3px double #000; padding-bottom: 15px; margin-bottom: 15px; }
             table { font-size: 8px !important; width: 100% !important; min-width: 0 !important; border-collapse: collapse; }
             .table-pro th, .table-pro td { padding: 4px 3px !important; }
             .table-pro th { background-color: #f1f5f9 !important; color: #000 !important; -webkit-print-color-adjust: exact; border: 1px solid #000 !important; }
             .table-pro td { border: 1px solid #000 !important; }
             .overflow-x-auto { overflow: visible !important; }
-            .ttd-area { display: flex !important; justify-content: space-between; margin-top: 40px; page-break-inside: avoid; color: #000; text-align: center; }
+            /* FIXED: Tucked the signature area closer to the table */
+            .ttd-area { display: flex !important; justify-content: space-between; margin-top: 15px !important; page-break-inside: avoid; color: #000; text-align: center; }
             .ttd-box { width: 30%; }
-
-            /* WATERMARK REMOVED BY USER REQUEST */
         }
     </style>
 </head>
-<body class="pb-24" data-watermark="AUDITED REPORT">
+<body class="pb-24">
 
     <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white p-6 rounded-b-3xl shadow-2xl relative overflow-hidden no-print z-[60]">
         <div class="absolute -right-6 -top-6 text-9xl opacity-10"><i class="fas fa-balance-scale-right"></i></div>
@@ -144,8 +145,8 @@
         </div>
     </div>
 
-    <div id="p-jurnal" class="page px-4 mt-6">
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-lg">
+    <div id="p-jurnal" class="page px-4 mt-6 print:m-0 print:p-0">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-lg print:border-none print:shadow-none print:p-0">
             
             <div class="print-header hidden">
                 <div class="w-1/4 flex justify-start">
@@ -179,14 +180,14 @@
             </div>
             
             <div class="ttd-area hidden">
-                <div class="ttd-box"><p class="font-bold text-[10px] mb-12 uppercase">Dibuat Oleh,</p><p class="font-black text-xs border-t border-black pt-1">Accounting Dept</p></div>
-                <div class="ttd-box"><p class="font-bold text-[10px] mb-12 uppercase">Disetujui Oleh,</p><p class="font-black text-xs border-t border-black pt-1 pr-bos">CFO</p></div>
+                <div class="ttd-box"><p class="font-bold text-[10px] mb-8 uppercase">Dibuat Oleh,</p><p class="font-black text-xs border-t border-black pt-1">Accounting Dept</p></div>
+                <div class="ttd-box"><p class="font-bold text-[10px] mb-8 uppercase">Disetujui Oleh,</p><p class="font-black text-xs border-t border-black pt-1 pr-bos">CFO</p></div>
             </div>
         </div>
     </div>
 
-    <div id="p-worksheet" class="page px-4 mt-6">
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-lg overflow-hidden">
+    <div id="p-worksheet" class="page px-4 mt-6 print:m-0 print:p-0">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-lg overflow-hidden print:border-none print:shadow-none print:p-0 print:overflow-visible">
             
             <div class="print-header hidden">
                 <div class="w-1/4 flex justify-start">
@@ -222,8 +223,8 @@
             </div>
 
             <div class="ttd-area hidden">
-                <div class="ttd-box"><p class="font-bold text-[10px] mb-12 uppercase">Diperiksa Oleh,</p><p class="font-black text-xs border-t border-black pt-1">Internal Auditor</p></div>
-                <div class="ttd-box"><p class="font-bold text-[10px] mb-12 uppercase">Disahkan Oleh,</p><p class="font-black text-xs border-t border-black pt-1 pr-bos">CFO</p></div>
+                <div class="ttd-box"><p class="font-bold text-[10px] mb-8 uppercase">Diperiksa Oleh,</p><p class="font-black text-xs border-t border-black pt-1">Internal Auditor</p></div>
+                <div class="ttd-box"><p class="font-bold text-[10px] mb-8 uppercase">Disahkan Oleh,</p><p class="font-black text-xs border-t border-black pt-1 pr-bos">CFO</p></div>
             </div>
         </div>
     </div>
@@ -509,7 +510,6 @@
                 });
             });
             
-            // TAMBAHAN GRAND TOTAL BALANCE
             if (totalDeb > 0 || totalKre > 0) {
                 hJ += `<tr class="bg-slate-100 font-black border-t-2 border-slate-300"><td colspan="3" class="p-3 text-right uppercase text-slate-700">Total Mutasi Balance</td><td class="p-3 text-right text-emerald-700">${formatRp(totalDeb)}</td><td class="p-3 text-right text-rose-700">${formatRp(totalKre)}</td><td class="no-print"></td></tr>`;
             }
