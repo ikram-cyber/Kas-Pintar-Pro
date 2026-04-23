@@ -67,7 +67,11 @@
             <div id="ai-audit-grade" class="text-4xl font-black text-white relative z-10 drop-shadow-lg w-1/4 text-right">N/A</div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mb-6">
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <div class="col-span-2 bg-gradient-to-r from-emerald-600 to-teal-600 p-4 rounded-2xl shadow-md text-center text-white border border-emerald-400">
+                <div class="text-[10px] font-black uppercase tracking-widest opacity-90 mb-1"><i class="fas fa-vault mr-1"></i> Total Aktiva (Aset)</div>
+                <div class="text-2xl font-black" id="v-aset-pro">Rp 0</div>
+            </div>
             <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm text-center hover:border-emerald-300 transition-colors">
                 <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest"><i class="fas fa-chart-line mr-1 text-emerald-500"></i> Laba Bersih</div>
                 <div class="text-sm font-black text-emerald-600 mt-1" id="v-laba-pro">Rp 0</div>
@@ -408,27 +412,19 @@
             } else {
                 csv = "Ref,Nama_Akun,NS_D,NS_K,AJP_D,AJP_K,NSD_D,NSD_K,LR_D,LR_K,NR_D,NR_K\n";
                 COA.forEach(akun => {
-                    // Neraca Saldo (Non-AJP)
                     let regD = dbPro.filter(x => x.ref===akun.no && x.pos==='D' && !x.isAjp).reduce((a,b)=>a+b.nom, 0);
                     let regK = dbPro.filter(x => x.ref===akun.no && x.pos==='K' && !x.isAjp).reduce((a,b)=>a+b.nom, 0);
                     let nsD = 0, nsK = 0;
                     if(akun.sn === 'D') { let bal = regD - regK; nsD = bal > 0 ? bal : 0; nsK = bal < 0 ? Math.abs(bal) : 0; } 
                     else { let bal = regK - regD; nsK = bal > 0 ? bal : 0; nsD = bal < 0 ? Math.abs(bal) : 0; }
-                    
-                    // AJP
                     let ajpD = dbPro.filter(x => x.ref===akun.no && x.pos==='D' && x.isAjp).reduce((a,b)=>a+b.nom, 0);
                     let ajpK = dbPro.filter(x => x.ref===akun.no && x.pos==='K' && x.isAjp).reduce((a,b)=>a+b.nom, 0);
-
-                    // Neraca Saldo Disesuaikan (NSD)
                     let totalD = nsD + ajpD; let totalK = nsK + ajpK;
                     let nsdD = 0, nsdK = 0;
                     if(akun.sn === 'D') { let bal = totalD - totalK; nsdD = bal > 0 ? bal : 0; nsdK = bal < 0 ? Math.abs(bal) : 0; } 
                     else { let bal = totalK - totalD; nsdK = bal > 0 ? bal : 0; nsdD = bal < 0 ? Math.abs(bal) : 0; }
-
-                    // Laba Rugi & Neraca
                     let lrD=0, lrK=0, nrD=0, nrK=0;
                     if(akun.tipe==='Pendapatan' || akun.tipe==='Beban') { lrD=nsdD; lrK=nsdK; } else { nrD=nsdD; nrK=nsdK; }
-                    
                     csv += `${akun.no},"${akun.nama}",${nsD},${nsK},${ajpD},${ajpK},${nsdD},${nsdK},${lrD},${lrK},${nrD},${nrK}\n`;
                 });
             }
@@ -446,7 +442,6 @@
                 items.forEach((x, idx) => {
                     let nama = COA.find(a=>a.no===x.ref).nama;
                     let ajpBadge = x.isAjp ? `<span class="ml-1 bg-indigo-100 text-indigo-700 px-1 py-0.5 rounded text-[8px] border border-indigo-200 print:border-none">AJP</span>` : '';
-                    
                     if(x.pos === 'D') {
                         hJ += `<tr class="border-t border-slate-200 hover:bg-slate-50"><td class="p-2">${idx===0 ? x.tgl.slice(5) : ''}</td><td class="p-2 text-center font-bold text-slate-700">${x.ref}</td><td class="p-2 font-bold text-slate-800">${nama} ${ajpBadge}<br><span class="text-[9px] font-normal text-slate-400">${x.ket}</span></td><td class="p-2 text-right font-black text-emerald-600">${formatRp(x.nom)}</td><td class="p-2 text-right">-</td><td class="p-2 text-center no-print">${idx===0 ? `<button onclick="hapusJurnal(${x.grp})" class="text-rose-400 hover:text-rose-600 bg-rose-50 px-2 py-1 rounded"><i class="fas fa-trash"></i></button>` : ''}</td></tr>`;
                     } else {
@@ -457,30 +452,27 @@
             document.getElementById('v-jurnal').innerHTML = hJ;
 
             let hL = '', totals = Array(12).fill(0);
-            let ekuitas = 0, pendapatan = 0, hutangPPN = 0;
+            let ekuitas = 0, pendapatan = 0, hutangPPN = 0, totalAset = 0;
             
             COA.forEach(akun => {
-                // 1. NERACA SALDO (NS)
                 let regD = dbPro.filter(x => x.ref===akun.no && x.pos==='D' && !x.isAjp).reduce((a,b)=>a+b.nom, 0);
                 let regK = dbPro.filter(x => x.ref===akun.no && x.pos==='K' && !x.isAjp).reduce((a,b)=>a+b.nom, 0);
                 let nsD = 0, nsK = 0;
                 if(akun.sn === 'D') { let bal = regD - regK; nsD = bal > 0 ? bal : 0; nsK = bal < 0 ? Math.abs(bal) : 0; } 
                 else { let bal = regK - regD; nsK = bal > 0 ? bal : 0; nsD = bal < 0 ? Math.abs(bal) : 0; }
 
-                // 2. AJP
                 let ajpD = dbPro.filter(x => x.ref===akun.no && x.pos==='D' && x.isAjp).reduce((a,b)=>a+b.nom, 0);
                 let ajpK = dbPro.filter(x => x.ref===akun.no && x.pos==='K' && x.isAjp).reduce((a,b)=>a+b.nom, 0);
 
-                // 3. NSD (Neraca Saldo Disesuaikan)
                 let totalD = nsD + ajpD; let totalK = nsK + ajpK;
                 let nsdD = 0, nsdK = 0;
                 if(akun.sn === 'D') { let bal = totalD - totalK; nsdD = bal > 0 ? bal : 0; nsdK = bal < 0 ? Math.abs(bal) : 0; } 
                 else { let bal = totalK - totalD; nsdK = bal > 0 ? bal : 0; nsdD = bal < 0 ? Math.abs(bal) : 0; }
                 
-                // 4. LABA RUGI & NERACA
                 let lrD=0, lrK=0, nrD=0, nrK=0;
                 if(akun.tipe==='Pendapatan' || akun.tipe==='Beban') { lrD=nsdD; lrK=nsdK; } else { nrD=nsdD; nrK=nsdK; }
                 
+                if(akun.tipe==='Aset') totalAset += (nsdD - nsdK);
                 if(akun.tipe==='Ekuitas') ekuitas += nsdK;
                 if(akun.tipe==='Pendapatan') pendapatan += nsdK;
                 if(akun.no==='205') hutangPPN = nsdK - nsdD; 
@@ -501,9 +493,9 @@
                 <tr class="bg-slate-800 text-white"><td colspan="2" class="text-right uppercase tracking-widest text-[9px]">Total Balance</td><td colspan="6"></td><td class="text-right font-black">${formatRp(totals[6]+labaD)}</td><td class="text-right font-black">${formatRp(totals[7]+labaK)}</td><td class="text-right font-black">${formatRp(totals[8]+labaK)}</td><td class="text-right font-black">${formatRp(totals[9]+labaD)}</td></tr>
             `;
 
-            // EXECUTIVE DASHBOARD LOGIC
-            document.getElementById('v-laba-pro').innerText = formatRp(laba);
-            document.getElementById('v-ppn-pro').innerText = formatRp(hutangPPN);
+            document.getElementById('v-aset-pro').innerText = "Rp " + formatRp(totalAset);
+            document.getElementById('v-laba-pro').innerText = "Rp " + formatRp(laba);
+            document.getElementById('v-ppn-pro').innerText = "Rp " + formatRp(hutangPPN);
 
             let roe = ekuitas > 0 ? (laba / ekuitas * 100).toFixed(2) : "0.00";
             let npm = pendapatan > 0 ? (laba / pendapatan * 100).toFixed(2) : "0.00";
@@ -529,13 +521,7 @@
                 auditGrd.innerText = "N/A"; auditGrd.className = "text-4xl font-black text-slate-400 drop-shadow-lg";
                 aiSentences = `Belum ada Laba/Rugi tercatat. `;
             }
-
-            if(hutangPPN > 0) {
-                aiSentences += `Kepatuhan pajak baik: Total PPN Terutang siap dilapor sejumlah ${formatRp(hutangPPN)}.`;
-            } else if(pendapatan > 0) {
-                aiSentences += `Tidak ada akumulasi PPN tercatat pada omset periode ini.`;
-            }
-
+            if(hutangPPN > 0) aiSentences += `Total PPN Terutang siap dilapor sejumlah ${formatRp(hutangPPN)}.`;
             auditTxt.innerText = aiSentences;
         }
 
@@ -544,12 +530,10 @@
         window.onload = () => {
             let opt = ''; COA.forEach(a => opt += `<option value="${a.no}">${a.no} - ${a.nama}</option>`);
             document.getElementById('j-debit').innerHTML = opt; document.getElementById('j-kredit').innerHTML = opt;
-            
             let tzOffset = new Date().getTimezoneOffset() * 60000;
             let today = new Date(Date.now() - tzOffset).toISOString().split('T')[0];
             document.getElementById('j-tgl').value = today;
             document.getElementById('j-tgl').setAttribute('max', today);
-            
             document.getElementById('set-toko-pro').value = localStorage.getItem('kspro_toko') || "";
             document.getElementById('set-bos-pro').value = localStorage.getItem('kspro_bos') || "";
             updateUI(); render();
