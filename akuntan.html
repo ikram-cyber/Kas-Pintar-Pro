@@ -79,7 +79,7 @@
                 <div class="text-sm font-black text-emerald-600 mt-1" id="v-laba-pro">Rp 0</div>
             </div>
             <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm text-center hover:border-amber-300 transition-colors">
-                <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest"><i class="fas fa-landmark mr-1 text-amber-500"></i> Utang PPN 11%</div>
+                <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest"><i class="fas fa-landmark mr-1 text-amber-500"></i> Utang PPN (VAT)</div>
                 <div class="text-sm font-black text-amber-600 mt-1" id="v-ppn-pro">Rp 0</div>
             </div>
             <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm text-center hover:border-indigo-300 transition-colors">
@@ -109,11 +109,17 @@
                 </div>
             </div>
 
-            <div class="bg-gradient-to-r from-amber-50 to-yellow-50 p-3 rounded-xl border border-amber-200 mb-3 shadow-sm">
+            <div class="bg-gradient-to-r from-amber-50 to-yellow-50 p-3 rounded-xl border border-amber-200 mb-3 shadow-sm flex justify-between items-center">
                 <label class="flex items-center gap-2 text-[10px] font-black uppercase text-amber-800 cursor-pointer">
                     <input type="checkbox" id="j-tax-auto" class="w-4 h-4 rounded text-indigo-600 accent-amber-500"> 
-                    Catat PPN 11% Keluaran/Masukan
+                    Catat PPN Otomatis
                 </label>
+                <select id="j-tax-rate" class="p-1 px-2 border border-amber-300 rounded text-[10px] font-black bg-white text-amber-900 outline-none">
+                    <option value="11">11% (Standar)</option>
+                    <option value="12">12% (Masa Depan)</option>
+                    <option value="10">10% (Lama)</option>
+                    <option value="1">1% (Final)</option>
+                </select>
             </div>
             
             <div class="bg-gradient-to-r from-indigo-50 to-blue-50 p-3 rounded-xl border border-indigo-200 mb-4 shadow-sm">
@@ -237,13 +243,7 @@
 
             <h3 class="font-black text-slate-800 text-sm uppercase tracking-wide border-b border-slate-200 pb-3 mb-4 mt-6"><i class="fas fa-shield-halved mr-1"></i> Security Control</h3>
             <label class="text-[10px] font-black text-rose-600 uppercase tracking-widest mb-1 block"><i class="fas fa-lock mr-1"></i> Kunci Tanggal Tutup Buku</label>
-            <input type="date" id="set-lock-date-pro" class="w-full p-3 mb-4 border border-rose-200 rounded-xl text-sm font-bold bg-rose-50" onchange="simpanSetPro()">
-
-            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 block mt-2">Tampilkan QR Code Verifikasi</label>
-            <select id="set-qr-pro" class="w-full p-3 mb-6 border border-slate-300 rounded text-sm font-bold bg-slate-50" onchange="simpanSetPro()">
-                <option value="show">Ya, Tampilkan QR Code</option>
-                <option value="hide">Sembunyikan QR Code</option>
-            </select>
+            <input type="date" id="set-lock-date-pro" class="w-full p-3 mb-6 border border-rose-200 rounded-xl text-sm font-bold bg-rose-50" onchange="simpanSetPro()">
 
             <h3 class="font-black text-slate-800 text-sm uppercase tracking-wide border-b border-slate-200 pb-3 mb-4 mt-6"><i class="fas fa-database mr-1"></i> Manajemen Data</h3>
             <div class="grid grid-cols-2 gap-3 mb-6">
@@ -308,7 +308,7 @@
         }
 
         function exportFullBackup() {
-            const data = { praktis: localStorage.getItem('kspro_db'), pro: localStorage.getItem('kspro_db_pro'), t: localStorage.getItem('kspro_toko'), l: localStorage.getItem('kspro_logo'), b: localStorage.getItem('kspro_bos'), lock: localStorage.getItem('kspro_lock'), lock_pro: localStorage.getItem('kspro_lock_pro'), qr: localStorage.getItem('kspro_qr'), qr_pro: localStorage.getItem('kspro_qr_pro') };
+            const data = { praktis: localStorage.getItem('kspro_db'), pro: localStorage.getItem('kspro_db_pro'), t: localStorage.getItem('kspro_toko'), l: localStorage.getItem('kspro_logo'), b: localStorage.getItem('kspro_bos'), lock: localStorage.getItem('kspro_lock'), lock_pro: localStorage.getItem('kspro_lock_pro') };
             const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
             const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Backup_Data_Audit.json`; a.click();
         }
@@ -326,9 +326,7 @@
                         if(d.b) localStorage.setItem('kspro_bos', d.b);
                         if(d.lock) localStorage.setItem('kspro_lock', d.lock);
                         if(d.lock_pro) localStorage.setItem('kspro_lock_pro', d.lock_pro);
-                        if(d.qr) localStorage.setItem('kspro_qr', d.qr);
-                        if(d.qr_pro) localStorage.setItem('kspro_qr_pro', d.qr_pro);
-                        alert("Restore Berhasil! Halaman dimuat ulang."); location.reload();
+                        alert("Restore Berhasil!"); location.reload();
                     } catch(err) { alert("File backup tidak valid!"); }
                 };
                 reader.readAsText(input.files[0]);
@@ -339,7 +337,6 @@
             localStorage.setItem('kspro_toko', document.getElementById('set-toko-pro').value); 
             localStorage.setItem('kspro_bos', document.getElementById('set-bos-pro').value); 
             localStorage.setItem('kspro_lock_pro', document.getElementById('set-lock-date-pro').value); 
-            localStorage.setItem('kspro_qr_pro', document.getElementById('set-qr-pro').value); 
             updateUI(); 
         }
 
@@ -355,16 +352,7 @@
             
             let safeToko = toko.split(" ").join("_");
             let qrData = "VERIFIED_AUDIT_" + safeToko + "_" + Date.now();
-            
-            let showQr = localStorage.getItem('kspro_qr_pro') !== 'hide';
-            let qrSelect = document.getElementById('set-qr-pro');
-            if(qrSelect) qrSelect.value = showQr ? 'show' : 'hide';
-
-            document.querySelectorAll('.pr-qr').forEach(img => { 
-                img.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + qrData; 
-                img.style.visibility = showQr ? 'visible' : 'hidden';
-                if(img.nextElementSibling) img.nextElementSibling.style.visibility = showQr ? 'visible' : 'hidden';
-            });
+            document.querySelectorAll('.pr-qr').forEach(img => img.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + qrData);
 
             let lockDate = localStorage.getItem('kspro_lock_pro') || "";
             document.getElementById('set-lock-date-pro').value = lockDate;
@@ -412,10 +400,11 @@
             let id = Date.now();
 
             if(useTax) {
-                let ppn = Math.round(nom * 0.11);
+                let taxRate = parseFloat(document.getElementById('j-tax-rate').value);
+                let ppn = Math.round(nom * (taxRate / 100));
                 dbPro.push({id, grp: id, tgl, ref:d, pos:'D', nom:nom+ppn, ket, isAjp});
                 dbPro.push({id:id+1, grp: id, tgl, ref:k, pos:'K', nom:nom, ket, isAjp});
-                dbPro.push({id:id+2, grp: id, tgl, ref:'205', pos:'K', nom:ppn, ket:"PPN 11%", isAjp});
+                dbPro.push({id:id+2, grp: id, tgl, ref:'205', pos:'K', nom:ppn, ket:`PPN ${taxRate}%`, isAjp});
             } else {
                 dbPro.push({id, grp: id, tgl, ref:d, pos:'D', nom:nom, ket, isAjp});
                 dbPro.push({id:id+1, grp: id, tgl, ref:k, pos:'K', nom:nom, ket, isAjp});
