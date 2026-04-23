@@ -25,11 +25,18 @@
             body { background: white; padding: 0 !important; color: #000; }
             .no-print { display: none !important; }
             
-            .print-cover { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; page-break-after: always; }
+            /* BOOK COVER FORMATTING */
+            .print-cover { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; page-break-after: always; padding: 10px; }
+            .print-cover-inner { border: 3px solid #0f172a; outline: 1px solid #0f172a; outline-offset: 4px; padding: 40px; height: 95%; width: 95%; display: flex; flex-direction: column; justify-content: center; align-items: center; margin: auto; }
+            
             .print-logo { max-height: 120px; margin-bottom: 2rem; }
             .print-title { font-size: 32pt; font-weight: 900; text-transform: uppercase; margin-bottom: 1rem; line-height: 1.1; }
             .print-subtitle { font-size: 16pt; font-weight: bold; color: #475569; margin-bottom: 4rem; }
             .print-year { font-size: 24pt; font-weight: 900; background-color: #0f172a; color: white !important; padding: 10px 30px; border-radius: 50px; -webkit-print-color-adjust: exact; margin-bottom: 2rem; }
+            
+            /* TABLE OF CONTENTS */
+            .toc-item { display: flex; justify-content: space-between; border-bottom: 2px dotted #cbd5e1; margin-bottom: 15px; font-size: 12pt; padding-bottom: 5px; }
+            .toc-item span:first-child { font-weight: bold; }
             
             /* THICK BOOK FORMATTING */
             .chapter { page-break-before: always; padding-top: 20px; }
@@ -62,16 +69,19 @@
     </div>
 
     <div class="hidden print:flex print-cover">
-        <img id="print-logo" src="" class="print-logo" style="display:none;">
-        <h1 class="print-title" id="print-toko">NAMA PERUSAHAAN</h1>
-        <p class="print-subtitle">BUKU LAPORAN RAPAT ANGGOTA TAHUNAN<br>(ANNUAL AUDITED REPORT)</p>
-        <div class="print-year" id="print-year">2026</div>
-        
-        <img id="rat-qr" src="" class="mx-auto mt-4 w-24 h-24 border border-black p-1" style="display:none;">
+        <div class="print-cover-inner">
+            <img id="print-logo" src="" class="print-logo" style="display:none;">
+            <h1 class="print-title" id="print-toko">NAMA PERUSAHAAN</h1>
+            <p class="print-subtitle">BUKU LAPORAN RAPAT ANGGOTA TAHUNAN<br>(ANNUAL AUDITED REPORT)</p>
+            <div class="print-year" id="print-year">2026</div>
+            
+            <img id="rat-qr" src="" class="mx-auto mt-4 w-24 h-24 border border-black p-1" style="display:none;">
 
-        <div style="margin-top: auto; padding-bottom: 2rem;">
-            <p style="font-weight: bold; font-size: 10pt; color: #64748b;">CONFIDENTIAL & VERIFIED DOCUMENT</p>
-            <p style="font-size: 8pt; color: #94a3b8;" id="print-date">Generated on: </p>
+            <div style="margin-top: auto; padding-bottom: 1rem;">
+                <p style="font-weight: bold; font-size: 10pt; color: #000;">CONFIDENTIAL & VERIFIED DOCUMENT</p>
+                <p style="font-size: 8pt; color: #475569;" id="print-date">Generated on: </p>
+                <p style="font-size: 8pt; font-weight: bold; color: #0f172a; margin-top: 15px;">&copy; 2026 Hak Cipta Dilindungi - Ikram Cyber System Enterprise</p>
+            </div>
         </div>
     </div>
 
@@ -89,6 +99,15 @@
         <button onclick="window.print()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-4 rounded-xl text-xs uppercase tracking-widest shadow-xl mb-8 no-print transition-transform active:scale-95">
             <i class="fas fa-print mr-2 text-amber-400"></i> Cetak Buku Laporan (PDF)
         </button>
+
+        <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 mb-8 chapter hidden print:block">
+            <h2 class="chapter-title">DAFTAR ISI</h2>
+            <div class="toc-item"><span>BAB I - Laporan Manajemen (Sambutan Direksi)</span><span>1</span></div>
+            <div class="toc-item"><span>BAB II - Executive Summary & Indikator Kinerja</span><span>2</span></div>
+            <div class="toc-item"><span>BAB III - Laporan Keuangan Komprehensif</span><span>3</span></div>
+            <div class="toc-item"><span>BAB IV - Catatan Atas Laporan Keuangan (CALK)</span><span>4</span></div>
+            <div class="toc-item"><span>LAMPIRAN - Audit Trail & Buku Besar Tahunan</span><span>5</span></div>
+        </div>
 
         <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 mb-8 chapter">
             <h2 class="chapter-title">BAB I<br>Laporan Manajemen</h2>
@@ -155,6 +174,8 @@
             </div>
         </div>
 
+        <div class="text-center pt-8 pb-10 text-slate-400 text-[10px] font-black tracking-widest uppercase w-full no-print">&copy; 2026 HAK CIPTA DILINDUNGI - IKRAM CYBER SYSTEM ENTERPRISE</div>
+
     </div>
 
     <script>
@@ -189,7 +210,7 @@
                 qrImg.style.display = 'block';
             }
 
-            // DATA PROCESSING
+            // DATA PROCESSING (Memprioritaskan Mode Audit/Pro, fallback ke Standar)
             let dbPro = JSON.parse(localStorage.getItem('kspro_db_pro'));
             let dbStd = JSON.parse(localStorage.getItem('kspro_db'));
             
