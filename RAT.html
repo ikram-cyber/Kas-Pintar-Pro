@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>E-RAT | Annual Report Dashboard</title>
+    <meta name="theme-color" content="#0f172a">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; }
+        
+        .gold-gradient { background: linear-gradient(135deg, #d97706 0%, #fbbf24 50%, #d97706 100%); }
+        .gold-text { background: linear-gradient(135deg, #b45309 0%, #f59e0b 50%, #b45309 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        @media print {
+            @page { size: A4 portrait; margin: 1.5cm; }
+            body { background: white; padding: 0 !important; }
+            .no-print { display: none !important; }
+            
+            .print-cover { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; page-break-after: always; }
+            .print-logo { max-height: 120px; margin-bottom: 2rem; }
+            .print-title { font-size: 32pt; font-weight: 900; text-transform: uppercase; margin-bottom: 1rem; line-height: 1.1; }
+            .print-subtitle { font-size: 16pt; font-weight: bold; color: #475569; margin-bottom: 4rem; }
+            .print-year { font-size: 24pt; font-weight: 900; background-color: #0f172a; color: white !important; padding: 10px 30px; border-radius: 50px; -webkit-print-color-adjust: exact; }
+            
+            .print-section { page-break-inside: avoid; margin-bottom: 30px; }
+            .print-header-small { border-bottom: 2px solid #0f172a; padding-bottom: 5px; margin-bottom: 15px; font-weight: 900; font-size: 14pt; text-transform: uppercase; }
+            
+            .grid-print { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+            .card-print { border: 1px solid #cbd5e1; padding: 15px; border-radius: 8px; }
+            .card-title { font-size: 9pt; text-transform: uppercase; color: #64748b; font-weight: bold; }
+            .card-value { font-size: 18pt; font-weight: 900; margin-top: 5px; }
+            
+            .ttd-area { display: flex; justify-content: space-between; margin-top: 60px; text-align: center; }
+            .ttd-box { width: 40%; }
+        }
+    </style>
+</head>
+<body class="pb-10">
+
+    <div class="bg-slate-900 p-4 shadow-xl flex justify-between items-center no-print sticky top-0 z-50">
+        <div class="flex items-center gap-2">
+            <i class="fas fa-crown text-amber-400 text-xl"></i>
+            <h1 class="text-white font-black tracking-widest uppercase text-sm">E-RAT SYSTEM</h1>
+        </div>
+        <div class="flex gap-1">
+            <a href="index.html" class="bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg text-[9px] font-black transition-colors"><i class="fas fa-chart-line mr-1"></i> STD</a>
+            <a href="akuntan.html" class="bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg text-[9px] font-black transition-colors"><i class="fas fa-shield-halved mr-1"></i> AUDIT</a>
+        </div>
+    </div>
+
+    <div class="hidden print:flex print-cover">
+        <img id="print-logo" src="" class="print-logo" style="display:none;">
+        <h1 class="print-title" id="print-toko">NAMA PERUSAHAAN</h1>
+        <p class="print-subtitle">BUKU LAPORAN RAPAT ANGGOTA TAHUNAN<br>(EXECUTIVE SUMMARY)</p>
+        <div class="print-year" id="print-year">2026</div>
+        <div style="margin-top: auto; padding-bottom: 2rem;">
+            <p style="font-weight: bold; font-size: 10pt; color: #64748b;">CONFIDENTIAL & AUDITED DOCUMENT</p>
+            <p style="font-size: 8pt; color: #94a3b8;" id="print-date">Generated on: </p>
+        </div>
+    </div>
+
+    <div class="px-4 mt-6 max-w-2xl mx-auto">
+        
+        <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200 mb-6 text-center no-print">
+            <div class="inline-block gold-gradient p-3 rounded-full mb-3 shadow-lg">
+                <i class="fas fa-book-open text-white text-2xl"></i>
+            </div>
+            <h2 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-1">Rapat Anggota Tahunan</h2>
+            <h1 class="text-2xl font-black text-slate-800 uppercase" id="dash-toko">NAMA PT</h1>
+            <p class="text-[10px] font-bold text-slate-400 mt-2">Executive Annual Report Dashboard</p>
+        </div>
+
+        <button onclick="window.print()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-4 rounded-xl text-xs uppercase tracking-widest shadow-xl mb-6 no-print transition-transform active:scale-95">
+            <i class="fas fa-print mr-2 text-amber-400"></i> Cetak Buku RAT
+        </button>
+
+        <div class="print-section bg-gradient-to-br from-slate-900 to-slate-800 p-6 rounded-2xl shadow-xl text-white mb-6">
+            <h3 class="print-header-small text-amber-400 border-amber-400/30 flex items-center gap-2 mb-3">
+                <i class="fas fa-robot text-lg"></i> AI Annual Review
+            </h3>
+            <p id="ai-summary" class="text-sm font-semibold leading-relaxed text-slate-300 text-justify">
+                Menganalisis performa tahunan...
+            </p>
+        </div>
+
+        <div class="print-section mb-6">
+            <h3 class="print-header-small text-slate-800 border-slate-300 no-print font-black text-sm uppercase tracking-wide mb-3">Sorotan Kinerja</h3>
+            <div class="grid grid-cols-2 gap-3 grid-print">
+                <div class="card-print bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="card-title text-[9px] font-black text-slate-500 uppercase tracking-widest"><i class="fas fa-vault mr-1 text-emerald-500"></i> Total Aset</div>
+                    <div class="card-value text-lg font-black text-emerald-700 mt-1" id="rat-aset">Rp 0</div>
+                </div>
+                <div class="card-print bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="card-title text-[9px] font-black text-slate-500 uppercase tracking-widest"><i class="fas fa-chart-line mr-1 text-blue-500"></i> Laba Bersih</div>
+                    <div class="card-value text-lg font-black text-blue-700 mt-1" id="rat-laba">Rp 0</div>
+                </div>
+                <div class="card-print bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="card-title text-[9px] font-black text-slate-500 uppercase tracking-widest"><i class="fas fa-coins mr-1 text-amber-500"></i> Total Ekuitas</div>
+                    <div class="card-value text-lg font-black text-amber-700 mt-1" id="rat-ekuitas">Rp 0</div>
+                </div>
+                <div class="card-print bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="card-title text-[9px] font-black text-slate-500 uppercase tracking-widest"><i class="fas fa-scale-unbalanced mr-1 text-rose-500"></i> Rasio Utang (DAR)</div>
+                    <div class="card-value text-lg font-black text-rose-700 mt-1" id="rat-dar">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="print-section bg-white p-5 rounded-xl border border-slate-200 shadow-sm mb-6">
+            <h3 class="print-header-small text-slate-800 border-slate-300 font-black text-sm uppercase tracking-wide mb-4 text-center">Grafik Arus Keuangan Laba/Rugi</h3>
+            <canvas id="ratChart" height="220"></canvas>
+        </div>
+
+        <div class="ttd-area hidden print:flex mt-12">
+            <div class="ttd-box">
+                <p class="font-bold text-[10px] mb-16 uppercase">Direktur Keuangan / CFO</p>
+                <div class="border-t-2 border-black pt-1 font-black text-sm uppercase" id="ttd-cfo">NAMA CFO</div>
+            </div>
+            <div class="ttd-box">
+                <p class="font-bold text-[10px] mb-16 uppercase">Dewan Komisaris</p>
+                <div class="border-t-2 border-black pt-1 font-black text-sm uppercase">_________________</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const formatRp = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(n);
+        let chartInstance = null;
+
+        function renderRAT() {
+            let toko = localStorage.getItem('kspro_toko') || "NAMA PERUSAHAAN";
+            let bos = localStorage.getItem('kspro_bos') || "DIREKTUR UTAMA";
+            let logoSrc = localStorage.getItem('kspro_logo');
+            let currentYear = new Date().getFullYear();
+
+            // Set UI Elements
+            document.getElementById('dash-toko').innerText = toko;
+            document.getElementById('print-toko').innerText = toko;
+            document.getElementById('print-year').innerText = currentYear;
+            document.getElementById('print-date').innerText = "Generated on: " + new Date().toLocaleString();
+            document.getElementById('ttd-cfo').innerText = bos;
+
+            if(logoSrc) {
+                let pLogo = document.getElementById('print-logo');
+                pLogo.src = logoSrc;
+                pLogo.style.display = 'block';
+            }
+
+            // DATA PROCESSING (Memprioritaskan Mode Audit / Pro)
+            let dbPro = JSON.parse(localStorage.getItem('kspro_db_pro'));
+            let totalAset = 0, laba = 0, ekuitas = 0, totalUtang = 0;
+            let opIn = 0, opOut = 0; // Untuk grafik
+            
+            if (dbPro && dbPro.length > 0) {
+                // Kalkulasi dari Mode Audit 10 Kolom
+                const COA = [ { no: '101', tipe: 'Aset', sn: 'D' }, { no: '102', tipe: 'Aset', sn: 'D' }, { no: '103', tipe: 'Aset', sn: 'D' }, { no: '121', tipe: 'Aset', sn: 'D' }, { no: '122', tipe: 'Aset', sn: 'K' }, { no: '201', tipe: 'Kewajiban', sn: 'K' }, { no: '205', tipe: 'Kewajiban', sn: 'K' }, { no: '301', tipe: 'Ekuitas', sn: 'K' }, { no: '302', tipe: 'Ekuitas', sn: 'D' }, { no: '401', tipe: 'Pendapatan', sn: 'K' }, { no: '501', tipe: 'Beban', sn: 'D' }, { no: '502', tipe: 'Beban', sn: 'D' } ];
+                
+                COA.forEach(a => {
+                    let d = dbPro.filter(x=>x.ref===a.no && x.pos==='D').reduce((p,c)=>p+c.nom,0);
+                    let k = dbPro.filter(x=>x.ref===a.no && x.pos==='K').reduce((p,c)=>p+c.nom,0);
+                    let nsd = a.sn==='D' ? d-k : k-d;
+                    if (nsd < 0) nsd = 0; // Hindari negatif untuk rekap simpel
+                    
+                    if(a.tipe === 'Aset') totalAset += (a.sn==='D'?d-k:k-d);
+                    if(a.tipe === 'Ekuitas') ekuitas += (a.sn==='K'?k-d:d-k);
+                    if(a.tipe === 'Kewajiban') totalUtang += (a.sn==='K'?k-d:d-k);
+                    if(a.tipe === 'Pendapatan') opIn += k;
+                    if(a.tipe === 'Beban') opOut += d;
+                });
+                laba = opIn - opOut;
+                ekuitas += laba; // Ekuitas akhir
+            } else {
+                // Fallback ke Mode Standar jika belum pakai Audit
+                let dbStd = JSON.parse(localStorage.getItem('kspro_db')) || [];
+                dbStd.forEach(x => { 
+                    if(x.kat==='Operasional') x.jen==='in' ? opIn+=x.nom : opOut+=x.nom; 
+                    if(x.kat==='Utang') x.jen==='in' ? totalUtang+=x.nom : totalUtang-=x.nom; 
+                    if(x.kat==='Modal') x.jen==='in' ? ekuitas+=x.nom : ekuitas-=x.nom; 
+                });
+                laba = opIn - opOut;
+                ekuitas += laba;
+                totalAset = ekuitas + totalUtang;
+            }
+
+            // Update UI Metrics
+            document.getElementById('rat-aset').innerText = formatRp(totalAset);
+            document.getElementById('rat-laba').innerText = formatRp(laba);
+            document.getElementById('rat-ekuitas').innerText = formatRp(ekuitas);
+            
+            let dar = totalAset > 0 ? (totalUtang / totalAset * 100).toFixed(2) : 0;
+            document.getElementById('rat-dar').innerText = dar + "%";
+
+            // Generate AI Narrative
+            let aiText = "";
+            if(totalAset === 0) {
+                aiText = "Sistem belum memiliki data akuntansi yang cukup untuk menyusun laporan Rapat Anggota Tahunan. Silakan masukkan transaksi terlebih dahulu.";
+            } else {
+                let margin = opIn > 0 ? ((laba/opIn)*100).toFixed(2) : 0;
+                aiText = `Tahun buku ${currentYear} mencerminkan stabilitas finansial bagi ${toko.toUpperCase()}. Perusahaan mencatatkan total aset sebesar ${formatRp(totalAset)}, yang didukung oleh ekuitas bersih senilai ${formatRp(ekuitas)}. `;
+                
+                if(laba > 0) {
+                    aiText += `Operasional menghasilkan laba bersih positif sebesar ${formatRp(laba)} (Margin Laba: ${margin}%). `;
+                } else {
+                    aiText += `Perusahaan mengalami defisit operasional sebesar ${formatRp(Math.abs(laba))}, memerlukan evaluasi efisiensi biaya pada tahun berikutnya. `;
+                }
+
+                if(dar < 40) {
+                    aiText += `Rasio utang terhadap aset (DAR) berada di level sangat sehat (${dar}%), menunjukkan kemandirian finansial yang kuat tanpa ketergantungan utang berlebih.`;
+                } else if(dar < 70) {
+                    aiText += `Rasio utang terkendali pada ${dar}%, dalam ambang batas wajar ekspansi bisnis.`;
+                } else {
+                    aiText += `Rasio utang cukup tinggi (${dar}%), manajemen disarankan memprioritaskan pelunasan liabilitas untuk menekan beban bunga ke depannya.`;
+                }
+            }
+            document.getElementById('ai-summary').innerText = aiText;
+
+            // Render Chart
+            const ctx = document.getElementById('ratChart').getContext('2d'); 
+            if (chartInstance) chartInstance.destroy(); 
+            chartInstance = new Chart(ctx, { 
+                type: 'bar', 
+                data: { 
+                    labels: ['Pendapatan', 'Beban', 'Laba Bersih'], 
+                    datasets: [{ 
+                        data: [opIn, opOut, laba], 
+                        backgroundColor: ['#059669', '#e11d48', laba >= 0 ? '#1e40af' : '#9f1239'], 
+                        borderRadius: 8 
+                    }] 
+                }, 
+                options: { 
+                    responsive: true, 
+                    plugins: { legend: { display: false } }, 
+                    scales: { 
+                        y: { beginAtZero: true, display: false }, 
+                        x: { grid: { display: false } } 
+                    } 
+                } 
+            }); 
+        }
+
+        window.onload = renderRAT;
+    </script>
+</body>
+</html>
