@@ -28,9 +28,11 @@
             .no-print, .bottom-nav { display: none !important; }
             .page { display: none !important; } .page.active { display: block !important; }
             .print-header { display: flex !important; justify-content: space-between; align-items: flex-start; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 20px; }
-            table { font-size: 9px !important; width: 100% !important; border-collapse: collapse; }
+            table { font-size: 8px !important; width: 100% !important; min-width: 0 !important; border-collapse: collapse; }
+            .table-pro th, .table-pro td { padding: 4px 3px !important; }
             .table-pro th { background-color: #f1f5f9 !important; color: #000 !important; -webkit-print-color-adjust: exact; border: 1px solid #000 !important; }
             .table-pro td { border: 1px solid #000 !important; }
+            .overflow-x-auto { overflow: visible !important; }
             .ttd-area { display: flex !important; justify-content: space-between; margin-top: 40px; page-break-inside: avoid; color: #000; text-align: center; }
             .ttd-box { width: 30%; }
         }
@@ -48,7 +50,7 @@
             <div class="flex flex-col items-end">
                 <div class="bg-emerald-500 text-white px-2 py-1 rounded text-[9px] font-black shadow-sm mb-2 tracking-widest border border-emerald-400">10-COLUMN</div>
                 <a href="index.html" class="bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg text-[10px] font-black shadow-xl transition-all active:scale-95">
-                    <i class="fas fa-exchange-alt mr-1"></i> PRAKTIS
+                    <i class="fas fa-exchange-alt mr-1"></i> STANDAR
                 </a>
             </div>
         </div>
@@ -434,15 +436,15 @@
             // EXECUTIVE DASHBOARD LOGIC (Pimpinan & Pajak Melongo)
             document.getElementById('v-laba-pro').innerText = formatRp(laba);
             document.getElementById('v-ppn-pro').innerText = formatRp(hutangPPN);
-            
+
             let roe = ekuitas > 0 ? (laba / ekuitas * 100).toFixed(2) : "0.00";
             let npm = pendapatan > 0 ? (laba / pendapatan * 100).toFixed(2) : "0.00";
             document.getElementById('v-roe-pro').innerText = roe + "%";
             document.getElementById('v-npm-pro').innerText = npm + "%";
-            
-            let auditTxt = document.getElementById('ai-audit-desc'); 
+
+            let auditTxt = document.getElementById('ai-audit-desc');
             let auditGrd = document.getElementById('ai-audit-grade');
-            
+
             let aiSentences = "";
             if(laba > 0) {
                 if(roe >= 15) {
