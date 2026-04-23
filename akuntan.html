@@ -35,10 +35,12 @@
             .overflow-x-auto { overflow: visible !important; }
             .ttd-area { display: flex !important; justify-content: space-between; margin-top: 40px; page-break-inside: avoid; color: #000; text-align: center; }
             .ttd-box { width: 30%; }
+
+            /* WATERMARK REMOVED BY USER REQUEST */
         }
     </style>
 </head>
-<body class="pb-24">
+<body class="pb-24" data-watermark="AUDITED REPORT">
 
     <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white p-6 rounded-b-3xl shadow-2xl relative overflow-hidden no-print z-[60]">
         <div class="absolute -right-6 -top-6 text-9xl opacity-10"><i class="fas fa-balance-scale-right"></i></div>
@@ -49,7 +51,7 @@
             </div>
             <div class="flex flex-col items-end">
                 <div class="bg-emerald-500 text-white px-2 py-1 rounded text-[9px] font-black shadow-sm mb-2 tracking-widest border border-emerald-400">10-COLUMN</div>
-                <div class="flex gap-1">
+                <div class="flex gap-1 mt-1">
                     <a href="index.html" class="bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg text-[10px] font-black shadow-xl transition-all active:scale-95">
                         <i class="fas fa-exchange-alt mr-1"></i> STANDAR
                     </a>
@@ -271,7 +273,7 @@
         </div>
     </div>
 
-    <div class="text-center pt-8 pb-20 text-slate-400 text-[10px] font-black tracking-widest uppercase w-full no-print">&copy; 2026 Ikram Cyber System</div>
+    <div class="text-center pt-8 pb-20 text-slate-400 text-[10px] font-black tracking-widest uppercase w-full no-print">&copy; 2026 HAK CIPTA DILINDUNGI - IKRAM CYBER SYSTEM ENTERPRISE</div>
 
     <nav class="bottom-nav no-print">
         <button class="nav-item active" onclick="bukaTab('input')"><i class="fas fa-brain mb-1 text-lg"></i>Audit</button>
@@ -485,6 +487,7 @@
         function render() {
             let hJ = ''; let groups = [...new Set(dbPro.map(item => item.grp))];
             let lockDate = localStorage.getItem('kspro_lock_pro');
+            let totalDeb = 0, totalKre = 0;
             
             if(groups.length === 0) hJ = '<tr><td colspan="6" class="text-center p-8 text-slate-400 font-bold">Belum ada transaksi tercatat.</td></tr>';
 
@@ -497,12 +500,20 @@
                     let hapusBtn = isLocked ? '' : (idx===0 ? `<button onclick="hapusJurnal(${x.grp})" class="text-rose-400 hover:text-rose-600 bg-rose-50 px-2 py-1 rounded"><i class="fas fa-trash"></i></button>` : '');
                     
                     if(x.pos === 'D') {
+                        totalDeb += x.nom;
                         hJ += `<tr class="border-t border-slate-200 hover:bg-slate-50"><td class="p-2">${idx===0 ? x.tgl.slice(5) : ''}</td><td class="p-2 text-center font-bold text-slate-700">${x.ref}</td><td class="p-2 font-bold text-slate-800">${nama} ${ajpBadge}<br><span class="text-[9px] font-normal text-slate-400">${x.ket}</span></td><td class="p-2 text-right font-black text-emerald-600">${formatRp(x.nom)}</td><td class="p-2 text-right">-</td><td class="p-2 text-center no-print">${hapusBtn}</td></tr>`;
                     } else {
+                        totalKre += x.nom;
                         hJ += `<tr class="hover:bg-slate-50"><td class="p-2"></td><td class="p-2 text-center text-slate-500">${x.ref}</td><td class="p-2 pl-6 italic text-slate-600">${nama} ${ajpBadge}<br><span class="text-[9px] font-normal not-italic text-slate-400">${x.ket}</span></td><td class="p-2 text-right">-</td><td class="p-2 text-right font-black text-rose-600">${formatRp(x.nom)}</td><td class="p-2 no-print"></td></tr>`;
                     }
                 });
             });
+            
+            // TAMBAHAN GRAND TOTAL BALANCE
+            if (totalDeb > 0 || totalKre > 0) {
+                hJ += `<tr class="bg-slate-100 font-black border-t-2 border-slate-300"><td colspan="3" class="p-3 text-right uppercase text-slate-700">Total Mutasi Balance</td><td class="p-3 text-right text-emerald-700">${formatRp(totalDeb)}</td><td class="p-3 text-right text-rose-700">${formatRp(totalKre)}</td><td class="no-print"></td></tr>`;
+            }
+            
             document.getElementById('v-jurnal').innerHTML = hJ;
 
             let hL = '', totals = Array(12).fill(0);

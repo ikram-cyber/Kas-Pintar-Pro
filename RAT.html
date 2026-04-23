@@ -80,6 +80,7 @@
             <div style="margin-top: auto; padding-bottom: 1rem;">
                 <p style="font-weight: bold; font-size: 10pt; color: #000;">CONFIDENTIAL & VERIFIED DOCUMENT</p>
                 <p style="font-size: 8pt; color: #475569;" id="print-date">Generated on: </p>
+                <p style="font-size: 8pt; font-weight: bold; color: #0f172a; margin-top: 15px;">&copy; 2026 Hak Cipta Dilindungi - Ikram Cyber System Enterprise</p>
             </div>
         </div>
     </div>
@@ -105,7 +106,7 @@
             <div class="toc-item"><span>BAB II - Executive Summary & Indikator Kinerja</span><span>2</span></div>
             <div class="toc-item"><span>BAB III - Laporan Keuangan Komprehensif</span><span>3</span></div>
             <div class="toc-item"><span>BAB IV - Catatan Atas Laporan Keuangan (CALK)</span><span>4</span></div>
-            <div class="toc-item"><span>LAMPIRAN - Audit Trail & Buku Besar Tahunan</span><span>5</span></div>
+            <div class="toc-item"><span>LAMPIRAN - Audit Trail & Buku Jurnal Tahunan</span><span>5</span></div>
         </div>
 
         <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 mb-8 chapter">
@@ -264,12 +265,21 @@
                 ekuitas += laba; 
                 tableHTML += `</tbody><tfoot class="bg-slate-100 font-black"><tr><td colspan="2" class="text-right uppercase">Total Aset Keseluruhan</td><td class="text-right">${formatRp(totalAset)}</td></tr></tfoot></table>`;
 
-                // BUILD LAMPIRAN PRO
+                // BUILD LAMPIRAN PRO DENGAN GRAND TOTAL
+                let totalDebitJurnal = 0, totalKreditJurnal = 0;
                 lampiranHTML = `<table class="table-pro w-full"><thead><tr><th>Tgl</th><th>Ref</th><th>Keterangan</th><th class="text-right">Debit</th><th class="text-right">Kredit</th></tr></thead><tbody>`;
                 dbPro.sort((a,b)=>a.id-b.id).forEach(x => {
+                    if(x.pos === 'D') totalDebitJurnal += x.nom;
+                    if(x.pos === 'K') totalKreditJurnal += x.nom;
                     lampiranHTML += `<tr><td>${x.tgl}</td><td class="text-center">${x.ref}</td><td>${x.ket} ${x.isAjp?'<b>[AJP]</b>':''}</td><td class="text-right">${x.pos==='D'?formatRp(x.nom):'-'}</td><td class="text-right">${x.pos==='K'?formatRp(x.nom):'-'}</td></tr>`;
                 });
-                lampiranHTML += `</tbody></table>`;
+                
+                // TAMBAH ROW TOTAL BALANCE
+                if(totalDebitJurnal > 0 || totalKreditJurnal > 0) {
+                    lampiranHTML += `</tbody><tfoot class="bg-slate-100 font-black text-sm"><tr class="border-t-2 border-black"><td colspan="3" class="text-right uppercase py-3">Total Keseluruhan (Balance)</td><td class="text-right text-emerald-700 py-3">${formatRp(totalDebitJurnal)}</td><td class="text-right text-rose-700 py-3">${formatRp(totalKreditJurnal)}</td></tr></tfoot></table>`;
+                } else {
+                    lampiranHTML += `</tbody></table>`;
+                }
 
             } else if (dbStd && dbStd.length > 0) {
                 // LOGIKA STANDAR (KAS PINTAR BIASA)
@@ -303,13 +313,20 @@
                     </tbody>
                 </table>`;
 
-                // BUILD LAMPIRAN STANDAR
+                // BUILD LAMPIRAN STANDAR DENGAN GRAND TOTAL
+                let totalMasuk = 0, totalKeluar = 0;
                 lampiranHTML = `<table class="table-pro w-full"><thead><tr><th>Tgl</th><th>Kategori</th><th>Keterangan</th><th class="text-right">Masuk (D)</th><th class="text-right">Keluar (K)</th></tr></thead><tbody>`;
                 dbStd.sort((a,b)=>a.id-b.id).forEach(x => {
                     let isD = x.jen === 'in';
+                    if(isD) totalMasuk += x.nom; else totalKeluar += x.nom;
                     lampiranHTML += `<tr><td>${x.tgl}</td><td>${x.kat}</td><td>${x.ket}</td><td class="text-right">${isD?formatRp(x.nom):'-'}</td><td class="text-right">${!isD?formatRp(x.nom):'-'}</td></tr>`;
                 });
-                lampiranHTML += `</tbody></table>`;
+                
+                if (totalMasuk > 0 || totalKeluar > 0) {
+                    lampiranHTML += `</tbody><tfoot class="bg-slate-100 font-black text-sm"><tr class="border-t-2 border-black"><td colspan="3" class="text-right uppercase py-3">Total Mutasi Keseluruhan</td><td class="text-right text-emerald-700 py-3">${formatRp(totalMasuk)}</td><td class="text-right text-rose-700 py-3">${formatRp(totalKeluar)}</td></tr></tfoot></table>`;
+                } else {
+                    lampiranHTML += `</tbody></table>`;
+                }
 
             } else {
                 tableHTML = "<p class='formal-text'>Belum ada data transaksi yang tercatat di sistem.</p>";
