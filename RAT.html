@@ -29,7 +29,7 @@
             .print-logo { max-height: 120px; margin-bottom: 2rem; }
             .print-title { font-size: 32pt; font-weight: 900; text-transform: uppercase; margin-bottom: 1rem; line-height: 1.1; }
             .print-subtitle { font-size: 16pt; font-weight: bold; color: #475569; margin-bottom: 4rem; }
-            .print-year { font-size: 24pt; font-weight: 900; background-color: #0f172a; color: white !important; padding: 10px 30px; border-radius: 50px; -webkit-print-color-adjust: exact; }
+            .print-year { font-size: 24pt; font-weight: 900; background-color: #0f172a; color: white !important; padding: 10px 30px; border-radius: 50px; -webkit-print-color-adjust: exact; margin-bottom: 2rem; }
             
             /* THICK BOOK FORMATTING */
             .chapter { page-break-before: always; padding-top: 20px; }
@@ -66,6 +66,9 @@
         <h1 class="print-title" id="print-toko">NAMA PERUSAHAAN</h1>
         <p class="print-subtitle">BUKU LAPORAN RAPAT ANGGOTA TAHUNAN<br>(ANNUAL AUDITED REPORT)</p>
         <div class="print-year" id="print-year">2026</div>
+        
+        <img id="rat-qr" src="" class="mx-auto mt-4 w-24 h-24 border border-black p-1" style="display:none;">
+
         <div style="margin-top: auto; padding-bottom: 2rem;">
             <p style="font-weight: bold; font-size: 10pt; color: #64748b;">CONFIDENTIAL & VERIFIED DOCUMENT</p>
             <p style="font-size: 8pt; color: #94a3b8;" id="print-date">Generated on: </p>
@@ -177,7 +180,16 @@
                 pLogo.style.display = 'block';
             }
 
-            // DATA PROCESSING (Memprioritaskan Mode Audit/Pro, fallback ke Standar)
+            // SINKRONISASI FITUR QR CODE
+            let showQr = localStorage.getItem('kspro_qr_pro') !== 'hide';
+            if(showQr) {
+                let qrData = `VERIFIED_ERAT_${toko.replace(/\s+/g,'_')}_${new Date().getTime()}`;
+                let qrImg = document.getElementById('rat-qr');
+                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${qrData}`;
+                qrImg.style.display = 'block';
+            }
+
+            // DATA PROCESSING
             let dbPro = JSON.parse(localStorage.getItem('kspro_db_pro'));
             let dbStd = JSON.parse(localStorage.getItem('kspro_db'));
             
@@ -188,8 +200,23 @@
             let lampiranHTML = "";
             
             if (dbPro && dbPro.length > 0) {
-                // LOGIKA PRO (10 KOLOM)
-                const COA = [ { no: '101', nama: 'Kas / Bank', tipe: 'Aset', sn: 'D' }, { no: '102', nama: 'Piutang', tipe: 'Aset', sn: 'D' }, { no: '103', nama: 'Persediaan', tipe: 'Aset', sn: 'D' }, { no: '121', nama: 'Aset Tetap', tipe: 'Aset', sn: 'D' }, { no: '122', nama: 'Akum. Penyusutan', tipe: 'Aset', sn: 'K' }, { no: '201', nama: 'Utang Dagang', tipe: 'Kewajiban', sn: 'K' }, { no: '205', nama: 'Utang PPN', tipe: 'Kewajiban', sn: 'K' }, { no: '301', nama: 'Modal Ekuitas', tipe: 'Ekuitas', sn: 'K' }, { no: '302', nama: 'Prive', tipe: 'Ekuitas', sn: 'D' }, { no: '401', nama: 'Pendapatan', tipe: 'Pendapatan', sn: 'K' }, { no: '501', nama: 'Beban Gaji', tipe: 'Beban', sn: 'D' }, { no: '502', nama: 'Beban Operasional', tipe: 'Beban', sn: 'D' } ];
+                // LOGIKA PRO (10 KOLOM) - DENGAN 14 AKUN LENGKAP
+                const COA = [
+                    { no: '101', nama: 'Kas / Bank', tipe: 'Aset', sn: 'D' },
+                    { no: '102', nama: 'Piutang Dagang', tipe: 'Aset', sn: 'D' },
+                    { no: '103', nama: 'Persediaan', tipe: 'Aset', sn: 'D' },
+                    { no: '121', nama: 'Aset Tetap', tipe: 'Aset', sn: 'D' },
+                    { no: '122', nama: 'Akumulasi Penyusutan', tipe: 'Aset', sn: 'K' },
+                    { no: '201', nama: 'Utang Dagang', tipe: 'Kewajiban', sn: 'K' },
+                    { no: '205', nama: 'Utang Pajak (PPN)', tipe: 'Kewajiban', sn: 'K' },
+                    { no: '301', nama: 'Modal Ekuitas', tipe: 'Ekuitas', sn: 'K' },
+                    { no: '302', nama: 'Prive / Penarikan', tipe: 'Ekuitas', sn: 'D' },
+                    { no: '401', nama: 'Pendapatan Jasa / Sales', tipe: 'Pendapatan', sn: 'K' },
+                    { no: '501', nama: 'Beban Gaji', tipe: 'Beban', sn: 'D' },
+                    { no: '502', nama: 'Beban Operasional', tipe: 'Beban', sn: 'D' },
+                    { no: '503', nama: 'Beban Perlengkapan', tipe: 'Beban', sn: 'D' },
+                    { no: '504', nama: 'Beban Penyusutan', tipe: 'Beban', sn: 'D' }
+                ];
                 
                 tableHTML = `<table class="table-pro mb-6"><thead><tr><th>No</th><th>Nama Akun</th><th class="text-right">Saldo Neraca Akhir</th></tr></thead><tbody>`;
                 
@@ -265,8 +292,8 @@
                 lampiranHTML += `</tbody></table>`;
 
             } else {
-                tableHTML = "<p class="formal-text">Belum ada data transaksi yang tercatat di sistem.</p>";
-                lampiranHTML = "<p class="formal-text">Data Kosong.</p>";
+                tableHTML = "<p class='formal-text'>Belum ada data transaksi yang tercatat di sistem.</p>";
+                lampiranHTML = "<p class='formal-text'>Data Kosong.</p>";
             }
 
             // Update UI Dash
