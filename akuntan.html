@@ -27,10 +27,7 @@
             body { background: white; padding: 0 !important; }
             .no-print, .bottom-nav { display: none !important; }
             .page { display: none !important; } .page.active { display: block !important; }
-            
-            /* KOP SURAT ALIGNMENT FIX */
             .print-header { display: flex !important; justify-content: space-between; align-items: center; border-bottom: 3px double #000; padding-bottom: 15px; margin-bottom: 20px; }
-            
             table { font-size: 8px !important; width: 100% !important; min-width: 0 !important; border-collapse: collapse; }
             .table-pro th, .table-pro td { padding: 4px 3px !important; }
             .table-pro th { background-color: #f1f5f9 !important; color: #000 !important; -webkit-print-color-adjust: exact; border: 1px solid #000 !important; }
@@ -125,6 +122,7 @@
 
     <div id="p-jurnal" class="page px-4 mt-6">
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-lg">
+            
             <div class="print-header hidden">
                 <div class="w-1/4 flex justify-start">
                     <img class="pr-logo-pro" src="" style="max-height:60px; object-fit: contain; display:none;">
@@ -139,6 +137,7 @@
                     <div class="text-[6px] font-black uppercase tracking-widest mt-1 text-center" style="width: 56px;">Verified Audit</div>
                 </div>
             </div>
+
             <div class="no-print flex justify-between items-center mb-5">
                 <h3 class="font-black text-slate-800 text-sm uppercase tracking-wide"><i class="fas fa-list-ol mr-2 text-emerald-500"></i> Buku Jurnal</h3>
                 <div class="flex gap-2">
@@ -164,6 +163,7 @@
 
     <div id="p-worksheet" class="page px-4 mt-6">
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-lg overflow-hidden">
+            
             <div class="print-header hidden">
                 <div class="w-1/4 flex justify-start">
                     <img class="pr-logo-pro" src="" style="max-height:60px; object-fit: contain; display:none;">
@@ -178,6 +178,7 @@
                     <div class="text-[6px] font-black uppercase tracking-widest mt-1 text-center" style="width: 56px;">Verified Audit</div>
                 </div>
             </div>
+
             <div class="flex justify-between items-center mb-5 no-print">
                 <h3 class="font-black text-slate-800 text-sm uppercase tracking-wide"><i class="fas fa-table mr-2 text-emerald-500"></i> Neraca Lajur</h3>
                 <div class="flex gap-2">
@@ -208,7 +209,12 @@
             <h3 class="font-black text-slate-800 text-sm uppercase border-b border-slate-100 pb-3 mb-5"><i class="fas fa-cogs mr-2 text-slate-500"></i> Konfigurasi Sistem</h3>
             
             <label class="text-[10px] font-black uppercase text-slate-400 mb-1 block">Logo Kop Surat Laporan</label>
-            <input type="file" accept="image/*" class="w-full text-xs mb-5 p-2 border border-slate-300 rounded-xl bg-slate-50" onchange="handleLogo(this)">
+            <input type="file" accept="image/*" class="w-full text-xs mb-2 p-2 border border-slate-300 rounded-xl bg-slate-50" onchange="handleLogo(this)">
+            
+            <div id="logo-preview-container" class="hidden mb-4 p-3 border border-slate-200 rounded-xl bg-white text-center">
+                <img id="logo-preview-img" src="" class="h-16 mx-auto mb-3 object-contain">
+                <button onclick="hapusLogo()" class="bg-rose-50 text-rose-600 px-3 py-1.5 rounded text-[10px] font-black hover:bg-rose-100 transition border border-rose-200 shadow-sm"><i class="fas fa-trash mr-1"></i> Hapus Logo</button>
+            </div>
 
             <label class="text-[10px] font-black uppercase text-slate-400 mb-1 block">Nama Perusahaan (Kop Surat)</label>
             <input type="text" id="set-toko-pro" class="w-full p-3 mb-5 border border-slate-300 rounded-xl font-bold text-slate-700 outline-none focus:ring-2 focus:ring-emerald-500 transition-all" oninput="simpanSetPro()">
@@ -270,6 +276,13 @@
             }
         }
 
+        function hapusLogo() {
+            if(confirm("Hapus logo dari laporan?")) {
+                localStorage.removeItem('kspro_logo');
+                updateUI();
+            }
+        }
+
         function exportFullBackup() {
             const data = { praktis: localStorage.getItem('kspro_db'), pro: localStorage.getItem('kspro_db_pro'), t: localStorage.getItem('kspro_toko'), l: localStorage.getItem('kspro_logo'), b: localStorage.getItem('kspro_bos') };
             const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
@@ -306,17 +319,34 @@
             document.querySelectorAll('.h-pt-pro, .pr-toko').forEach(el => el.innerText = toko.toUpperCase());
             document.querySelectorAll('.pr-bos').forEach(el => el.innerText = bos);
             
-            let logo = localStorage.getItem('kspro_logo');
-            document.querySelectorAll('.pr-logo-pro').forEach(img => {
-                if(logo) { img.src = logo; img.style.display = 'block'; }
-            });
-
             let tglCetak = "Dicetak: " + new Date().toLocaleString('id-ID');
             document.querySelectorAll('.pr-date').forEach(el => el.innerText = tglCetak);
             
             let safeToko = toko.split(" ").join("_");
             let qrData = "VERIFIED_AUDIT_" + safeToko + "_" + Date.now();
             document.querySelectorAll('.pr-qr').forEach(img => img.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + qrData);
+
+            // LOGIC LOGO & TOMBOL HAPUS
+            let logoSrc = localStorage.getItem('kspro_logo'); 
+            let prevContainer = document.getElementById('logo-preview-container');
+            let prevImg = document.getElementById('logo-preview-img');
+            
+            if(logoSrc) {
+                if(prevContainer) prevContainer.classList.remove('hidden');
+                if(prevImg) prevImg.src = logoSrc;
+                document.querySelectorAll('.pr-logo-pro').forEach(img => { 
+                    img.src = logoSrc; 
+                    img.classList.remove('hidden'); 
+                    img.style.display = 'block'; 
+                }); 
+            } else {
+                if(prevContainer) prevContainer.classList.add('hidden');
+                document.querySelectorAll('.pr-logo-pro').forEach(img => { 
+                    img.src = ""; 
+                    img.classList.add('hidden'); 
+                    img.style.display = 'none'; 
+                });
+            }
         }
 
         function simpanJurnal() {
@@ -337,6 +367,8 @@
 
             if(useTax) {
                 let ppn = Math.round(nom * 0.11);
+                // Jika jurnal adalah pendapatan (Kredit ke akun 401), maka PPN Keluaran
+                // Total diterima = nom + PPN.
                 dbPro.push({id, grp: id, tgl, ref:d, pos:'D', nom:nom+ppn, ket});
                 dbPro.push({id:id+1, grp: id, tgl, ref:k, pos:'K', nom:nom, ket});
                 dbPro.push({id:id+2, grp: id, tgl, ref:'205', pos:'K', nom:ppn, ket:"PPN 11%"});
