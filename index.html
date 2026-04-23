@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kas Pintar Pro | Corporate ERP</title>
+    <title>Kas Pintar System | Corporate ERP</title>
     <meta name="theme-color" content="#0f172a">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,16 +22,19 @@
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         
-        /* PRINT LAYOUT ANTI-BLANK PAGE */
+        /* PRINT LAYOUT ANTI-BLANK PAGE & ALIGNMENT */
         @media print {
             body { background: white; padding: 0 !important; margin: 0 !important; font-size: 10pt; color: #000; }
             .no-print, .bottom-nav { display: none !important; }
             .page { display: none !important; margin: 0 !important; padding: 0 !important; }
             .page.active { display: block !important; page-break-after: auto; }
-            .print-header { border-bottom: 3px double #000; padding-bottom: 15px; margin-bottom: 20px; display: flex !important; justify-content: space-between; align-items: flex-start; }
+            
+            /* KOP SURAT ALIGNMENT FIX */
+            .print-header { display: flex !important; justify-content: space-between; align-items: center; border-bottom: 3px double #000; padding-bottom: 15px; margin-bottom: 20px; }
             .print-title { font-size: 22px; font-weight: 900; color: #000 !important; margin: 0; text-transform: uppercase; letter-spacing: 1px; -webkit-print-color-adjust: exact; }
             .print-subtitle { font-size: 12px; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
             .report-badge { border: 1px solid #000; padding: 3px 8px; font-size: 9px; font-weight: 900; letter-spacing: 1px; margin-top: 5px; display: inline-block; background: #f8fafc; }
+            
             table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 10pt; }
             th, td { border: 1px solid #000; padding: 8px 10px; text-align: left; }
             th { background-color: #f1f5f9 !important; font-weight: 800; -webkit-print-color-adjust: exact; text-transform: uppercase; font-size: 9pt; }
@@ -47,7 +50,7 @@
         <div class="absolute -right-4 -top-4 text-8xl opacity-10"><i class="fas fa-building-columns"></i></div>
         <div class="flex justify-between items-start">
             <div>
-                <h1 class="text-2xl font-black tracking-wide" id="h-pt">KAS PINTAR PRO</h1>
+                <h1 class="text-2xl font-black tracking-wide" id="h-pt">KAS PINTAR</h1>
                 <p class="text-[10px] font-bold opacity-80 mt-1 tracking-widest uppercase text-blue-300" id="h-mode-desc">CORPORATE STANDARD</p>
             </div>
             <div class="flex flex-col items-end relative z-50">
@@ -107,7 +110,7 @@
             <canvas id="financeChart" height="200"></canvas>
         </div>
 
-        <div class="bg-white p-5 rounded-xl border-t-4 border-t-blue-600 shadow-lg mb-5">
+        <div class="bg-white p-5 rounded-xl border-t-4 border-t-blue-600 shadow-lg mb-8">
             <h3 class="font-black text-blue-900 text-sm uppercase tracking-wide mb-4"><i class="fas fa-pen-to-square mr-1"></i> Posting Jurnal Transaksi</h3>
             <input type="number" id="inp-amt" placeholder="Nominal Uang (Wajib Rupiah)" class="w-full p-3 mb-3 border border-slate-300 rounded-lg text-sm font-bold">
             <input type="text" id="inp-desc" placeholder="Keterangan Transaksi" class="w-full p-3 mb-3 border border-slate-300 rounded-lg text-sm">
@@ -128,19 +131,23 @@
 
     <div id="p-buku" class="page px-4 mt-5">
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 print:border-none print:shadow-none print:p-0">
+            
             <div class="print-header hidden">
-                <div class="w-3/4">
-                    <img class="pr-logo hidden mb-2" style="max-height: 60px; max-width: 150px; object-fit: contain;">
+                <div class="w-1/4 flex justify-start">
+                    <img class="pr-logo" src="" style="max-height: 60px; object-fit: contain; display:none;">
+                </div>
+                <div class="w-1/2 text-center">
                     <h1 class="print-title" id="kop-buku-toko">NAMA PERUSAHAAN</h1>
                     <p class="print-subtitle">BUKU BESAR (GENERAL LEDGER)</p>
                     <p class="text-xs font-bold text-slate-600" id="kop-buku-tgl"></p>
                     <div class="report-badge">CORPORATE FINANCIAL REPORT</div>
                 </div>
-                <div class="w-1/4 text-right">
-                    <img id="pr-qr-buku" src="" alt="QR" class="w-16 h-16 ml-auto border border-black p-0.5">
-                    <div class="text-[6px] font-black uppercase tracking-widest mt-1">Verified Audit</div>
+                <div class="w-1/4 flex flex-col items-end justify-center">
+                    <img id="pr-qr-buku" src="" alt="QR" class="w-16 h-16 border border-black p-0.5">
+                    <div class="text-[6px] font-black uppercase tracking-widest mt-1 text-center" style="width: 64px;">Verified System</div>
                 </div>
             </div>
+
             <div class="no-print mb-4">
                 <h3 class="font-black text-slate-800 text-sm uppercase tracking-wide mb-3"><i class="fas fa-book-open mr-1"></i> Buku Besar & Filter</h3>
                 <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
@@ -162,6 +169,7 @@
                 </div>
             </div>
             <div class="overflow-x-auto text-xs" id="view-buku"></div>
+            
             <div class="ttd-area hidden">
                 <div class="ttd-box"><p class="font-bold text-[10px] mb-8 uppercase">Diperiksa Oleh,</p><div style="height:50px;"></div><p class="font-black text-xs border-t border-black pt-1">Internal Auditor</p></div>
                 <div class="ttd-box"><p class="font-bold text-[10px] mb-8 uppercase">Disetujui Oleh,</p><div style="height:50px;"></div><p class="font-black text-xs border-t border-black pt-1" id="ttd-nama-1">Direktur / CFO</p></div>
@@ -171,19 +179,23 @@
 
     <div id="p-neraca" class="page px-4 mt-5">
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 print:border-none print:shadow-none print:p-0">
+            
             <div class="print-header hidden">
-                <div class="w-3/4">
-                    <img class="pr-logo hidden mb-2" style="max-height: 60px; max-width: 150px; object-fit: contain;">
+                <div class="w-1/4 flex justify-start">
+                    <img class="pr-logo" src="" style="max-height: 60px; object-fit: contain; display:none;">
+                </div>
+                <div class="w-1/2 text-center">
                     <h1 class="print-title" id="kop-neraca-toko">NAMA PERUSAHAAN</h1>
                     <p class="print-subtitle">LAPORAN POSISI KEUANGAN (NERACA)</p>
                     <p class="text-xs font-bold text-slate-600" id="kop-neraca-tgl"></p>
                     <div class="report-badge">CORPORATE FINANCIAL REPORT</div>
                 </div>
-                <div class="w-1/4 text-right">
-                    <img id="pr-qr-neraca" src="" alt="QR" class="w-16 h-16 ml-auto border border-black p-0.5">
-                    <div class="text-[6px] font-black uppercase tracking-widest mt-1">Verified Audit</div>
+                <div class="w-1/4 flex flex-col items-end justify-center">
+                    <img id="pr-qr-neraca" src="" alt="QR" class="w-16 h-16 border border-black p-0.5">
+                    <div class="text-[6px] font-black uppercase tracking-widest mt-1 text-center" style="width: 64px;">Verified System</div>
                 </div>
             </div>
+
             <div class="no-print flex justify-between items-center border-b border-slate-200 pb-3 mb-4">
                 <h3 class="font-black text-slate-800 text-sm uppercase tracking-wide"><i class="fas fa-balance-scale mr-1"></i> Laporan Neraca</h3>
                 <button onclick="cetakPDF('Neraca')" class="bg-slate-800 text-white font-bold px-3 py-1.5 rounded text-xs shadow-sm"><i class="fas fa-print"></i> Cetak</button>
@@ -203,19 +215,23 @@
 
     <div id="p-lr" class="page px-4 mt-5">
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 print:border-none print:shadow-none print:p-0">
+            
             <div class="print-header hidden">
-                <div class="w-3/4">
-                    <img class="pr-logo hidden mb-2" style="max-height: 60px; max-width: 150px; object-fit: contain;">
+                <div class="w-1/4 flex justify-start">
+                    <img class="pr-logo" src="" style="max-height: 60px; object-fit: contain; display:none;">
+                </div>
+                <div class="w-1/2 text-center">
                     <h1 class="print-title" id="kop-lr-toko">NAMA PERUSAHAAN</h1>
                     <p class="print-subtitle">LABA RUGI & ARUS KAS</p>
                     <p class="text-xs font-bold text-slate-600" id="kop-lr-tgl"></p>
                     <div class="report-badge">CORPORATE FINANCIAL REPORT</div>
                 </div>
-                <div class="w-1/4 text-right">
-                    <img id="pr-qr-lr" src="" alt="QR" class="w-16 h-16 ml-auto border border-black p-0.5">
-                    <div class="text-[6px] font-black uppercase tracking-widest mt-1">Verified Audit</div>
+                <div class="w-1/4 flex flex-col items-end justify-center">
+                    <img id="pr-qr-lr" src="" alt="QR" class="w-16 h-16 border border-black p-0.5">
+                    <div class="text-[6px] font-black uppercase tracking-widest mt-1 text-center" style="width: 64px;">Verified System</div>
                 </div>
             </div>
+
             <div class="no-print flex justify-between items-center border-b border-slate-200 pb-3 mb-4">
                 <h3 class="font-black text-slate-800 text-sm uppercase tracking-wide"><i class="fas fa-file-invoice-dollar mr-1"></i> Kinerja Laba Rugi</h3>
                 <button onclick="cetakPDF('Laba_Rugi')" class="bg-slate-800 text-white font-bold px-3 py-1.5 rounded text-xs shadow-sm"><i class="fas fa-print"></i> Cetak</button>
@@ -224,6 +240,7 @@
             <div id="view-lr" class="text-sm"></div>
             <div class="font-black text-center bg-slate-100 text-slate-700 py-2 mt-6 mb-3 text-[10px] tracking-widest uppercase border border-slate-200 rounded print:border-black print:text-black print:mt-8">II. Laporan Arus Kas</div>
             <div id="view-cashflow" class="text-sm"></div>
+            
             <div class="ttd-area hidden mt-10">
                 <div class="ttd-box"><p class="font-bold text-[10px] mb-8 uppercase">Disusun Oleh,</p><div style="height:50px;"></div><p class="font-black text-xs border-t border-black pt-1">Bagian Keuangan</p></div>
                 <div class="ttd-box"><p class="font-bold text-[10px] mb-8 uppercase">Disahkan Oleh,</p><div style="height:50px;"></div><p class="font-black text-xs border-t border-black pt-1" id="ttd-nama-3">Direktur / CFO</p></div>
@@ -246,7 +263,6 @@
                     <i class="fas fa-sync-alt mr-1"></i> AUTO
                 </button>
             </div>
-            
             <h3 class="font-black text-slate-800 text-sm uppercase tracking-wide border-b border-slate-200 pb-3 mb-4 mt-6"><i class="fas fa-id-card mr-1"></i> Entitas Bisnis</h3>
             <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Nama Perusahaan</label>
             <input type="text" id="set-toko" placeholder="Contoh: PT. Ikram Cyber Group" class="w-full p-3 mb-4 border border-slate-300 rounded text-sm font-bold" oninput="simpanSet()">
@@ -254,7 +270,6 @@
             <input type="file" id="set-logo" accept="image/*" class="w-full text-xs mb-4 p-2 border border-slate-300 rounded bg-slate-50" onchange="handleLogo(this)">
             <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Nama Pimpinan / CFO (TTD)</label>
             <input type="text" id="set-bos" placeholder="Contoh: Ikram, S.Kom." class="w-full p-3 border border-slate-300 rounded text-sm font-bold" oninput="simpanSet()">
-            
             <h3 class="font-black text-slate-800 text-sm uppercase tracking-wide border-b border-slate-200 pb-3 mb-4 mt-6"><i class="fas fa-database mr-1"></i> Manajemen Data</h3>
             <div class="flex gap-2 mb-4">
                 <button onclick="exportFullBackup()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-black py-3 rounded-lg text-[10px] uppercase shadow-md"><i class="fas fa-download mr-1"></i> Backup</button>
@@ -426,7 +441,7 @@
             
             ['buku', 'neraca', 'lr'].forEach(id => { 
                 document.getElementById(`kop-${id}-toko`).innerText = toko.toUpperCase(); document.getElementById(`kop-${id}-tgl`).innerText = tglCetak; 
-                let qrData = `VERIFIED_AUDIT_${toko.replace(/\s+/g,'_')}_${new Date().getTime()}`; 
+                let qrData = `VERIFIED_SYSTEM_${toko.replace(/\s+/g,'_')}_${new Date().getTime()}`; 
                 document.getElementById(`pr-qr-${id}`).src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${qrData}`; 
             }); 
             
@@ -464,7 +479,7 @@
             cariData(); 
         } 
 
-        function cetakPDF(namaLaporan) { let toko = localStorage.getItem('kspro_toko') || "Perusahaan"; document.title = `${toko.replace(/\s+/g, '_')}_${namaLaporan}`; window.print(); setTimeout(() => { document.title = "Kas Pintar Pro"; }, 1000); } 
+        function cetakPDF(namaLaporan) { let toko = localStorage.getItem('kspro_toko') || "Perusahaan"; document.title = `${toko.replace(/\s+/g, '_')}_${namaLaporan}`; window.print(); setTimeout(() => { document.title = "Kas Pintar System"; }, 1000); } 
         function exportExcel() { let hasil = cariData(); if(hasil.length === 0) return alert("Kosong!"); let csvContent = "Tanggal,Akun,Keterangan,Masuk,Keluar\n"; hasil.forEach(x => { let masuk = x.jen === 'in' ? x.nom : 0; let keluar = x.jen === 'out' ? x.nom : 0; csvContent += `${x.tgl},${x.kat},"${x.ket}",${masuk},${keluar}\n`; }); let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }); let url = URL.createObjectURL(blob); let a = document.createElement("a"); a.href = url; let toko = localStorage.getItem('kspro_toko') || "Export"; a.download = `${toko.replace(/\s+/g, '')}.csv`; document.body.appendChild(a); a.click(); document.body.removeChild(a); } 
         function exportFullBackup(){let data={praktis:localStorage.getItem("kspro_db"),pro:localStorage.getItem("kspro_db_pro"),t:localStorage.getItem("kspro_toko"),b:localStorage.getItem("kspro_bos")};let blob=new Blob([JSON.stringify(data)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="Backup_KasPintar.json";a.click();} 
         function importFullBackup(input){if(input.files&&input.files[0]){let reader=new FileReader();reader.onload=(e)=>{try{let data=JSON.parse(e.target.result);if(data.praktis)localStorage.setItem("kspro_db",data.praktis);if(data.pro)localStorage.setItem("kspro_db_pro",data.pro);if(data.t)localStorage.setItem("kspro_toko",data.t);if(data.b)localStorage.setItem("kspro_bos",data.b);alert("Restore Berhasil! Halaman dimuat ulang.");location.reload();}catch(err){alert("File backup tidak valid!");}};reader.readAsText(input.files[0]);}} 
