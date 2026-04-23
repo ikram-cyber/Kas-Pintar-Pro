@@ -22,26 +22,21 @@
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         
-        /* PRINT LAYOUT ANTI-BLANK PAGE & ALIGNMENT */
         @media print {
-            body { background: white; padding: 0 !important; margin: 0 !important; font-size: 10pt; color: #000; position: relative; overflow: visible; }
+            body { background: white; padding: 0 !important; margin: 0 !important; font-size: 10pt; color: #000; }
             .no-print, .bottom-nav { display: none !important; }
             .page { display: none !important; margin: 0 !important; padding: 0 !important; }
             .page.active { display: block !important; page-break-after: auto; }
-            
             .print-header { border-bottom: 3px double #000; padding-bottom: 15px; margin-bottom: 20px; display: flex !important; justify-content: space-between; align-items: center; }
             .print-title { font-size: 22px; font-weight: 900; color: #000 !important; margin: 0; text-transform: uppercase; letter-spacing: 1px; -webkit-print-color-adjust: exact; }
             .print-subtitle { font-size: 12px; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
             .report-badge { border: 1px solid #000; padding: 3px 8px; font-size: 9px; font-weight: 900; letter-spacing: 1px; margin-top: 5px; display: inline-block; background: #f8fafc; }
-            
             table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 10pt; }
             th, td { border: 1px solid #000; padding: 8px 10px; text-align: left; }
             th { background-color: #f1f5f9 !important; font-weight: 800; -webkit-print-color-adjust: exact; text-transform: uppercase; font-size: 9pt; }
             .ratio-box, .dupont-box { border: 1px solid #000; -webkit-print-color-adjust: exact; page-break-inside: avoid; margin-top: 20px; }
             .ttd-area { display: flex !important; justify-content: space-between; margin-top: 50px; text-align: center; page-break-inside: avoid; }
             .ttd-box { width: 30%; }
-
-            /* WATERMARK REMOVED BY USER REQUEST */
         }
     </style>
 </head>
@@ -276,6 +271,12 @@
                 <button onclick="hapusLogo()" class="bg-rose-50 text-rose-600 px-3 py-1.5 rounded text-[10px] font-black hover:bg-rose-100 transition border border-rose-200 shadow-sm"><i class="fas fa-trash mr-1"></i> Hapus Logo</button>
             </div>
 
+            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 block mt-2">Tampilkan QR Code Verifikasi</label>
+            <select id="set-qr" class="w-full p-3 mb-4 border border-slate-300 rounded text-sm font-bold bg-slate-50" onchange="simpanSet()">
+                <option value="show">Ya, Tampilkan QR Code</option>
+                <option value="hide">Sembunyikan QR Code</option>
+            </select>
+
             <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Nama Pimpinan / CFO (TTD)</label>
             <input type="text" id="set-bos" placeholder="Contoh: Ikram, S.Kom." class="w-full p-3 border border-slate-300 rounded text-sm font-bold" oninput="simpanSet()">
             
@@ -316,7 +317,15 @@
 
         function hitungSaldo() { saldo = 0; db.forEach(x => { saldo += (x.jen === 'in' ? x.nom : -x.nom); }); localStorage.setItem('kspro_saldo', saldo); }
         function simpan() { hitungSaldo(); localStorage.setItem('kspro_db', JSON.stringify(db)); perbaruiSemua(); }
-        function simpanSet() { localStorage.setItem('kspro_toko', document.getElementById('set-toko').value); localStorage.setItem('kspro_bos', document.getElementById('set-bos').value); localStorage.setItem('kspro_mode', document.getElementById('set-mode').value); localStorage.setItem('kspro_rate', document.getElementById('set-rate').value); localStorage.setItem('kspro_lock', document.getElementById('set-lock-date').value); perbaruiSemua(); }
+        function simpanSet() { 
+            localStorage.setItem('kspro_toko', document.getElementById('set-toko').value); 
+            localStorage.setItem('kspro_bos', document.getElementById('set-bos').value); 
+            localStorage.setItem('kspro_mode', document.getElementById('set-mode').value); 
+            localStorage.setItem('kspro_rate', document.getElementById('set-rate').value); 
+            localStorage.setItem('kspro_lock', document.getElementById('set-lock-date').value); 
+            localStorage.setItem('kspro_qr', document.getElementById('set-qr').value); 
+            perbaruiSemua(); 
+        }
         
         function handleLogo(input) { 
             if (input.files && input.files[0]) { 
@@ -468,13 +477,22 @@
             let lockDate = localStorage.getItem('kspro_lock') || "";
             document.getElementById('set-lock-date').value = lockDate;
 
+            let showQr = localStorage.getItem('kspro_qr') !== 'hide';
+            let qrSelect = document.getElementById('set-qr');
+            if(qrSelect) qrSelect.value = showQr ? 'show' : 'hide';
+
             let tglCetak = "Periode Cetak: " + new Date().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'}); 
             document.getElementById('h-pt').innerText = toko.toUpperCase(); document.getElementById('set-toko').value = toko !== "NAMA PERUSAHAAN" ? toko : ""; document.getElementById('set-bos').value = bos !== "Direktur Utama" ? bos : ""; 
             
             ['buku', 'neraca', 'lr'].forEach(id => { 
                 document.getElementById(`kop-${id}-toko`).innerText = toko.toUpperCase(); document.getElementById(`kop-${id}-tgl`).innerText = tglCetak; 
                 let qrData = `VERIFIED_SYSTEM_${toko.replace(/\s+/g,'_')}_${new Date().getTime()}`; 
-                document.getElementById(`pr-qr-${id}`).src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${qrData}`; 
+                let qrImg = document.getElementById(`pr-qr-${id}`);
+                if(qrImg) {
+                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${qrData}`;
+                    qrImg.style.visibility = showQr ? 'visible' : 'hidden';
+                    if(qrImg.nextElementSibling) qrImg.nextElementSibling.style.visibility = showQr ? 'visible' : 'hidden';
+                }
             }); 
             
             document.getElementById('ttd-nama-1').innerText = bos; document.getElementById('ttd-nama-2').innerText = bos; document.getElementById('ttd-nama-3').innerText = bos; 
@@ -530,8 +548,8 @@
 
         function cetakPDF(namaLaporan) { let toko = localStorage.getItem('kspro_toko') || "Perusahaan"; document.title = `${toko.replace(/\s+/g, '_')}_${namaLaporan}`; window.print(); setTimeout(() => { document.title = "Kas Pintar System"; }, 1000); } 
         function exportExcel() { let hasil = cariData(); if(hasil.length === 0) return alert("Kosong!"); let csvContent = "Tanggal,Akun,Keterangan,Masuk,Keluar\n"; hasil.forEach(x => { let masuk = x.jen === 'in' ? x.nom : 0; let keluar = x.jen === 'out' ? x.nom : 0; csvContent += `${x.tgl},${x.kat},"${x.ket}",${masuk},${keluar}\n`; }); let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }); let url = URL.createObjectURL(blob); let a = document.createElement("a"); a.href = url; let toko = localStorage.getItem('kspro_toko') || "Export"; a.download = `${toko.replace(/\s+/g, '')}.csv`; document.body.appendChild(a); a.click(); document.body.removeChild(a); } 
-        function exportFullBackup(){let data={praktis:localStorage.getItem("kspro_db"),pro:localStorage.getItem("kspro_db_pro"),t:localStorage.getItem("kspro_toko"),b:localStorage.getItem("kspro_bos"), lock: localStorage.getItem('kspro_lock'), lock_pro: localStorage.getItem('kspro_lock_pro')};let blob=new Blob([JSON.stringify(data)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="Backup_KasPintar.json";a.click();} 
-        function importFullBackup(input){if(input.files&&input.files[0]){let reader=new FileReader();reader.onload=(e)=>{try{let data=JSON.parse(e.target.result);if(data.praktis)localStorage.setItem("kspro_db",data.praktis);if(data.pro)localStorage.setItem("kspro_db_pro",data.pro);if(data.t)localStorage.setItem("kspro_toko",data.t);if(data.b)localStorage.setItem("kspro_bos",data.b);if(data.lock)localStorage.setItem("kspro_lock",data.lock);if(data.lock_pro)localStorage.setItem("kspro_lock_pro",data.lock_pro);alert("Restore Berhasil! Halaman dimuat ulang.");location.reload();}catch(err){alert("File backup tidak valid!");}};reader.readAsText(input.files[0]);}} 
+        function exportFullBackup(){let data={praktis:localStorage.getItem("kspro_db"),pro:localStorage.getItem("kspro_db_pro"),t:localStorage.getItem("kspro_toko"),b:localStorage.getItem("kspro_bos"), lock: localStorage.getItem('kspro_lock'), lock_pro: localStorage.getItem('kspro_lock_pro'), qr: localStorage.getItem('kspro_qr'), qr_pro: localStorage.getItem('kspro_qr_pro')};let blob=new Blob([JSON.stringify(data)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="Backup_KasPintar.json";a.click();} 
+        function importFullBackup(input){if(input.files&&input.files[0]){let reader=new FileReader();reader.onload=(e)=>{try{let data=JSON.parse(e.target.result);if(data.praktis)localStorage.setItem("kspro_db",data.praktis);if(data.pro)localStorage.setItem("kspro_db_pro",data.pro);if(data.t)localStorage.setItem("kspro_toko",data.t);if(data.b)localStorage.setItem("kspro_bos",data.b);if(data.lock)localStorage.setItem("kspro_lock",data.lock);if(data.lock_pro)localStorage.setItem("kspro_lock_pro",data.lock_pro);if(data.qr)localStorage.setItem("kspro_qr",data.qr);if(data.qr_pro)localStorage.setItem("kspro_qr_pro",data.qr_pro);alert("Restore Berhasil! Halaman dimuat ulang.");location.reload();}catch(err){alert("File backup tidak valid!");}};reader.readAsText(input.files[0]);}} 
         function bukaTab(id) { document.querySelectorAll('.page, .nav-item').forEach(e => e.classList.remove('active')); document.getElementById('p-'+id).classList.add('active'); event.currentTarget.classList.add('active'); window.scrollTo(0,0); } 
 
         // BOOT INIT 
