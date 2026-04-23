@@ -25,32 +25,34 @@
             body { background: white; padding: 0 !important; color: #000; }
             .no-print { display: none !important; }
             
-            /* BOOK COVER FORMATTING FIXED */
-            .print-cover { height: 250mm; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; page-break-after: always; padding: 10px; box-sizing: border-box; }
-            .print-cover-inner { border: 3px solid #0f172a; outline: 1px solid #0f172a; outline-offset: 4px; padding: 30px; height: 100%; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+            /* BOOK COVER FORMATTING - NYAMAN MATA & PRESISI */
+            .print-cover { height: 250mm; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; page-break-after: always; padding: 0; box-sizing: border-box; }
+            .print-cover-inner { border: 2px solid #000; outline: 1px solid #000; outline-offset: 4px; padding: 40px; height: 100%; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; }
             
-            .print-logo { max-height: 120px; margin-bottom: 2rem; }
-            .print-title { font-size: 32pt; font-weight: 900; text-transform: uppercase; margin-bottom: 1rem; line-height: 1.1; }
-            .print-subtitle { font-size: 16pt; font-weight: bold; color: #475569; margin-bottom: 4rem; }
-            .print-year { font-size: 24pt; font-weight: 900; background-color: #0f172a; color: white !important; padding: 10px 30px; border-radius: 50px; -webkit-print-color-adjust: exact; margin-bottom: 2rem; }
+            .print-logo { max-height: 120px; margin-bottom: 2.5rem; }
+            .print-title { font-size: 34pt; font-weight: 900; text-transform: uppercase; margin-bottom: 1rem; line-height: 1.1; letter-spacing: 2px; }
+            .print-subtitle { font-size: 14pt; font-weight: bold; color: #333; margin-bottom: 4rem; letter-spacing: 1px; }
+            .print-year { font-size: 26pt; font-weight: 900; background-color: #0f172a; color: white !important; padding: 12px 40px; border-radius: 50px; -webkit-print-color-adjust: exact; margin-bottom: 2rem; }
             
-            /* TABLE OF CONTENTS */
-            .toc-item { display: flex; justify-content: space-between; border-bottom: 2px dotted #cbd5e1; margin-bottom: 15px; font-size: 12pt; padding-bottom: 5px; }
-            .toc-item span:first-child { font-weight: bold; }
+            /* HAPUS KOTAK WEBSITE DI KERTAS BUKU */
+            .chapter { page-break-before: always; padding-top: 1cm !important; border: none !important; box-shadow: none !important; background: transparent !important; margin: 0 !important; border-radius: 0 !important; }
+            .chapter-title { font-size: 18pt; font-weight: 900; text-transform: uppercase; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 10px; text-align: left; color: #000; letter-spacing: 1px; }
+            .formal-text { text-align: justify; line-height: 1.8; font-size: 11pt; margin-bottom: 15px; color: #000 !important; }
             
-            /* THICK BOOK FORMATTING */
-            .chapter { page-break-before: always; padding-top: 20px; }
-            .chapter-title { font-size: 18pt; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; border-bottom: 3px double #000; padding-bottom: 10px; text-align: center; }
-            .formal-text { text-align: justify; line-height: 1.8; font-size: 11pt; margin-bottom: 15px; }
+            /* TABLE OF CONTENTS ELEGANT */
+            .toc-item { display: flex; justify-content: space-between; border-bottom: 1px dotted #000; margin-bottom: 20px; font-size: 12pt; padding-bottom: 5px; align-items: flex-end; }
+            .toc-item span:first-child { font-weight: bold; background: white; padding-right: 10px; position: relative; top: 6px; }
+            .toc-item span:last-child { background: white; padding-left: 10px; position: relative; top: 6px; font-weight: 900; }
             
-            .table-pro { font-size: 9pt !important; }
+            /* PRINT TABLES & GRIDS */
+            .table-pro { font-size: 9pt !important; border: 1px solid #000 !important; }
             .table-pro th { background-color: #f1f5f9 !important; color: #000 !important; border: 1px solid #000 !important; -webkit-print-color-adjust: exact; }
             .table-pro td { border: 1px solid #000 !important; }
             
             .grid-print { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-            .card-print { border: 1px solid #000; padding: 15px; }
+            .card-print { border: 1px solid #000 !important; padding: 15px !important; border-radius: 0 !important; box-shadow: none !important; background: transparent !important; }
             
-            .ttd-area { display: flex !important; justify-content: space-between; margin-top: 60px; text-align: center; page-break-inside: avoid; }
+            .ttd-area { display: flex; justify-content: space-between; margin-top: 60px; text-align: center; page-break-inside: avoid; }
             .ttd-box { width: 40%; }
         }
     </style>
@@ -75,7 +77,7 @@
             <p class="print-subtitle">BUKU LAPORAN RAPAT ANGGOTA TAHUNAN<br>(ANNUAL AUDITED REPORT)</p>
             <div class="print-year" id="print-year">2026</div>
             
-            <img id="rat-qr" src="" class="mx-auto mt-4 w-24 h-24 border border-black p-1" style="display:none;">
+            <img id="rat-qr" src="" class="mx-auto mt-4 w-28 h-28 p-1 print:border-none print:p-0" style="display:none;">
 
             <div style="margin-top: auto; padding-bottom: 1rem;">
                 <p style="font-weight: bold; font-size: 10pt; color: #000;">CONFIDENTIAL & VERIFIED DOCUMENT</p>
@@ -99,44 +101,46 @@
             <i class="fas fa-print mr-2 text-amber-400"></i> Cetak Buku Laporan (PDF)
         </button>
 
-        <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 mb-8 chapter hidden print:block">
+        <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 mb-8 chapter print:p-0 print:border-none print:shadow-none hidden print:block">
             <h2 class="chapter-title">DAFTAR ISI</h2>
-            <div class="toc-item"><span>BAB I - Laporan Manajemen (Sambutan Direksi)</span><span>1</span></div>
-            <div class="toc-item"><span>BAB II - Executive Summary & Indikator Kinerja</span><span>2</span></div>
-            <div class="toc-item"><span>BAB III - Laporan Keuangan Komprehensif</span><span>3</span></div>
-            <div class="toc-item"><span>BAB IV - Catatan Atas Laporan Keuangan (CALK)</span><span>4</span></div>
-            <div class="toc-item"><span>LAMPIRAN - Audit Trail & Buku Besar Tahunan</span><span>5</span></div>
+            <div style="margin-top: 30px;">
+                <div class="toc-item"><span>BAB I - Laporan Manajemen (Sambutan Direksi)</span><span>1</span></div>
+                <div class="toc-item"><span>BAB II - Executive Summary & Indikator Kinerja</span><span>2</span></div>
+                <div class="toc-item"><span>BAB III - Laporan Keuangan Komprehensif</span><span>3</span></div>
+                <div class="toc-item"><span>BAB IV - Catatan Atas Laporan Keuangan (CALK)</span><span>4</span></div>
+                <div class="toc-item"><span>LAMPIRAN - Audit Trail & Buku Jurnal Tahunan</span><span>5</span></div>
+            </div>
         </div>
 
-        <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 mb-8 chapter">
+        <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 mb-8 chapter print:p-0 print:border-none print:shadow-none">
             <h2 class="chapter-title">BAB I<br>Laporan Manajemen</h2>
             <div id="bab-sambutan" class="formal-text text-slate-700"></div>
         </div>
 
-        <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 mb-8 chapter">
+        <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 mb-8 chapter print:p-0 print:border-none print:shadow-none">
             <h2 class="chapter-title">BAB II<br>Executive Summary</h2>
             
-            <div class="bg-slate-900 p-6 rounded-2xl shadow-inner text-white mb-6 print:bg-white print:text-black print:border print:border-black">
-                <h3 class="text-amber-400 font-black mb-2 print:text-black"><i class="fas fa-robot mr-2 no-print"></i> AI Annual Review</h3>
-                <p id="ai-summary" class="formal-text text-slate-300 print:text-black">Menganalisis performa tahunan...</p>
+            <div class="bg-slate-900 p-6 rounded-2xl shadow-inner text-white mb-6 print:bg-transparent print:text-black print:border-y-2 print:border-black print:rounded-none print:px-2 print:py-4 print:shadow-none">
+                <h3 class="text-amber-400 font-black mb-2 print:text-black print:mb-3"><i class="fas fa-robot mr-2 no-print"></i> AI Annual Review</h3>
+                <p id="ai-summary" class="formal-text text-slate-300 print:text-black print:m-0">Menganalisis performa tahunan...</p>
             </div>
 
             <div class="grid grid-cols-2 gap-4 grid-print mb-6">
                 <div class="card-print bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
-                    <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Total Aset</div>
-                    <div class="text-xl font-black text-emerald-700 mt-1" id="rat-aset">Rp 0</div>
+                    <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest print:text-black">Total Aset</div>
+                    <div class="text-xl font-black text-emerald-700 mt-1 print:text-black" id="rat-aset">Rp 0</div>
                 </div>
                 <div class="card-print bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
-                    <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Laba Bersih</div>
-                    <div class="text-xl font-black text-blue-700 mt-1" id="rat-laba">Rp 0</div>
+                    <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest print:text-black">Laba Bersih</div>
+                    <div class="text-xl font-black text-blue-700 mt-1 print:text-black" id="rat-laba">Rp 0</div>
                 </div>
                 <div class="card-print bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
-                    <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Total Ekuitas</div>
-                    <div class="text-xl font-black text-amber-700 mt-1" id="rat-ekuitas">Rp 0</div>
+                    <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest print:text-black">Total Ekuitas</div>
+                    <div class="text-xl font-black text-amber-700 mt-1 print:text-black" id="rat-ekuitas">Rp 0</div>
                 </div>
                 <div class="card-print bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
-                    <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Rasio Utang (DAR)</div>
-                    <div class="text-xl font-black text-rose-700 mt-1" id="rat-dar">0%</div>
+                    <div class="text-[10px] font-black text-slate-500 uppercase tracking-widest print:text-black">Rasio Utang (DAR)</div>
+                    <div class="text-xl font-black text-rose-700 mt-1 print:text-black" id="rat-dar">0%</div>
                 </div>
             </div>
 
@@ -146,34 +150,34 @@
             </div>
         </div>
 
-        <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 mb-8 chapter">
+        <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 mb-8 chapter print:p-0 print:border-none print:shadow-none">
             <h2 class="chapter-title">BAB III<br>Laporan Keuangan Komprehensif</h2>
             <div id="bab-laporan-keuangan"></div>
         </div>
 
-        <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 mb-8 chapter">
+        <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 mb-8 chapter print:p-0 print:border-none print:shadow-none">
             <h2 class="chapter-title">BAB IV<br>Catatan Atas Laporan Keuangan (CALK)</h2>
             <div id="bab-calk" class="formal-text text-slate-700"></div>
         </div>
 
-        <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 mb-8 chapter">
+        <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 mb-8 chapter print:p-0 print:border-none print:shadow-none">
             <h2 class="chapter-title">LAMPIRAN<br>Audit Trail & Buku Jurnal</h2>
-            <p class="formal-text mb-4 text-sm italic text-slate-500 text-center">Rekapitulasi seluruh transaksi yang dibukukan selama tahun berjalan.</p>
-            <div class="overflow-x-auto" id="bab-lampiran"></div>
+            <p class="formal-text mb-4 text-sm italic text-slate-500 text-center print:mb-6">Rekapitulasi seluruh transaksi yang dibukukan selama tahun berjalan.</p>
+            <div class="overflow-x-auto print:overflow-visible" id="bab-lampiran"></div>
         </div>
 
         <div class="ttd-area hidden print:flex mt-12 pb-10">
             <div class="ttd-box">
-                <p class="font-bold text-[10px] mb-16 uppercase">Direktur Keuangan / CFO</p>
-                <div class="border-t-2 border-black pt-1 font-black text-sm uppercase" id="ttd-cfo">NAMA CFO</div>
+                <p class="font-bold text-[10pt] mb-20 uppercase">Direktur Keuangan / CFO</p>
+                <div class="border-t-2 border-black pt-2 font-black text-[11pt] uppercase" id="ttd-cfo">NAMA CFO</div>
             </div>
             <div class="ttd-box">
-                <p class="font-bold text-[10px] mb-16 uppercase">Dewan Komisaris / Pimpinan</p>
-                <div class="border-t-2 border-black pt-1 font-black text-sm uppercase">_________________</div>
+                <p class="font-bold text-[10pt] mb-20 uppercase">Dewan Komisaris / Pimpinan</p>
+                <div class="border-t-2 border-black pt-2 font-black text-[11pt] uppercase">_________________</div>
             </div>
         </div>
 
-        <div class="text-center pt-8 pb-10 text-slate-400 text-[10px] font-black tracking-widest uppercase w-full no-print">&copy; 2026 Ikram Cyber System</div>
+        <div class="text-center pt-8 pb-10 text-slate-400 text-[10px] font-black tracking-widest uppercase w-full no-print">&copy; 2026 IKRAM CYBER SYSTEM</div>
 
     </div>
 
@@ -261,57 +265,57 @@
 
                 // BUILD HTML: LABA RUGI
                 tableHTML += `
-                <div class="mb-8">
-                    <h3 class="font-black text-center bg-slate-100 border-y-2 border-black py-2 mb-3 text-xs uppercase tracking-widest">A. Laporan Laba Rugi Komprehensif</h3>
-                    <table class="table-pro w-full text-sm">
+                <div style="margin-bottom: 40px;">
+                    <h3 style="font-weight: 900; text-align: center; border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 8px 0; margin-bottom: 15px; font-size: 11pt; text-transform: uppercase; letter-spacing: 1px;">A. Laporan Laba Rugi Komprehensif</h3>
+                    <table class="table-pro w-full">
                         <tbody>
-                            <tr><td colspan="2" class="font-bold bg-slate-50 uppercase">Pendapatan</td></tr>
-                            <tr><td class="pl-6">Pendapatan Jasa / Sales</td><td class="text-right font-bold text-emerald-700">${formatRp(opIn)}</td></tr>
-                            <tr><td colspan="2" class="font-bold bg-slate-50 uppercase">Beban-Beban</td></tr>
+                            <tr><td colspan="2" style="font-weight: 900; text-transform: uppercase; background: #f8fafc;">Pendapatan</td></tr>
+                            <tr><td style="padding-left: 20px;">Pendapatan Jasa / Sales</td><td style="text-align: right; font-weight: bold;">${formatRp(opIn)}</td></tr>
+                            <tr><td colspan="2" style="font-weight: 900; text-transform: uppercase; background: #f8fafc;">Beban-Beban</td></tr>
                 `;
                 
                 COA.filter(a => a.tipe === 'Beban').forEach(a => {
                     let d = dbPro.filter(x=>x.ref===a.no && x.pos==='D').reduce((p,c)=>p+c.nom,0);
                     let k = dbPro.filter(x=>x.ref===a.no && x.pos==='K').reduce((p,c)=>p+c.nom,0);
                     let nsd = d - k;
-                    if(nsd > 0) tableHTML += `<tr><td class="pl-6">${a.nama}</td><td class="text-right text-rose-700">(${formatRp(nsd)})</td></tr>`;
+                    if(nsd > 0) tableHTML += `<tr><td style="padding-left: 20px;">${a.nama}</td><td style="text-align: right;">(${formatRp(nsd)})</td></tr>`;
                 });
                 
-                tableHTML += `<tr class="border-t-2 border-black font-black bg-slate-100 uppercase"><td>Laba (Rugi) Bersih</td><td class="text-right">${formatRp(laba)}</td></tr></tbody></table></div>`;
+                tableHTML += `<tr><td style="font-weight: 900; text-transform: uppercase; border-top: 2px solid #000; background: #f1f5f9;">Laba (Rugi) Bersih</td><td style="text-align: right; font-weight: 900; border-top: 2px solid #000; background: #f1f5f9;">${formatRp(laba)}</td></tr></tbody></table></div>`;
 
                 // BUILD HTML: NERACA
                 tableHTML += `
-                <div class="mb-4">
-                    <h3 class="font-black text-center bg-slate-100 border-y-2 border-black py-2 mb-3 text-xs uppercase tracking-widest">B. Laporan Posisi KEUANGAN (NERACA)</h3>
-                    <table class="table-pro w-full text-sm">
+                <div style="margin-bottom: 20px;">
+                    <h3 style="font-weight: 900; text-align: center; border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 8px 0; margin-bottom: 15px; font-size: 11pt; text-transform: uppercase; letter-spacing: 1px;">B. Laporan Posisi KEUANGAN (NERACA)</h3>
+                    <table class="table-pro w-full">
                         <tbody>
-                            <tr><td colspan="2" class="font-bold bg-slate-50 text-center uppercase tracking-widest">Aktiva (Aset)</td></tr>
+                            <tr><td colspan="2" style="font-weight: 900; text-align: center; text-transform: uppercase; background: #f8fafc; letter-spacing: 2px;">Aktiva (Aset)</td></tr>
                 `;
                 
                 COA.filter(a => a.tipe === 'Aset').forEach(a => {
                     let d = dbPro.filter(x=>x.ref===a.no && x.pos==='D').reduce((p,c)=>p+c.nom,0);
                     let k = dbPro.filter(x=>x.ref===a.no && x.pos==='K').reduce((p,c)=>p+c.nom,0);
                     let nsd = a.sn === 'D' ? d-k : k-d;
-                    if(nsd > 0) tableHTML += `<tr><td class="pl-6">${a.nama}</td><td class="text-right">${a.sn==='K'?'('+formatRp(nsd)+')':formatRp(nsd)}</td></tr>`;
+                    if(nsd > 0) tableHTML += `<tr><td style="padding-left: 20px;">${a.nama}</td><td style="text-align: right;">${a.sn==='K'?'('+formatRp(nsd)+')':formatRp(nsd)}</td></tr>`;
                 });
                 
-                tableHTML += `<tr class="border-t-2 border-black font-black bg-slate-100 uppercase"><td>Total Aktiva</td><td class="text-right">${formatRp(totalAset)}</td></tr><tr><td colspan="2" class="font-bold bg-slate-50 text-center uppercase tracking-widest mt-4">Pasiva (Liabilitas & Ekuitas)</td></tr>`;
+                tableHTML += `<tr><td style="font-weight: 900; text-transform: uppercase; border-top: 2px solid #000; background: #f1f5f9;">Total Aktiva</td><td style="text-align: right; font-weight: 900; border-top: 2px solid #000; background: #f1f5f9;">${formatRp(totalAset)}</td></tr><tr><td colspan="2" style="font-weight: 900; text-align: center; text-transform: uppercase; background: #f8fafc; letter-spacing: 2px; border-top: 3px double #000;">Pasiva (Liabilitas & Ekuitas)</td></tr>`;
                 
                 COA.filter(a => a.tipe === 'Kewajiban').forEach(a => {
                     let d = dbPro.filter(x=>x.ref===a.no && x.pos==='D').reduce((p,c)=>p+c.nom,0);
                     let k = dbPro.filter(x=>x.ref===a.no && x.pos==='K').reduce((p,c)=>p+c.nom,0);
                     let nsd = k - d;
-                    if(nsd > 0) tableHTML += `<tr><td class="pl-6 font-bold text-rose-700">${a.nama} (Utang)</td><td class="text-right">${formatRp(nsd)}</td></tr>`;
+                    if(nsd > 0) tableHTML += `<tr><td style="padding-left: 20px;">${a.nama} (Utang)</td><td style="text-align: right;">${formatRp(nsd)}</td></tr>`;
                 });
                 
                 COA.filter(a => a.tipe === 'Ekuitas').forEach(a => {
                     let d = dbPro.filter(x=>x.ref===a.no && x.pos==='D').reduce((p,c)=>p+c.nom,0);
                     let k = dbPro.filter(x=>x.ref===a.no && x.pos==='K').reduce((p,c)=>p+c.nom,0);
                     let nsd = a.sn === 'K' ? k-d : d-k;
-                    if(nsd > 0) tableHTML += `<tr><td class="pl-6">${a.nama}</td><td class="text-right">${a.sn==='D'?'('+formatRp(nsd)+')':formatRp(nsd)}</td></tr>`;
+                    if(nsd > 0) tableHTML += `<tr><td style="padding-left: 20px;">${a.nama}</td><td style="text-align: right;">${a.sn==='D'?'('+formatRp(nsd)+')':formatRp(nsd)}</td></tr>`;
                 });
                 
-                tableHTML += `<tr><td class="pl-6 font-bold">Laba Berjalan</td><td class="text-right">${formatRp(laba)}</td></tr><tr class="border-t-2 border-black font-black bg-slate-100 uppercase"><td>Total Pasiva</td><td class="text-right">${formatRp(totalUtang + ekuitas)}</td></tr></tbody></table></div>`;
+                tableHTML += `<tr><td style="padding-left: 20px;">Laba Berjalan</td><td style="text-align: right;">${formatRp(laba)}</td></tr><tr><td style="font-weight: 900; text-transform: uppercase; border-top: 2px solid #000; background: #f1f5f9;">Total Pasiva</td><td style="text-align: right; font-weight: 900; border-top: 2px solid #000; background: #f1f5f9;">${formatRp(totalUtang + ekuitas)}</td></tr></tbody></table></div>`;
 
                 // LAMPIRAN JURNAL
                 let totalDebitJurnal = 0, totalKreditJurnal = 0;
@@ -320,41 +324,121 @@
                     if(x.pos === 'D') totalDebitJurnal += x.nom; else totalKreditJurnal += x.nom;
                     lampiranHTML += `<tr><td>${x.tgl}</td><td class="text-center font-bold">${x.ref}</td><td>${x.ket} ${x.isAjp?'<b>[AJP]</b>':''}</td><td class="text-right">${x.pos==='D'?formatRp(x.nom):'-'}</td><td class="text-right">${x.pos==='K'?formatRp(x.nom):'-'}</td></tr>`;
                 });
-                lampiranHTML += `</tbody><tfoot class="bg-slate-100 font-black text-sm"><tr class="border-t-2 border-black"><td colspan="3" class="text-right uppercase py-3">Total Balance Mutasi</td><td class="text-right text-emerald-700 py-3">${formatRp(totalDebitJurnal)}</td><td class="text-right text-rose-700 py-3">${formatRp(totalKreditJurnal)}</td></tr></tfoot></table>`;
+                lampiranHTML += `</tbody><tfoot><tr><td colspan="3" style="text-align: right; font-weight: 900; text-transform: uppercase; padding: 10px; border-top: 2px solid #000; background: #f1f5f9;">Total Balance Mutasi</td><td style="text-align: right; font-weight: 900; border-top: 2px solid #000; background: #f1f5f9;">${formatRp(totalDebitJurnal)}</td><td style="text-align: right; font-weight: 900; border-top: 2px solid #000; background: #f1f5f9;">${formatRp(totalKreditJurnal)}</td></tr></tfoot></table>`;
 
-            } else if (dbStd) {
-                // LOGIKA STANDAR (FALLBACK)
+            } else if (dbStd && dbStd.length > 0) {
+                // LOGIKA STANDAR (KAS PINTAR BIASA)
                 dbStd.forEach(x => { 
                     if(x.kat==='Operasional') x.jen==='in' ? opIn+=x.nom : opOut+=x.nom; 
                     if(x.kat==='Utang') x.jen==='in' ? utIn+=x.nom : utOut+=x.nom; 
                     if(x.kat==='Modal') x.jen==='in' ? moIn+=x.nom : moOut+=x.nom; 
                 });
-                laba = opIn - opOut; ekuitas = (moIn-moOut)+laba; totalUtang = utIn-utOut; totalAset = ekuitas + totalUtang;
-                tableHTML = `<p class='formal-text italic'>Laporan disarikan dari data standar.</p>`;
-                lampiranHTML = `<p class='formal-text'>Gunakan modul Audit untuk rincian jurnal lengkap.</p>`;
+                totalUtang = utIn - utOut;
+                ekuitas = moIn - moOut;
+                laba = opIn - opOut;
+                ekuitas += laba;
+                totalAset = ekuitas + totalUtang;
+                nsdKas = totalAset;
+
+                tableHTML = `
+                <div style="margin-bottom: 40px;">
+                    <h3 style="font-weight: 900; text-align: center; border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 8px 0; margin-bottom: 15px; font-size: 11pt; text-transform: uppercase; letter-spacing: 1px;">A. Laporan Laba Rugi</h3>
+                    <table class="table-pro w-full">
+                        <tbody>
+                            <tr><td style="padding-left: 20px;">Pendapatan Operasional</td><td style="text-align: right; font-weight: bold;">${formatRp(opIn)}</td></tr>
+                            <tr><td style="padding-left: 20px;">Beban Operasional</td><td style="text-align: right;">(${formatRp(opOut)})</td></tr>
+                            <tr><td style="font-weight: 900; text-transform: uppercase; border-top: 2px solid #000; background: #f1f5f9;">LABA BERSIH</td><td style="text-align: right; font-weight: 900; border-top: 2px solid #000; background: #f1f5f9;">${formatRp(laba)}</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h3 style="font-weight: 900; text-align: center; border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 8px 0; margin-bottom: 15px; font-size: 11pt; text-transform: uppercase; letter-spacing: 1px;">B. Laporan Posisi Keuangan (Neraca)</h3>
+                    <table class="table-pro w-full">
+                        <tbody>
+                            <tr><td style="padding-left: 20px;">Total Aktiva (Kas/Bank)</td><td style="text-align: right; font-weight: bold;">${formatRp(totalAset)}</td></tr>
+                            <tr><td style="padding-left: 20px;">Total Liabilitas (Utang)</td><td style="text-align: right;">${formatRp(totalUtang)}</td></tr>
+                            <tr><td style="padding-left: 20px;">Total Ekuitas (Modal + Laba)</td><td style="text-align: right;">${formatRp(ekuitas)}</td></tr>
+                        </tbody>
+                    </table>
+                </div>`;
+
+                // BUILD LAMPIRAN STANDAR DENGAN GRAND TOTAL
+                let totalMasuk = 0, totalKeluar = 0;
+                lampiranHTML = `<table class="table-pro w-full"><thead><tr><th>Tgl</th><th>Kategori</th><th>Keterangan</th><th class="text-right">Masuk (D)</th><th class="text-right">Keluar (K)</th></tr></thead><tbody>`;
+                dbStd.sort((a,b)=>a.id-b.id).forEach(x => {
+                    let isD = x.jen === 'in';
+                    if(isD) totalMasuk += x.nom; else totalKeluar += x.nom;
+                    lampiranHTML += `<tr><td>${x.tgl}</td><td>${x.kat}</td><td>${x.ket}</td><td class="text-right">${isD?formatRp(x.nom):'-'}</td><td class="text-right">${!isD?formatRp(x.nom):'-'}</td></tr>`;
+                });
+                
+                if (totalMasuk > 0 || totalKeluar > 0) {
+                    lampiranHTML += `</tbody><tfoot><tr><td colspan="3" style="text-align: right; font-weight: 900; text-transform: uppercase; padding: 10px; border-top: 2px solid #000; background: #f1f5f9;">Total Mutasi Keseluruhan</td><td style="text-align: right; font-weight: 900; border-top: 2px solid #000; background: #f1f5f9;">${formatRp(totalMasuk)}</td><td style="text-align: right; font-weight: 900; border-top: 2px solid #000; background: #f1f5f9;">${formatRp(totalKeluar)}</td></tr></tfoot></table>`;
+                } else {
+                    lampiranHTML += `</tbody></table>`;
+                }
+
+            } else {
+                tableHTML = "<p class='formal-text'>Belum ada data transaksi yang tercatat di sistem.</p>";
+                lampiranHTML = "<p class='formal-text'>Data Kosong.</p>";
             }
 
-            // Update UI
+            // Update UI Dash
             document.getElementById('rat-aset').innerText = formatRp(totalAset);
             document.getElementById('rat-laba').innerText = formatRp(laba);
             document.getElementById('rat-ekuitas').innerText = formatRp(ekuitas);
             let dar = totalAset > 0 ? (totalUtang / totalAset * 100).toFixed(2) : 0;
             document.getElementById('rat-dar').innerText = dar + "%";
+
             document.getElementById('bab-laporan-keuangan').innerHTML = tableHTML;
             document.getElementById('bab-lampiran').innerHTML = lampiranHTML;
 
-            // Sambutan & CALK
-            document.getElementById('bab-sambutan').innerHTML = `<p class="formal-text">Puji syukur kita panjatkan ke hadirat Tuhan Yang Maha Esa atas terselesaikannya Laporan Tahunan <strong>${toko.toUpperCase()}</strong> periode ${currentYear}. Laporan ini disusun secara profesional mencakup seluruh aktivitas ekonomi entitas.</p><p class="formal-text">Manajemen berkomitmen penuh untuk menjaga transparansi data dan akuntabilitas keuangan guna meningkatkan kepercayaan para pemangku kepentingan (stakeholders).</p>`;
-            document.getElementById('bab-calk').innerHTML = `<p class="formal-text font-black uppercase">1. Analisis Kinerja</p><p class="formal-text">Perusahaan mencatatkan Aset sebesar <b>${formatRp(totalAset)}</b>. Hasil operasional tahun ini membukukan ${laba>=0?'Keuntungan':'Defisit'} sebesar <b>${formatRp(Math.abs(laba))}</b>.</p><br><p class="formal-text font-black uppercase">2. Manajemen Utang</p><p class="formal-text">Rasio Debt to Asset (DAR) berada pada angka <b>${dar}%</b>, yang menunjukkan tingkat leverage finansial perusahaan masih berada dalam kategori ${dar<50?'aman':'waspada'}.</p>`;
+            // GENERATE BAB I: SAMBUTAN
+            document.getElementById('bab-sambutan').innerHTML = `
+                <p class="formal-text">Puji syukur senantiasa kita panjatkan ke hadirat Tuhan Yang Maha Esa atas segala rahmat dan bimbingan-Nya, sehingga <strong>${toko.toUpperCase()}</strong> dapat menyelesaikan tahun buku ${currentYear} dengan baik.</p>
+                <p class="formal-text">Tahun ini merupakan tahun yang penuh dinamika. Namun, berkat kerja keras seluruh tim dan dukungan dari para pemegang saham, serta komitmen kami terhadap tata kelola perusahaan yang baik (Good Corporate Governance), perusahaan mampu mempertahankan stabilitas operasional.</p>
+                <p class="formal-text">Laporan Tahunan ini disajikan sebagai bentuk transparansi dan pertanggungjawaban Direksi atas pengelolaan keuangan perusahaan sepanjang tahun. Kami melaporkan bahwa seluruh angka yang tercantum telah dibukukan menggunakan standar akuntansi yang berterima umum.</p>
+                <p class="formal-text">Akhir kata, kami mengucapkan terima kasih yang sebesar-besarnya kepada Dewan Komisaris, jajaran manajemen, karyawan, serta seluruh mitra kerja atas kepercayaan yang terus diberikan kepada kami.</p>
+            `;
 
-            // AI Narrative
-            let aiText = `Tahun buku ${currentYear} mencerminkan stabilitas bagi ${toko}. Dengan Total Aset ${formatRp(totalAset)} dan Laba Bersih ${formatRp(laba)}, perusahaan menunjukkan pertumbuhan fundamental yang terukur.`;
+            // GENERATE BAB IV: CALK (CATATAN ATAS LAPORAN KEUANGAN)
+            let calkText = `
+                <p class="formal-text">Catatan atas Laporan Keuangan ini memberikan rincian dan penjelasan lebih lanjut atas pos-pos material yang tersaji dalam Neraca dan Laporan Laba Rugi <strong>${toko.toUpperCase()}</strong> untuk periode yang berakhir pada tahun ${currentYear}.</p>
+                <br>
+                <p class="formal-text" style="font-weight: 900; text-transform: uppercase;">1. Kebijakan Akuntansi</p>
+                <p class="formal-text">Laporan keuangan disusun berdasarkan basis akrual (accrual basis) dan prinsip kelangsungan usaha (going concern). Mata uang pelaporan yang digunakan adalah Rupiah (IDR).</p>
+                <br>
+                <p class="formal-text" style="font-weight: 900; text-transform: uppercase;">2. Rincian Aset dan Likuiditas</p>
+                <p class="formal-text">Total aset perusahaan tercatat sebesar <b>${formatRp(totalAset)}</b>. Likuiditas perusahaan didukung oleh Kas dan Setara Kas senilai <b>${formatRp(nsdKas)}</b>. ${nsdPiutang > 0 ? 'Terdapat pula tagihan Piutang Usaha sebesar <b>'+formatRp(nsdPiutang)+'</b> yang diharapkan dapat direalisasikan.' : ''} ${nsdAsetTetap > 0 ? 'Aset Tetap perusahaan yang dicatat berdasarkan harga perolehan adalah sebesar <b>'+formatRp(nsdAsetTetap)+'</b>.' : ''}</p>
+                <br>
+                <p class="formal-text" style="font-weight: 900; text-transform: uppercase;">3. Rincian Liabilitas dan Ekuitas</p>
+                <p class="formal-text">Kewajiban total (Liabilitas) perusahaan adalah <b>${formatRp(totalUtang)}</b>. ${nsdUtangDagang > 0 ? 'Terdiri dari Utang Dagang operasional sebesar <b>'+formatRp(nsdUtangDagang)+'</b>.' : ''} ${nsdUtangPajak > 0 ? 'Perusahaan juga memiliki kewajiban perpajakan (PPN) yang belum disetor sebesar <b>'+formatRp(nsdUtangPajak)+'</b>.' : ''} Total Ekuitas atau kekayaan bersih pemegang saham menembus angka <b>${formatRp(ekuitas)}</b>, yang mencerminkan rasio kemandirian dana yang ${dar < 50 ? 'sangat sehat' : 'perlu diawasi'}.</p>
+                <br>
+                <p class="formal-text" style="font-weight: 900; text-transform: uppercase;">4. Kinerja Operasional (Laba/Rugi)</p>
+                <p class="formal-text">Sepanjang tahun buku berjalan, perusahaan membukukan Pendapatan Bruto sebesar <b>${formatRp(opIn)}</b>. Setelah dikurangi total Beban Operasional sebesar <b>${formatRp(opOut)}</b>, perusahaan mencatatkan ${laba >= 0 ? 'Laba Bersih' : 'Rugi Bersih'} sebesar <b>${formatRp(Math.abs(laba))}</b>.</p>
+            `;
+            document.getElementById('bab-calk').innerHTML = calkText;
+
+            // Generate AI Narrative for Dashboard
+            let aiText = "";
+            if(totalAset === 0) { aiText = "Sistem belum memiliki data akuntansi yang cukup."; } 
+            else {
+                let margin = opIn > 0 ? ((laba/opIn)*100).toFixed(2) : 0;
+                aiText = `Tahun buku ${currentYear} mencerminkan profil finansial yang valid bagi ${toko}. Perusahaan mencatatkan total aset sebesar ${formatRp(totalAset)}, didukung ekuitas bersih ${formatRp(ekuitas)}. `;
+                if(laba > 0) aiText += `Operasional menghasilkan laba bersih ${formatRp(laba)} (Margin: ${margin}%). `;
+                else aiText += `Perusahaan mengalami defisit operasional sebesar ${formatRp(Math.abs(laba))}. `;
+                if(dar < 40) aiText += `Rasio utang (DAR) berada di level sangat sehat (${dar}%), menunjukkan kemandirian finansial yang kuat.`;
+                else aiText += `Rasio utang tercatat pada ${dar}%, manajemen disarankan mengawasi liabilitas.`;
+            }
             document.getElementById('ai-summary').innerText = aiText;
 
-            // Chart
+            // Render Dashboard Chart
             const ctx = document.getElementById('ratChart').getContext('2d'); 
             if (chartInstance) chartInstance.destroy(); 
-            chartInstance = new Chart(ctx, { type: 'bar', data: { labels: ['Pendapatan', 'Beban', 'Laba'], datasets: [{ data: [opIn, opOut, laba], backgroundColor: ['#059669', '#e11d48', laba>=0?'#1e40af':'#9f1239'], borderRadius: 8 }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false } } } } }); 
+            chartInstance = new Chart(ctx, { 
+                type: 'bar', 
+                data: { labels: ['Pendapatan', 'Beban', 'Laba Bersih'], datasets: [{ data: [opIn, opOut, laba], backgroundColor: ['#059669', '#e11d48', laba >= 0 ? '#1e40af' : '#9f1239'], borderRadius: 8 }] }, 
+                options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false } } } } 
+            }); 
         }
 
         window.onload = renderRAT;
