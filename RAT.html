@@ -25,9 +25,9 @@
             body { background: white; padding: 0 !important; color: #000; }
             .no-print { display: none !important; }
             
-            /* BOOK COVER FORMATTING */
-            .print-cover { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; page-break-after: always; padding: 10px; }
-            .print-cover-inner { border: 3px solid #0f172a; outline: 1px solid #0f172a; outline-offset: 4px; padding: 40px; height: 95%; width: 95%; display: flex; flex-direction: column; justify-content: center; align-items: center; margin: auto; }
+            /* BOOK COVER FORMATTING FIXED (Anti Bocor Halaman 2) */
+            .print-cover { height: 250mm; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; page-break-after: always; padding: 10px; box-sizing: border-box; }
+            .print-cover-inner { border: 3px solid #0f172a; outline: 1px solid #0f172a; outline-offset: 4px; padding: 30px; height: 100%; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; }
             
             .print-logo { max-height: 120px; margin-bottom: 2rem; }
             .print-title { font-size: 32pt; font-weight: 900; text-transform: uppercase; margin-bottom: 1rem; line-height: 1.1; }
@@ -106,7 +106,7 @@
             <div class="toc-item"><span>BAB II - Executive Summary & Indikator Kinerja</span><span>2</span></div>
             <div class="toc-item"><span>BAB III - Laporan Keuangan Komprehensif</span><span>3</span></div>
             <div class="toc-item"><span>BAB IV - Catatan Atas Laporan Keuangan (CALK)</span><span>4</span></div>
-            <div class="toc-item"><span>LAMPIRAN - Audit Trail & Buku Jurnal Tahunan</span><span>5</span></div>
+            <div class="toc-item"><span>LAMPIRAN - Audit Trail & Buku Besar Tahunan</span><span>5</span></div>
         </div>
 
         <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 mb-8 chapter">
